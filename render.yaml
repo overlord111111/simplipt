@@ -1,0 +1,14 @@
+# Render Blueprint — deploy automático do GitHub
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: simplipt-site
+    runtime: python
+    repo: https://github.com/overlord111111/simplipt
+    branch: main
+    buildCommand: pip install -e .
+    startCommand: python -m src.cli exemplos/site/site.spt
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000

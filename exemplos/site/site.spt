@@ -109,9 +109,17 @@ servidor.rota("GET", "/api/modulo_atual", fn(req)
     retornar {modulo: req.params.pegar("m", "0")}
 fim)
 
+# ─── PORTA via ambiente (Render / Fly / Railway) ───
+porta_str = sistema.variavel("PORT")
+se porta_str é ""
+    porta = 3000
+senao
+    porta = porta_str.inteiro()
+fim
+
 falar "=== SimpliPT Site ==="
-falar "http://localhost:3000"
-falar servidor.iniciar(3000)
+falar "http://localhost:" + texto(porta)
+falar servidor.iniciar(porta)
 falar "Servidor rodando. Pressione Ctrl+C para parar."
 
 enquanto verdadeiro
