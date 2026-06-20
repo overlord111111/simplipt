@@ -72,3 +72,10 @@ Opções: `--debug`, `-b/--breakpoint`, `-w/--watch`, `--strict`, `--hot`, `--js
 - SQLite, cache com TTL, fila de tarefas com workers
 - Tipagem opcional: `nome: texto = "João"`
 - Zero dependências externas
+
+---
+
+<p align="center">
+  Feito por <a href="https://overlord111111.github.io">Over</a> &bull; 
+  <a href="https://github.com/overlord111111/overlord111111">Profile</a>
+</p>
