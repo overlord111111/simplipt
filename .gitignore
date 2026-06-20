@@ -29,3 +29,10 @@ site_stderr.log
 site_stdout.log
 _dash_err.txt
 _dash_out.txt
+
+# Temp test files
+_test_*.py
+blog.db
+novo.spt
+teste_*.spt
+validar_exemplos.spt

@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = {text = "MIT"}
 authors = [
-    {name = "Over", email = "over@simplipt.dev"},
+    {name = "Over", email = "over.lord.hck@proton.me"},
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
