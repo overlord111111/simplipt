@@ -112,14 +112,13 @@ fim)
 # ─── PORTA via ambiente (Render / Fly / Railway) ───
 porta_str = sistema.variavel("PORT")
 se porta_str é ""
-    porta = 3000
+    servidor.iniciar(3000)
 senao
-    porta = porta_str.inteiro()
+    servidor.iniciar(porta_str)
 fim
 
 falar "=== SimpliPT Site ==="
-falar "http://localhost:" + texto(porta)
-falar servidor.iniciar(porta)
+falar "Servidor rodando na porta " + sistema.variavel("PORT") se porta_str é "" senao "Servidor rodando na porta " + porta_str
 falar "Servidor rodando. Pressione Ctrl+C para parar."
 
 enquanto verdadeiro
