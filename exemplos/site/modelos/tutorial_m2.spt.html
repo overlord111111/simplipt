@@ -1,0 +1,309 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="aula">
+<aside class="aula-sidebar">
+<a href="/tutorial" class="voltar">&larr; Voltar</a>
+<h4>Modulo 2</h4>
+<ul class="indice">
+<li><a href="#intro" class="ativo">Introducao</a></li>
+<li><a href="#aula1">Aula 1</a></li>
+<li><a href="#aula2">Aula 2</a></li>
+<li><a href="#aula3">Aula 3</a></li>
+<li><a href="#aula4">Aula 4</a></li>
+<li><a href="#exercicios">Exercicios</a></li>
+</ul>
+</aside>
+
+<main class="aula-content">
+<div class="cabecalho">
+<div class="bread"><a href="/tutorial">Tutorial</a> / Modulo 2</div>
+<h1>Modulo 2: Controle de Fluxo</h1>
+<p>Aprenda a controlar o fluxo do seu programa: decisoes com se/senao, repeticoes com para/enquanto e correspondencia de padroes com corresponder/caso.</p>
+</div>
+
+<div class="secao" id="intro">
+<h2>Introducao</h2>
+<p>Nem todo programa executa linhas do inicio ao fim sem desvios. Na maioria das vezes voce precisa tomar decisoes, repetir blocos de codigo ou escolher entre varios caminhos. Essas estruturas sao chamadas de <strong>controle de fluxo</strong> e sao a base de qualquer linguagem de programacao que se preze.</p>
+<p>No SimpliPT voce tem quatro ferramentas principais para controlar o fluxo: <code class="inline-code">se</code>, <code class="inline-code">para</code>, <code class="inline-code">enquanto</code> e <code class="inline-code">corresponder</code>. Vamos conhecer cada uma delas.</p>
+</div>
+
+<div class="secao" id="aula1">
+<h2>Aula 1: se / senao / senao se &mdash; Decisoes</h2>
+
+<p>O <code class="inline-code">se</code> permite executar um bloco de codigo apenas se uma condicao for verdadeira. E o <code class="inline-code">senao</code> executa quando a condicao for falsa. Voce tambem pode encadear varias condicoes com <code class="inline-code">senao se</code>.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">se</span> idade &gt;= <span class="num">18</span>
+    falar <span class="str">"Maior de idade"</span>
+<span class="kw">senao</span>
+    falar <span class="str">"Menor de idade"</span>
+<span class="kw">fim</span></code></pre>
+</div>
+
+<p>O SimpliPT usa <strong>2 espacos de indentacao</strong> dentro dos blocos. Sempre mantenha a indentacao consistente!</p>
+
+<div class="dica">
+<p><strong>Dica:</strong> Use 2 espacos para indentar blocos dentro de <code class="inline-code">se</code>, <code class="inline-code">para</code>, <code class="inline-code">enquanto</code> e <code class="inline-code">corresponder</code>.</p>
+</div>
+
+<h3>Exemplo: Numero par ou impar</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>numero = <span class="num">7</span>
+<span class="kw">se</span> numero % <span class="num">2</span> <span class="kw">eh</span> <span class="num">0</span>
+    falar <span class="str">"O numero {numero} eh par"</span>
+<span class="kw">senao</span>
+    falar <span class="str">"O numero {numero} eh impar"</span>
+<span class="kw">fim</span></code></pre>
+</div>
+
+<h3>Exemplo: Nota para conceito (senao se)</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>nota = <span class="num">85</span>
+<span class="kw">se</span> nota &gt;= <span class="num">90</span>
+    conceito = <span class="str">"A"</span>
+<span class="kw">senao se</span> nota &gt;= <span class="num">80</span>
+    conceito = <span class="str">"B"</span>
+<span class="kw">senao se</span> nota &gt;= <span class="num">70</span>
+    conceito = <span class="str">"C"</span>
+<span class="kw">senao se</span> nota &gt;= <span class="num">60</span>
+    conceito = <span class="str">"D"</span>
+<span class="kw">senao</span>
+    conceito = <span class="str">"F"</span>
+<span class="kw">fim</span>
+falar <span class="str">"Conceito: {conceito}"</span></code></pre>
+</div>
+
+<h3>Aninhamento de condicionais</h3>
+
+<p>Voce pode colocar um <code class="inline-code">se</code> dentro de outro. Isso se chama <strong>aninhamento</strong> e serve para validar multiplas condicoes em sequencia.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">se</span> usuario.logado
+    <span class="kw">se</span> usuario.admin
+        falar <span class="str">"Bem-vindo, admin!"</span>
+    <span class="kw">senao</span>
+        falar <span class="str">"Bem-vindo, usuario!"</span>
+    <span class="kw">fim</span>
+<span class="kw">senao</span>
+    falar <span class="str">"Faca login para continuar"</span>
+<span class="kw">fim</span></code></pre>
+</div>
+</div>
+
+<div class="secao" id="aula2">
+<h2>Aula 2: para ate e para em &mdash; Repeticao</h2>
+
+<p>O <code class="inline-code">para</code> repete um bloco de codigo um numero determinado de vezes. Existem duas formas:</p>
+
+<ul>
+<li><strong>para <em>var</em> ate <em>N</em>:</strong> conta de 1 ate N</li>
+<li><strong>para <em>var</em> em <em>colecao</em>:</strong> itera sobre cada elemento de uma lista ou dicionario</li>
+</ul>
+
+<h3>Exemplo: Tabuada do 5</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>num = <span class="num">5</span>
+<span class="kw">para</span> i <span class="kw">ate</span> <span class="num">10</span>
+    falar <span class="str">"{num} x {i} = {num * i}"</span>
+<span class="kw">fim</span></code></pre>
+</div>
+
+<h3>Exemplo: Iterando sobre uma lista</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>frutas = [<span class="str">"maca"</span>, <span class="str">"banana"</span>, <span class="str">"laranja"</span>]
+<span class="kw">para</span> fruta <span class="kw">em</span> frutas
+    falar <span class="str">"Eu gosto de {fruta}"</span>
+<span class="kw">fim</span></code></pre>
+</div>
+
+<h3>Exemplo: Somar de 1 a 100</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>soma = <span class="num">0</span>
+<span class="kw">para</span> i <span class="kw">ate</span> <span class="num">100</span>
+    soma = soma + i
+<span class="kw">fim</span>
+falar <span class="str">"Soma total: {soma}"</span></code></pre>
+</div>
+</div>
+
+<div class="secao" id="aula3">
+<h2>Aula 3: enquanto &mdash; Loop Condicional</h2>
+
+<p>O <code class="inline-code">enquanto</code> repete um bloco <strong>enquanto</strong> uma condicao for verdadeira. Diferente do <code class="inline-code">para</code>, voce nao sabe quantas repeticoes vao acontecer &mdash; o loop so para quando a condicao se torna falsa.</p>
+
+<div class="aviso">
+<p><strong>Atencao:</strong> Se a condicao nunca se tornar falsa, o loop executa <strong>para sempre</strong> &mdash; isso eh um <em>loop infinito</em>! Sempre tenha uma saida dentro do bloco (uma variavel que muda, um <code class="inline-code">parar</code>, etc.).</p>
+</div>
+
+<h3>Exemplo: Contagem regressiva</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>contador = <span class="num">10</span>
+<span class="kw">enquanto</span> contador &gt; <span class="num">0</span>
+    falar contador
+    contador = contador - <span class="num">1</span>
+<span class="kw">fim</span>
+falar <span class="str">"Fogo!"</span></code></pre>
+</div>
+
+<h3>Exemplo: Menu interativo</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>opcao = <span class="str">""</span>
+<span class="kw">enquanto</span> opcao <span class="kw">nao eh</span> <span class="str">"3"</span>
+    falar <span class="str">"1 - Ver saldo"</span>
+    falar <span class="str">"2 - Depositar"</span>
+    falar <span class="str">"3 - Sair"</span>
+    opcao = ler(<span class="str">"Escolha: "</span>)
+    <span class="kw">se</span> opcao <span class="kw">eh</span> <span class="str">"1"</span>
+        falar <span class="str">"Seu saldo eh R$ 100,00"</span>
+    <span class="kw">senao se</span> opcao <span class="kw">eh</span> <span class="str">"2"</span>
+        falar <span class="str">"Deposito realizado!"</span>
+    <span class="kw">fim</span>
+<span class="kw">fim</span></code></pre>
+</div>
+</div>
+
+<div class="secao" id="aula4">
+<h2>Aula 4: corresponder / caso &mdash; Match/Case</h2>
+
+<p>O <code class="inline-code">corresponder</code> compara um valor com varios padroes e executa o bloco do primeiro <code class="inline-code">caso</code> que corresponder. Eh como um <code class="inline-code">se</code> multiplo, mas mais limpo e legivel.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>dia = <span class="num">3</span>
+<span class="kw">corresponder</span> dia
+    <span class="kw">caso</span> <span class="num">1</span>
+        falar <span class="str">"Domingo"</span>
+    <span class="kw">caso</span> <span class="num">2</span>
+        falar <span class="str">"Segunda"</span>
+    <span class="kw">caso</span> <span class="num">3</span>
+        falar <span class="str">"Terca"</span>
+    <span class="kw">caso</span> <span class="num">4</span>
+        falar <span class="str">"Quarta"</span>
+    <span class="kw">caso</span> <span class="num">5</span>
+        falar <span class="str">"Quinta"</span>
+    <span class="kw">caso</span> <span class="num">6</span>
+        falar <span class="str">"Sexta"</span>
+    <span class="kw">caso</span> <span class="num">7</span>
+        falar <span class="str">"Sabado"</span>
+<span class="kw">fim</span></code></pre>
+</div>
+
+<h3>Exemplo: Classificar notas com se/senao se</h3>
+<p><strong>Nota:</strong> <code class="inline-code">corresponder</code> compara valores exatos, nao expressoes. Para intervalos e comparacoes, use <code class="inline-code">se/senao se</code>.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>nota = <span class="num">85</span>
+<span class="kw">se</span> nota &gt;= <span class="num">90</span>
+    falar <span class="str">"Excelente!"</span>
+<span class="kw">senao se</span> nota &gt;= <span class="num">70</span>
+    falar <span class="str">"Bom"</span>
+<span class="kw">senao se</span> nota &gt;= <span class="num">50</span>
+    falar <span class="str">"Regular"</span>
+<span class="kw">senao</span>
+    falar <span class="str">"Precisa melhorar"</span>
+<span class="kw">fim</span></code></pre>
+</div>
+</div>
+
+<div class="secao" id="exercicios">
+<h2>Exercicios</h2>
+<p>Abra o <a href="/playground" target="_blank">Playground</a> e resolva:</p>
+
+<div class="exercicio">
+<div class="label">&#9997; Exercicio 1</div>
+<h3>Par ou Impar</h3>
+<p>Crie um numero e mostre se ele eh par ou impar. Use <code class="inline-code">se</code>.</p>
+<p><a href="/playground?ex=m2-1" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+</div>
+
+<div class="exercicio">
+<span class="label">Exercicio 2</span>
+<h3>Tabuada do 7</h3>
+<p>Mostre a tabuada do 7 usando <code class="inline-code">para ate</code>.</p>
+<p><a href="/playground?ex=m2-2" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+</div>
+
+<div class="exercicio">
+<span class="label">Exercicio 3</span>
+<h3>Jogo da Adivinhacao</h3>
+<p>Gere um numero aleatorio entre 1 e 100 e peca para o usuario adivinhar. Use <code class="inline-code">enquanto</code> para repetir ate acertar. Diga se o chute foi alto ou baixo.</p>
+</div>
+
+<div class="exercicio">
+<span class="label">Desafio</span>
+<h3>Calculadora com Menu</h3>
+<p>Crie uma calculadora com um menu de opcoes (+, -, *, /) usando <code class="inline-code">corresponder</code>. O usuario escolhe a operacao, digita dois numeros e ve o resultado. Use <code class="inline-code">enquanto</code> para manter o menu aberto ate o usuario escolher sair.</p>
+</div>
+</div>
+
+<div class="nav-modulos">
+<a href="/tutorial_m1" class="anterior">&larr; Modulo 1</a>
+<button class="check-mod" id="btn-concluir">&#10003;</button>
+<a href="/tutorial_m3" class="proximo">Modulo 3 &rarr;</a>
+</div>
+</main>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'simplipt_tutorial_progress';
+  function carregar() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch(e) { return {} } }
+  function salvar(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)) } catch(e) {} }
+
+  var btn = document.getElementById('btn-concluir');
+  if (btn) {
+    var prog = carregar();
+    if (prog.m2) btn.classList.add('marcado');
+    btn.addEventListener('click', function() {
+      var p = carregar();
+      p.m2 = !p.m2;
+      salvar(p);
+      this.classList.toggle('marcado');
+    });
+  }
+
+  var sidebar = document.querySelector('.aula-sidebar');
+  if (sidebar) {
+    var links = sidebar.querySelectorAll('.indice a');
+    var titles = [];
+    links.forEach(function(a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) titles.push({ el: el, link: a });
+    });
+    function onScroll() {
+      var found = false;
+      for (var i = titles.length - 1; i >= 0; i--) {
+        var rect = titles[i].el.getBoundingClientRect();
+        if (rect.top <= 120) {
+          links.forEach(function(l) { l.classList.remove('ativo'); });
+          titles[i].link.classList.add('ativo');
+          found = true; break;
+        }
+      }
+      if (!found && links.length) { links.forEach(function(l) { l.classList.remove('ativo'); }); links[0].classList.add('ativo'); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

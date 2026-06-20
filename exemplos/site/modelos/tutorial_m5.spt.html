@@ -1,0 +1,439 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="aula">
+<aside class="aula-sidebar">
+<a href="/tutorial" class="voltar">&larr; Voltar</a>
+<h4>Modulo 5</h4>
+<ul class="indice">
+<li><a href="#intro" class="ativo">Introducao</a></li>
+<li><a href="#aula1">Tratamento de Erros</a></li>
+<li><a href="#aula2">Arquivos</a></li>
+<li><a href="#aula3">JSON</a></li>
+<li><a href="#aula4">Regex</a></li>
+<li><a href="#exercicios">Exercicios</a></li>
+</ul>
+</aside>
+
+<main class="aula-content">
+<div class="cabecalho">
+<div class="bread"><a href="/tutorial">Tutorial</a> / Modulo 5</div>
+<h1>Modulo 5: Arquivos e Erros</h1>
+<p>Tratamento de erros, leitura e escrita de arquivos, JSON e expressoes regulares.</p>
+</div>
+
+<section id="intro" class="secao">
+<h2>Introducao</h2>
+<p>Um programa que nunca erra so existe em teoria. Na pratica, usuario digita coisa errada, arquivo nao existe, rede cai. Um bom programador <strong>antecipa</strong> esses problemas.</p>
+<p>Neste modulo voce vai aprender a lidar com erros sem derrubar o programa, trabalhar com arquivos no disco, usar JSON para guardar dados estruturados e dominar expressoes regulares para buscar padroes em textos.</p>
+</section>
+
+<section id="aula1" class="secao">
+<h2>Aula 1: Tratamento de Erros</h2>
+<p>O bloco <code class="inline-code">tentar</code> / <code class="inline-code">capturar</code> permite que voce <strong>tente executar</strong> um codigo arriscado e <strong>capture o erro</strong> caso algo de errado, mantendo o programa funcionando.</p>
+
+<h3>Sintaxe basica</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">tentar</span>
+    <span class="cm"># Codigo que pode dar erro</span>
+    resultado = <span class="num">10</span> <span class="op">/</span> <span class="num">0</span>
+<span class="kw">capturar</span>
+    escrever(<span class="str">"Erro: divisao por zero!"</span>)
+<span class="kw">fim</span></code></pre>
+</div>
+
+<h3>Exemplo: divisao segura</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>funcao dividir_seguro(a, b)
+    <span class="kw">tentar</span>
+        retornar a <span class="op">/</span> b
+    <span class="kw">capturar</span>
+        escrever(<span class="str">"Nao foi possivel dividir"</span>)
+        retornar <span class="num">0</span>
+    <span class="kw">fim</span>
+
+escrever(dividir_seguro(<span class="num">10</span>, <span class="num">2</span>))   <span class="cm"># 5</span>
+escrever(dividir_seguro(<span class="num">10</span>, <span class="num">0</span>))   <span class="cm"># "Nao foi possivel dividir" / 0</span></code></pre>
+</div>
+
+<h3>Exemplo: arquivo inexistente</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">tentar</span>
+    conteudo = arquivos.ler(<span class="str">"arquivo_que_nao_existe.txt"</span>)
+<span class="kw">capturar</span>
+    escrever(<span class="str">"Arquivo nao encontrado. Criando um novo..."</span>)
+    conteudo = <span class="str">""</span>
+<span class="kw">fim</span></code></pre>
+</div>
+
+<div class="dica">
+<strong>Dica:</strong> Use <code class="inline-code">tentar</code>/<code class="inline-code">capturar</code> <strong>sempre</strong> que seu programa interagir com o usuario ou com o sistema de arquivos. Isso evita travamentos e melhora a experiencia.
+</div>
+</section>
+
+<section id="aula2" class="secao">
+<h2>Aula 2: Lendo e Escrevendo Arquivos</h2>
+<p>Arquivos sao a forma mais simples de <strong>guardar dados permanentemente</strong>. Quando o programa fecha, o arquivo continua no disco.</p>
+
+<h3>Escrevendo em um arquivo</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> arquivos
+
+<span class="cm"># Sobrescreve o arquivo (modo escrita)</span>
+arquivos.escrever(<span class="str">"diario.txt"</span>, <span class="str">"Querido diario: hoje foi um dia incrivel!"</span>)
+
+<span class="cm"># Adiciona ao final (modo adicionar)</span>
+arquivos.adicionar(<span class="str">"log.txt"</span>, <span class="str">"[INFO] Programa iniciado\n"</span>)</code></pre>
+</div>
+
+<h3>Lendo um arquivo</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>conteudo = arquivos.ler(<span class="str">"diario.txt"</span>)
+escrever(conteudo)</code></pre>
+</div>
+
+<h3>Exemplo completo: diario pessoal</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> arquivos
+
+escrever(<span class="str">"=== DIARIO PESSOAL ==="</span>)
+data = ler(<span class="str">"Data: "</span>)
+texto = ler(<span class="str">"O que aconteceu? "</span>)
+
+<span class="cm"># Carregar entradas anteriores</span>
+<span class="kw">tentar</span>
+    entradas = arquivos.ler(<span class="str">"diario.txt"</span>)
+<span class="kw">capturar</span>
+    entradas = <span class="str">""</span>
+<span class="kw">fim</span>
+
+<span class="cm"># Adicionar nova entrada</span>
+entradas = entradas + data + <span class="str">": "</span> + texto + <span class="str">"\n"</span>
+arquivos.escrever(<span class="str">"diario.txt"</span>, entradas)
+escrever(<span class="str">"Entrada salva!"</span>)</code></pre>
+</div>
+
+<div class="aviso">
+<strong>Atencao:</strong> <code class="inline-code">arquivos.escrever()</code> <strong>sobrescreve</strong> o arquivo inteiro! Use <code class="inline-code">arquivos.adicionar()</code> para acrescentar ao final sem perder o conteudo existente.
+</div>
+</section>
+
+<section id="aula3" class="secao">
+<h2>Aula 3: JSON</h2>
+<p>JSON e um formato leve de <strong>troca de dados</strong>, amplamente usado em APIs, configuracoes e armazenamento. O SimpliPT tem suporte nativo para converter dados de/para JSON.</p>
+
+<h3>Convertendo dados para JSON</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> json
+
+contato = {
+    <span class="str">"nome"</span>: <span class="str">"Maria"</span>,
+    <span class="str">"idade"</span>: <span class="num">28</span>,
+    <span class="str">"habilidades"</span>: [<span class="str">"Python"</span>, <span class="str">"SQL"</span>, <span class="str">"HTML"</span>]
+}
+
+texto_json = json.gerar(contato)
+escrever(texto_json)
+<span class="cm"># {"nome": "Maria", "idade": 28, "habilidades": ["Python", "SQL", "HTML"]}</span></code></pre>
+</div>
+
+<h3>Convertendo JSON de volta para dados</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>texto = <span class="str">'{"cidade": "Sao Paulo", "populacao": 12300000}'</span>
+dados = json.ler(texto)
+escrever(dados.cidade)      <span class="cm"># Sao Paulo</span>
+escrever(dados.populacao)   <span class="cm"># 12300000</span></code></pre>
+</div>
+
+<h3>Exemplo: salvando agenda em arquivo</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> json
+usar arquivos
+
+<span class="cm"># Dados para salvar</span>
+agenda = [
+    {<span class="str">"nome"</span>: <span class="str">"Ana"</span>, <span class="str">"tel"</span>: <span class="str">"11111"</span>},
+    {<span class="str">"nome"</span>: <span class="str">"Bia"</span>, <span class="str">"tel"</span>: <span class="str">"22222"</span>}
+]
+
+<span class="cm"># Salvar em arquivo</span>
+arquivos.escrever(<span class="str">"agenda.json"</span>, json.gerar(agenda))
+
+<span class="cm"># Ler de volta</span>
+<span class="kw">tentar</span>
+    dados = json.ler(arquivos.ler(<span class="str">"agenda.json"</span>))
+    <span class="kw">para</span> contato <span class="kw">em</span> dados
+        escrever(contato.nome + <span class="str">" -> "</span> + contato.tel)
+<span class="kw">capturar</span>
+    escrever(<span class="str">"Erro ao ler arquivo JSON"</span>)
+<span class="kw">fim</span></code></pre>
+</div>
+
+<div class="dica">
+<strong>Dica:</strong> JSON e o formato padrao para configuracoes e APIs. Sempre prefira JSON a formatos customizados — e mais legivel, universal e facil de depurar.
+</div>
+</section>
+
+<section id="aula4" class="secao">
+<h2>Aula 4: Expressoes Regulares</h2>
+<p>Expressoes regulares (regex) sao <strong>padroes de busca</strong> em textos. Permitem encontrar, extrair e substituir textos que seguem um determinado formato — como emails, telefones, CPFs, datas.</p>
+
+<h3>Buscando padroes</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> regex
+
+texto = <span class="str">"Meu email e joao@email.com e o suporte e ajuda@site.com"</span>
+emails = regex.buscar(<span class="str">"[a-z]+@[a-z]+\.[a-z]+"</span>, texto)
+<span class="cm"># retorna: ["joao@email.com", "ajuda@site.com"]</span></code></pre>
+</div>
+
+<h3>Extraindo numeros de um texto</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>texto = <span class="str">"Pedido #1234: R$ 89,90 - 5 unidades"</span>
+numeros = regex.buscar(<span class="str">"[0-9]+"</span>, texto)
+escrever(numeros)  <span class="cm"># ["1234", "89", "90", "5"]</span></code></pre>
+</div>
+
+<h3>Substituindo padroes</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>texto_sujo = <span class="str">"Ola!!! Como vai???"</span>
+limpo = regex.substituir(<span class="str">"[!?]+"</span>, <span class="str">"."</span>, texto_sujo)
+escrever(limpo)  <span class="cm"># "Ola. Como vai."</span></code></pre>
+</div>
+
+<h3>Exemplo: validar email</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> regex
+
+funcao email_valido(email):
+    matches = regex.buscar(<span class="str">"^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"</span>, email)
+    retornar tamanho(matches) <span class="op">></span> <span class="num">0</span>
+<span class="kw">fim</span>
+
+escrever(email_valido(<span class="str">"teste@email.com"</span>))    <span class="cm"># verdadeiro</span>
+escrever(email_valido(<span class="str">"invalido"</span>))            <span class="cm"># falso</span></code></pre>
+</div>
+
+<div class="aviso">
+<strong>Atencao:</strong> Regex e <strong>poderoso</strong>, mas pode ficar complexo facilmente. Comece com padroes simples e va incrementando. Use comentarios para explicar regex complicadas.
+</div>
+</section>
+
+<section id="exercicios" class="secao">
+<h2>Exercicios</h2>
+<p>Abra o <a href="/playground" target="_blank">Playground</a> e resolva:</p>
+
+<div class="exercicio">
+<h3>Exercicio 1: Calculadora segura</h3>
+<p>Crie uma calculadora que pede dois numeros e uma operacao (+, -, *, /) e exibe o resultado. Use <code class="inline-code">tentar</code>/<code class="inline-code">capturar</code> para tratar divisao por zero e entradas invalidas.</p>
+<p><a href="/playground?ex=m5-1" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>escrever(<span class="str">"=== CALCULADORA SEGURA ==="</span>)
+
+<span class="kw">tentar</span>
+    a = numero(ler(<span class="str">"Primeiro numero: "</span>))
+    op = ler(<span class="str">"Operacao (+, -, *, /): "</span>)
+    b = numero(ler(<span class="str">"Segundo numero: "</span>))
+
+    <span class="kw">se</span> op <span class="kw">eh</span> <span class="str">"+"</span>
+        resultado = a <span class="op">+</span> b
+    <span class="kw">senao se</span> op <span class="kw">eh</span> <span class="str">"-"</span>
+        resultado = a <span class="op">-</span> b
+    <span class="kw">senao se</span> op <span class="kw">eh</span> <span class="str">"*"</span>
+        resultado = a <span class="op">*</span> b
+    <span class="kw">senao se</span> op <span class="kw">eh</span> <span class="str">"/"</span>
+        resultado = a <span class="op">/</span> b
+    <span class="kw">senao</span>
+        escrever(<span class="str">"Operacao invalida!"</span>)
+        resultado = <span class="num">0</span>
+    <span class="kw">fim</span>
+
+    escrever(<span class="str">"Resultado: "</span> + resultado)
+
+<span class="kw">capturar</span>
+    escrever(<span class="str">"Erro: entrada invalida ou divisao por zero!"</span>)
+<span class="kw">fim</span></code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h3>Exercicio 2: Diario pessoal</h3>
+<p>Crie um programa de diario que permite ao usuario escrever entradas e salva-las em um arquivo <code class="inline-code">diario.txt</code>. Cada entrada deve ter data e hora.</p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> arquivos
+
+escrever(<span class="str">"=== DIARIO PESSOAL ==="</span>)
+texto = ler(<span class="str">"Escreva algo: "</span>)
+
+<span class="kw">tentar</span>
+    conteudo = arquivos.ler(<span class="str">"diario.txt"</span>)
+<span class="kw">capturar</span>
+    conteudo = <span class="str">""</span>
+<span class="kw">fim</span>
+
+conteudo = conteudo + texto + <span class="str">"\n"</span>
+arquivos.escrever(<span class="str">"diario.txt"</span>, conteudo)
+escrever(<span class="str">"Salvo com sucesso!"</span>)</code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h3>Exercicio 3: Salvar contatos em JSON</h3>
+<p>Modifique o exercicio da agenda do Modulo 4 para salvar os contatos em um arquivo JSON e carrega-los ao iniciar.</p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> json
+usar arquivos
+
+<span class="cm"># Carregar contatos existentes</span>
+<span class="kw">tentar</span>
+    agenda = json.ler(arquivos.ler(<span class="str">"contatos.json"</span>))
+<span class="kw">capturar</span>
+    agenda = []
+<span class="kw">fim</span>
+
+<span class="cm"># Adicionar novo contato</span>
+nome = ler(<span class="str">"Nome: "</span>)
+tel = ler(<span class="str">"Telefone: "</span>)
+agenda.adicionar({<span class="str">"nome"</span>: nome, <span class="str">"tel"</span>: tel})
+
+<span class="cm"># Salvar</span>
+arquivos.escrever(<span class="str">"contatos.json"</span>, json.gerar(agenda))
+
+<span class="cm"># Listar</span>
+escrever(<span class="str">"\n=== CONTATOS ==="</span>)
+<span class="kw">para</span> c <span class="kw">em</span> agenda
+    escrever(c.nome + <span class="str">" - "</span> + c.tel)</code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h3>Exercicio 4 (Desafio): Validador de senha forte</h3>
+<p>Crie uma funcao que valida se uma senha e forte usando regex. Requisitos: minimo 8 caracteres, pelo menos 1 letra maiuscula, 1 letra minuscula, 1 numero e 1 caractere especial.</p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> regex
+
+funcao senha_forte(senha)
+    <span class="cm"># Verificar cada requisito separadamente para dar feedback claro</span>
+    erros = []
+
+    <span class="kw">se</span> tamanho(senha) <span class="op"><</span> <span class="num">8</span>
+        erros.adicionar(<span class="str">"Minimo 8 caracteres"</span>)
+    <span class="kw">fim</span>
+
+    <span class="kw">se</span> tamanho(regex.buscar(<span class="str">"[A-Z]"</span>, senha)) <span class="kw">eh</span> <span class="num">0</span>
+        erros.adicionar(<span class="str">"Falta letra maiuscula"</span>)
+    <span class="kw">fim</span>
+
+    <span class="kw">se</span> tamanho(regex.buscar(<span class="str">"[a-z]"</span>, senha)) <span class="kw">eh</span> <span class="num">0</span>
+        erros.adicionar(<span class="str">"Falta letra minuscula"</span>)
+    <span class="kw">fim</span>
+
+    <span class="kw">se</span> tamanho(regex.buscar(<span class="str">"[0-9]"</span>, senha)) <span class="kw">eh</span> <span class="num">0</span>
+        erros.adicionar(<span class="str">"Falta numero"</span>)
+    <span class="kw">fim</span>
+
+    <span class="kw">se</span> tamanho(regex.buscar(<span class="str">"[!@#$%^&*(),.?\":{}|<>]"</span>, senha)) <span class="kw">eh</span> <span class="num">0</span>
+        erros.adicionar(<span class="str">"Falta caractere especial"</span>)
+    <span class="kw">fim</span>
+
+    <span class="kw">se</span> tamanho(erros) <span class="kw">eh</span> <span class="num">0</span>
+        escrever(<span class="str">"Senha forte!"</span>)
+        retornar verdadeiro
+    <span class="kw">senao</span>
+        escrever(<span class="str">"Senha fraca:"</span>)
+        <span class="kw">para</span> erro <span class="kw">em</span> erros
+            escrever(<span class="str">"  - "</span> + erro)
+        <span class="kw">fim</span>
+        retornar falso
+    <span class="kw">fim</span>
+<span class="kw">fim</span>
+
+<span class="cm"># Teste</span>
+senha_forte(<span class="str">"Teste@123"</span>)  <span class="cm"># forte</span>
+senha_forte(<span class="str">"fraco"</span>)       <span class="cm"># fraca (mostra todos os erros)</span></code></pre>
+</div>
+</details>
+</div>
+</section>
+
+<div class="nav-modulos">
+<a href="/tutorial_m4" class="anterior">&larr; Modulo 4</a>
+<button class="check-mod" id="btn-concluir">&#10003;</button>
+<a href="/tutorial_m6" class="proximo">Modulo 6 &rarr;</a>
+</div>
+</main>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'simplipt_tutorial_progress';
+  function carregar() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch(e) { return {} } }
+  function salvar(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)) } catch(e) {} }
+
+  var btn = document.getElementById('btn-concluir');
+  if (btn) {
+    var prog = carregar();
+    if (prog.m5) btn.classList.add('marcado');
+    btn.addEventListener('click', function() {
+      var p = carregar();
+      p.m5 = !p.m5;
+      salvar(p);
+      this.classList.toggle('marcado');
+    });
+  }
+
+  var sidebar = document.querySelector('.aula-sidebar');
+  if (sidebar) {
+    var links = sidebar.querySelectorAll('.indice a');
+    var titles = [];
+    links.forEach(function(a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) titles.push({ el: el, link: a });
+    });
+    function onScroll() {
+      var found = false;
+      for (var i = titles.length - 1; i >= 0; i--) {
+        var rect = titles[i].el.getBoundingClientRect();
+        if (rect.top <= 120) {
+          links.forEach(function(l) { l.classList.remove('ativo'); });
+          titles[i].link.classList.add('ativo');
+          found = true; break;
+        }
+      }
+      if (!found && links.length) { links.forEach(function(l) { l.classList.remove('ativo'); }); links[0].classList.add('ativo'); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

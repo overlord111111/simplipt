@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SimpliPT IDE</title>
+<link rel="stylesheet" href="/_admin/estatico/ide.css">
+</head>
+<body>
+<div class="topo">
+    <a href="/_admin/" class="logo">&#x2B21; SimpliPT</a>
+    <a href="/_admin/playground">Playground</a>
+    <div class="spacer"></div>
+    <div class="info-bar">
+        <span><strong>{{ total }}</strong> arquivos</span>
+        <span>v5.1</span>
+    </div>
+</div>
+<div class="conteudo">
+    <div class="cartao">
+        <h2>Arquivos .spt</h2>
+        <p class="subtitulo">Clique em editar para modificar ou executar para rodar o script</p>
+        {% se arquivos %}
+        <table>
+            <tr><th>Arquivo</th><th style="text-align:right">Acoes</th></tr>
+            {% para arq em arquivos %}
+            <tr>
+                <td><span class="tag tag-spt">SPT</span> {{ arq }}</td>
+                <td style="text-align:right">
+                    <a href="/_admin/editar/{{ arq }}">editar</a>
+                    <a href="/_admin/executar/{{ arq }}" style="margin-left:12px">executar</a>
+                </td>
+            </tr>
+            {% fim %}
+        </table>
+        {% senao %}
+        <div class="vazio">
+            <div class="icone">&#x1F4C4;</div>
+            <p>Nenhum arquivo .spt encontrado</p>
+            <p style="font-size:12px">Crie um arquivo abaixo ou use o Playground</p>
+        </div>
+        {% fim %}
+    </div>
+    <div class="grade">
+        <div class="cartao">
+            <h2>Criar novo arquivo</h2>
+            <form action="/_admin/criar" method="POST">
+                <div class="form-group">
+                    <label>Nome do script</label>
+                    <input type="text" name="nome" placeholder="meu_script" required>
+                </div>
+                <button type="submit" class="btn btn-azul">+ Criar</button>
+            </form>
+        </div>
+        <div class="cartao">
+            <h2>Playground</h2>
+            <p class="subtitulo">Teste codigo rapidamente sem criar arquivo</p>
+            <a href="/_admin/playground" class="btn btn-primario">Abrir Playground</a>
+        </div>
+    </div>
+</div>
+<div class="rodape">SimpliPT v5.1 — Linguagem em portugues</div>
+</body>
+</html>

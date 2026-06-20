@@ -1,0 +1,31 @@
+{
+  "name": "simplipt",
+  "displayName": "SimpliPT",
+  "description": "Linguagem de programacao em portugues",
+  "version": "5.1.0",
+  "publisher": "simplipt",
+  "license": "MIT",
+  "icon": "icon.png",
+  "engines": { "vscode": "^1.84.0" },
+  "categories": ["Programming Languages", "Linters", "Snippets"],
+  "keywords": ["simplipt", "portugues", "linguagem"],
+  "activationEvents": ["onLanguage:simplipt"],
+  "main": "./client/extension.js",
+  "contributes": {
+    "languages": [{
+      "id": "simplipt",
+      "aliases": ["SimpliPT", "simplipt"],
+      "extensions": [".spt", ".spt.html"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "simplipt",
+      "scopeName": "source.simplipt",
+      "path": "./syntaxes/simplipt.tmLanguage.json"
+    }],
+    "snippets": [{
+      "language": "simplipt",
+      "path": "./snippets/simplipt.json"
+    }]
+  }
+}

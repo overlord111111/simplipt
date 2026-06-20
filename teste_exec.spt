@@ -1,0 +1,4 @@
+falar "Executando script de teste!"
+falar "2 + 2 = " + (2 + 2)
+nome = "Jarbs"
+falar "Ola, " + nome

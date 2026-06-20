@@ -1,0 +1,54 @@
+usar servidor
+usar banco
+usar data
+
+banco.conectar("blog.db")
+
+banco.criar_tabela("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT NOT NULL, conteudo TEXT NOT NULL, criado_em TEXT NOT NULL)")
+
+total = banco.contar("posts")
+se total é 0
+    banco.inserir("posts", {"titulo": "Bem-vindo ao Blog!", "conteudo": "Primeiro post com SimpliPT e SQLite.", "criado_em": data.agora()})
+    banco.inserir("posts", {"titulo": "SimpliPT e demais", "conteudo": "Linguagem em portugues para scripts, servidores e automacao.", "criado_em": data.agora()})
+fim
+
+fn listagem()
+    posts = banco.buscar("SELECT id, titulo, criado_em FROM posts ORDER BY criado_em DESC")
+    html = "<!DOCTYPE html><html><meta charset='utf-8'><title>Blog SimpliPT</title>"
+    html = html + "<style>body{font-family:sans-serif;max-width:800px;margin:auto;padding:2em}"
+    html = html + "h1{color:#333}.post{border-bottom:1px solid #ddd;padding:1em 0}"
+    html = html + "a{color:#06c}.data{color:#888;font-size:0.9em}</style>"
+    html = html + "<body><h1>Blog SimpliPT</h1>"
+    para p em posts
+        html = html + "<div class='post'><h2><a href='/post/" + texto(p.id) + "'>" + p.titulo + "</a></h2>"
+        html = html + "<div class='data'>" + p.criado_em + "</div></div>"
+    fim
+    html = html + "</body></html>"
+    retornar html
+fim
+
+fn post_individual(id)
+    post = banco.buscar_um("SELECT * FROM posts WHERE id = ?", [id])
+    se post é nada
+        retornar "<!DOCTYPE html><html><head><title>404</title></head><body><h1>Nao encontrado</h1><a href='/'>Voltar</a></body></html>"
+    fim
+    html = "<!DOCTYPE html><html><meta charset='utf-8'><title>" + post.titulo + " - Blog</title>"
+    html = html + "<style>body{font-family:sans-serif;max-width:800px;margin:auto;padding:2em}"
+    html = html + "h1{color:#333}.conteudo{margin:2em 0}.data{color:#888}</style>"
+    html = html + "<body><h1>" + post.titulo + "</h1>"
+    html = html + "<div class='data'>" + post.criado_em + "</div>"
+    html = html + "<div class='conteudo'>" + post.conteudo + "</div>"
+    html = html + "<p><a href='/'>Voltar</a></p></body></html>"
+    retornar html
+fim
+
+servidor.rota("GET", "/", fn(req)
+    retornar listagem()
+fim)
+
+servidor.rota("GET", "/post/:id", fn(req)
+    retornar post_individual(inteiro(req.params.id))
+fim)
+
+falar "Blog rodando em http://localhost:3000"
+falar servidor.iniciar(3000)

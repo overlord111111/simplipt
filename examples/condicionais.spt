@@ -1,0 +1,11 @@
+idade = 18
+
+se idade >= 18
+    falar "Maior de idade"
+senao
+    falar "Menor de idade"
+fim
+
+se idade é 18
+    falar "Tem exatamente 18 anos"
+fim

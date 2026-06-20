@@ -1,0 +1,340 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="aula">
+<aside class="aula-sidebar">
+<a href="/tutorial" class="voltar">&larr; Voltar</a>
+<h4>Modulo 4</h4>
+<ul class="indice">
+<li><a href="#intro" class="ativo">Introducao</a></li>
+<li><a href="#aula1">Listas</a></li>
+<li><a href="#aula2">Dicionarios</a></li>
+<li><a href="#aula3">Ranges</a></li>
+<li><a href="#aula4">List Comp</a></li>
+<li><a href="#exercicios">Exercicios</a></li>
+</ul>
+</aside>
+
+<main class="aula-content">
+<div class="cabecalho">
+<div class="bread"><a href="/tutorial">Tutorial</a> / Modulo 4</div>
+<h1>Modulo 4: Dados</h1>
+<p>Colecoes, estruturas e transformacoes de dados em SimpliPT.</p>
+</div>
+
+<section id="intro" class="secao">
+<h2>Introducao</h2>
+<p>Ate agora trabalhamos com variaveis simples: numeros, textos, verdadeiro/falso. Mas programas de verdade precisam lidar com <strong>colecoes de dados</strong>. Uma lista de alunos, um dicionario de contatos, uma sequencia de numeros.</p>
+<p>Neste modulo voce vai aprender as principais estruturas de dados do SimpliPT: <strong>listas</strong>, <strong>dicionarios</strong>, <strong>ranges</strong> e <strong>list comprehension</strong> — uma das ferramentas mais elegantes da linguagem.</p>
+</section>
+
+<section id="aula1" class="secao">
+<h2>Aula 1: Listas</h2>
+<p>Listas sao <strong>colecoes ordenadas</strong> de valores. Guardam varios itens em uma unica variavel, mantendo a ordem em que foram inseridos.</p>
+
+<h3>Criando uma lista</h3>
+<p>Use colchetes com valores separados por virgula:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="cm"># Lista de compras</span>
+compras = [<span class="str">"arroz"</span>, <span class="str">"feijao"</span>, <span class="str">"oleo"</span>, <span class="str">"sal"</span>]
+
+<span class="cm"># Lista de numeros</span>
+notas = [<span class="num">8.5</span>, <span class="num">7.0</span>, <span class="num">9.2</span>, <span class="num">6.8</span>]
+
+<span class="cm"># Lista vazia</span>
+vazia = []</code></pre>
+</div>
+
+<h3>Acessando elementos</h3>
+<p>A indexacao comeca em <strong>zero</strong>. Use colchetes com a posicao:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>escrever(compras[<span class="num">0</span>])  <span class="cm"># arroz</span>
+escrever(compras[<span class="num">1</span>])  <span class="cm"># feijao</span>
+escrever(compras[<span class="op">-</span><span class="num">1</span>]) <span class="cm"># sal (ultimo elemento)</span></code></pre>
+</div>
+
+<h3>Adicionando e modificando</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="cm"># Adicionar no final</span>
+compras.adicionar(<span class="str">"cafe"</span>)
+
+<span class="cm"># Modificar um elemento</span>
+notas[<span class="num">0</span>] = <span class="num">9.0</span>
+
+<span class="cm"># Tamanho da lista</span>
+falar tamanho(compras)  <span class="cm"># 5</span>
+falar tamanho(notas) <span class="cm"># 4</span></code></pre>
+</div>
+
+<h3>Percorrendo uma lista</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">para</span> item <span class="kw">em</span> compras
+    escrever(<span class="str">"Comprar: "</span> + item)</code></pre>
+</div>
+
+<div class="dica">
+<strong>Dica:</strong> Listas podem misturar tipos: <code class="inline-code">[1, "texto", verdadeiro]</code>. Mas evite — mantenha listas homogeneas para clareza.
+</div>
+</section>
+
+<section id="aula2" class="secao">
+<h2>Aula 2: Dicionarios</h2>
+<p>Dicionarios guardam <strong>pares chave:valor</strong>. Diferente de listas (que usam indices numericos), dicionarios usam chaves descritivas para acessar os valores.</p>
+
+<h3>Criando um dicionario</h3>
+<p>Use chaves com pares <code class="inline-code">chave: valor</code> separados por virgula:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>contato = {
+    <span class="str">"nome"</span>: <span class="str">"Joao"</span>,
+    <span class="str">"idade"</span>: <span class="num">30</span>,
+    <span class="str">"email"</span>: <span class="str">"joao@email.com"</span>,
+    <span class="str">"telefone"</span>: <span class="str">"11999999999"</span>
+}
+
+<span class="cm"># Dicionario vazio</span>
+config = {}</code></pre>
+</div>
+
+<h3>Acessando valores</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="cm"># Duas formas de acessar</span>
+escrever(contato[<span class="str">"nome"</span>])     <span class="cm"># Joao</span>
+escrever(contato.nome)          <span class="cm"># Joao (notacao de ponto)</span></code></pre>
+</div>
+
+<h3>Modificando e adicionando</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="cm"># Modificar valor existente</span>
+contato[<span class="str">"idade"</span>] = <span class="num">31</span>
+
+<span class="cm"># Adicionar novo par</span>
+contato[<span class="str">"cidade"</span>] = <span class="str">"Sao Paulo"</span></code></pre>
+</div>
+
+<h3>Percorrendo um dicionario</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">para</span> chave, valor <span class="kw">em</span> contato:
+    escrever(chave + <span class="str">": "</span> + valor)</code></pre>
+</div>
+
+<div class="dica">
+<strong>Dica:</strong> Use <code class="inline-code">dict.chave</code> quando a chave for conhecida e fixa. Use <code class="inline-code">dict["chave"]</code> quando a chave for dinamica (vinda de uma variavel).
+</div>
+</section>
+
+<section id="aula3" class="secao">
+<h2>Aula 3: Ranges</h2>
+<p>Ranges representam uma <strong>sequencia de numeros</strong> sem ocupar memoria com todos os valores de uma vez. Sao ideais para loops e para criar listas numericas.</p>
+
+<h3>Sintaxe</h3>
+<p>Use dois pontos finais <code class="inline-code">...</code> entre o inicio e o fim:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>range_1_10 = <span class="num">1</span>..<span class="num">10</span>   <span class="cm"># 1, 2, 3, ..., 10</span>
+range_0_5  = <span class="num">0</span>..<span class="num">5</span>    <span class="cm"># 0, 1, 2, 3, 4, 5</span></code></pre>
+</div>
+
+<h3>Usando em loops</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="cm"># Tabuada do 5</span>
+<span class="kw">para</span> i <span class="kw">em</span> <span class="num">1</span>..<span class="num">10</span>
+    escrever(<span class="str">"5 x "</span> + i + <span class="str">" = "</span> + (<span class="num">5</span> <span class="op">*</span> i))</code></pre>
+</div>
+
+<h3>Criando listas a partir de ranges</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>numeros = [<span class="num">1</span>..<span class="num">5</span>]     <span class="cm"># [1, 2, 3, 4, 5]</span>
+pares   = [<span class="num">2</span>..<span class="num">10</span>]    <span class="cm"># [2, 3, 4, 5, 6, 7, 8, 9, 10]</span></code></pre>
+</div>
+
+<div class="aviso">
+<strong>Atencao:</strong> Range com <code class="inline-code">1...10</code> inclui o <strong>10</strong>. Diferente de algumas linguagens onde o limite final e excluido.
+</div>
+</section>
+
+<section id="aula4" class="secao">
+<h2>Aula 4: List Comprehension</h2>
+<p>List comprehension e uma forma <strong>concisa e elegante</strong> de criar listas baseadas em sequencias existentes, aplicando transformacoes e filtros em uma unica linha.</p>
+
+<h3>Sintaxe basica</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>[expressao <span class="kw">para</span> var <span class="kw">em</span> colecao <span class="kw">se</span> filtro]</code></pre>
+</div>
+
+<h3>Exemplos praticos</h3>
+<p><strong>Dobrar valores:</strong></p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>numeros = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+dobro = [x <span class="op">*</span> <span class="num">2</span> <span class="kw">para</span> x <span class="kw">em</span> numeros]
+escrever(dobro)  <span class="cm"># [2, 4, 6, 8, 10]</span></code></pre>
+</div>
+
+<p><strong>Filtrar pares:</strong></p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>pares = [x <span class="kw">para</span> x <span class="kw">em</span> numeros <span class="kw">se</span> x <span class="op">%</span> <span class="num">2</span> <span class="kw">eh</span> <span class="num">0</span>]
+escrever(pares)   <span class="cm"># [2, 4]</span></code></pre>
+</div>
+
+<p><strong>Strings com filtro:</strong></p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>nomes = [<span class="str">"Ana"</span>, <span class="str">"Bruno"</span>, <span class="str">"Alice"</span>, <span class="str">"Carlos"</span>]
+com_a = [nome <span class="kw">para</span> nome <span class="kw">em</span> nomes <span class="kw">se</span> nome.startswith(<span class="str">"A"</span>)]
+escrever(com_a)   <span class="cm"># ["Ana", "Alice"]</span></code></pre>
+</div>
+
+<div class="dica">
+<strong>Dica:</strong> List comprehension e mais <strong>legivel</strong> e <strong>performatica</strong> que um loop manual com adicionar(). Use sempre que possivel.
+</div>
+</section>
+
+<section id="exercicios" class="secao">
+<h2>Exercicios</h2>
+<p>Abra o <a href="/playground" target="_blank">Playground</a> e resolva:</p>
+
+<div class="exercicio">
+<h3>Exercicio 1: Soma de lista</h3>
+<p>Crie uma funcao que recebe uma lista de numeros e retorna a soma total. Nao use funcao pronta de soma — faca com loop mesmo.</p>
+<p><a href="/playground?ex=m4-1" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>funcao somar_lista(lista)
+    total = <span class="num">0</span>
+    <span class="kw">para</span> n <span class="kw">em</span> lista
+        total = total <span class="op">+</span> n
+    retornar total
+
+escrever(somar_lista([<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>]))  <span class="cm"># 60</span></code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h3>Exercicio 2: Agenda de contatos</h3>
+<p>Crie um programa que gerencia uma agenda. Use um dicionario onde a chave e o nome e o valor e outro dicionario com email e telefone. Adicione 3 contatos e liste todos.</p>
+<p><a href="/playground?ex=m4-2" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>agenda = {}
+
+<span class="cm"># Adicionar contatos</span>
+agenda[<span class="str">"Maria"</span>] = {<span class="str">"email"</span>: <span class="str">"maria@email.com"</span>, <span class="str">"tel"</span>: <span class="str">"11988888888"</span>}
+agenda[<span class="str">"Pedro"</span>] = {<span class="str">"email"</span>: <span class="str">"pedro@email.com"</span>, <span class="str">"tel"</span>: <span class="str">"11977777777"</span>}
+agenda[<span class="str">"Lucas"</span>] = {<span class="str">"email"</span>: <span class="str">"lucas@email.com"</span>, <span class="str">"tel"</span>: <span class="str">"11966666666"</span>}
+
+<span class="cm"># Listar contatos</span>
+<span class="kw">para</span> nome, dados <span class="kw">em</span> agenda:
+    escrever(nome + <span class="str">": "</span> + dados.email + <span class="str">" / "</span> + dados.tel)</code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h3>Exercicio 3: Filtrar pares com listcomp</h3>
+<p>Dada uma lista de numeros, use list comprehension para criar uma nova lista apenas com os numeros pares.</p>
+<p><a href="/playground?ex=m4-3" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>, <span class="num">7</span>, <span class="num">8</span>, <span class="num">9</span>, <span class="num">10</span>]
+pares = [x <span class="kw">para</span> x <span class="kw">em</span> nums <span class="kw">se</span> x <span class="op">%</span> <span class="num">2</span> <span class="kw">eh</span> <span class="num">0</span>]
+escrever(pares)  <span class="cm"># [2, 4, 6, 8, 10]</span></code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h3>Exercicio 4 (Desafio): Matrix com listcomp aninhada</h3>
+<p>Crie uma matriz 3x3 (lista de listas) usando list comprehension aninhada. Depois exiba cada linha.</p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="cm"># Matriz 3x3 onde cada elemento e linha * coluna</span>
+matriz = [[linha <span class="op">*</span> coluna <span class="kw">para</span> coluna <span class="kw">em</span> <span class="num">1</span>..<span class="num">3</span>]
+          <span class="kw">para</span> linha <span class="kw">em</span> <span class="num">1</span>..<span class="num">3</span>]
+
+<span class="cm"># Exibir a matriz</span>
+<span class="kw">para</span> linha <span class="kw">em</span> matriz
+    escrever(linha)
+
+<span class="cm"># Resultado:</span>
+<span class="cm"># [1, 2, 3]</span>
+<span class="cm"># [2, 4, 6]</span>
+<span class="cm"># [3, 6, 9]</span></code></pre>
+</div>
+</details>
+</div>
+</section>
+
+<div class="nav-modulos">
+<a href="/tutorial_m3" class="anterior">&larr; Modulo 3</a>
+<button class="check-mod" id="btn-concluir">&#10003;</button>
+<a href="/tutorial_m5" class="proximo">Modulo 5 &rarr;</a>
+</div>
+</main>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'simplipt_tutorial_progress';
+  function carregar() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch(e) { return {} } }
+  function salvar(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)) } catch(e) {} }
+
+  var btn = document.getElementById('btn-concluir');
+  if (btn) {
+    var prog = carregar();
+    if (prog.m4) btn.classList.add('marcado');
+    btn.addEventListener('click', function() {
+      var p = carregar();
+      p.m4 = !p.m4;
+      salvar(p);
+      this.classList.toggle('marcado');
+    });
+  }
+
+  var sidebar = document.querySelector('.aula-sidebar');
+  if (sidebar) {
+    var links = sidebar.querySelectorAll('.indice a');
+    var titles = [];
+    links.forEach(function(a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) titles.push({ el: el, link: a });
+    });
+    function onScroll() {
+      var found = false;
+      for (var i = titles.length - 1; i >= 0; i--) {
+        var rect = titles[i].el.getBoundingClientRect();
+        if (rect.top <= 120) {
+          links.forEach(function(l) { l.classList.remove('ativo'); });
+          titles[i].link.classList.add('ativo');
+          found = true; break;
+        }
+      }
+      if (!found && links.length) { links.forEach(function(l) { l.classList.remove('ativo'); }); links[0].classList.add('ativo'); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

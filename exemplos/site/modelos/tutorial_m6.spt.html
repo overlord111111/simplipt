@@ -1,0 +1,195 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="aula">
+<aside class="aula-sidebar">
+<a href="/tutorial" class="voltar">&larr; Voltar</a>
+<h4>Modulo 6</h4>
+<ul class="indice">
+<li><a href="#intro" class="ativo">Introdução</a></li>
+<li><a href="#aula1">Servidor Web</a></li>
+<li><a href="#aula2">Rotas e Parametros</a></li>
+<li><a href="#aula3">Templates</a></li>
+<li><a href="#aula4">APIs JSON</a></li>
+<li><a href="#aula5">HTMX Helpers</a></li>
+<li><a href="#exercicios">Exercicios</a></li>
+</ul>
+</aside>
+
+<main class="aula-content">
+<div class="cabecalho">
+<div class="bread"><a href="/tutorial">Tutorial</a> / Modulo 6</div>
+<h1>Modulo 6: Web</h1>
+<p>Crie sites e APIs com o servidor embutido do SimpliPT.</p>
+</div>
+
+<section class="secao" id="intro">
+<h2>Introdução</h2>
+<p>Por que web? O SimpliPT tem um servidor HTTP embutido. Zero configuração. O modulo <code class="inline-code">servidor</code> permite criar sites e APIs em poucas linhas, sem precisar instalar Flask, Express ou qualquer outra dependência.</p>
+</section>
+
+<section class="secao" id="aula1">
+<h2>Servidor Web</h2>
+<p>Para começar, use o modulo <code class="inline-code">servidor</code> e defina rotas com <code class="inline-code">servidor.rota()</code>. Cada rota recebe um metodo HTTP, um caminho e uma função que processa a requisição.</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code><span class="kw">usar</span> servidor
+
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/"</span>, fn(req)
+    retornar <span class="str">"Ola, mundo!"</span>
+fim)
+
+servidor.iniciar(<span class="num">3000</span>)</code></pre>
+</div>
+
+<p>Acesse <code class="inline-code">http://localhost:3000</code> no navegador e veja o resultado. Simples assim.</p>
+</section>
+
+<section class="secao" id="aula2">
+<h2>Rotas e Parametros</h2>
+<p>Você pode definir rotas para qualquer metodo HTTP: <code class="inline-code">GET</code>, <code class="inline-code">POST</code>, <code class="inline-code">PUT</code>, <code class="inline-code">DELETE</code>. Use <code class="inline-code">:id</code> na URL para capturar parametros dinâmicos.</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code>servidor.rota(<span class="str">"GET"</span>, <span class="str">"/ola/:nome"</span>, fn(req)
+    retornar <span class="str">"Ola, "</span> + req.params.pegar(<span class="str">"nome"</span>)
+fim)
+
+servidor.rota(<span class="str">"POST"</span>, <span class="str">"/dados"</span>, fn(req)
+    retornar <span class="str">"Recebido!"</span>
+fim)</code></pre>
+</div>
+
+<p>Use <code class="inline-code">req.params.pegar("chave")</code> para acessar os valores extraídos da URL.</p>
+</section>
+
+<section class="secao" id="aula3">
+<h2>Templates</h2>
+<p>Para criar paginas HTML completas, configure uma pasta de templates com <code class="inline-code">servidor.modelos("pasta")</code> e renderize com <code class="inline-code">servidor.html()</code>.</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code>servidor.modelos(<span class="str">"modelos"</span>)
+
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/pagina"</span>, fn(req)
+    retornar servidor.html(<span class="str">"exemplo.spt.html"</span>, {
+        titulo: <span class="str">"Minha Pagina"</span>,
+        itens: [<span class="str">"A"</span>, <span class="str">"B"</span>, <span class="str">"C"</span>]
+    })
+fim)</code></pre>
+</div>
+
+<p>No template, use <code class="inline-code">{{ titulo }}</code> para variaveis e loops com <code class="inline-code">{% para item em itens %} ... {% fim %}</code>. O SimpliPT suporta cabecalho, condicionais e inclusao de arquivos.</p>
+</section>
+
+<section class="secao" id="aula4">
+<h2>APIs JSON</h2>
+<p>Retornar um dicionario de dados converte automaticamente para JSON. Use <code class="inline-code">req.corpo</code> para acessar dados enviados pelo cliente.</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code>mensagens = []
+
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/mensagens"</span>, fn(req)
+    retornar mensagens
+fim)
+
+servidor.rota(<span class="str">"POST"</span>, <span class="str">"/mensagens"</span>, fn(req)
+    mensagens.adicionar(req.corpo)
+    retornar { sucesso: verdadeiro }
+fim)</code></pre>
+</div>
+
+<p>Perfeito para construir APIs REST rápidas.</p>
+</section>
+
+<section class="secao" id="aula5">
+<h2>HTMX Helpers</h2>
+<p>O template engine do SimpliPT fornece helpers <code class="inline-code">htmx.*</code> para gerar HTML com atributos HTMX — frontend dinâmico sem JavaScript. Eles estão disponíveis <strong>dentro dos templates</strong> (<code>.spt.html</code>), sem necessidade de importação.</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code><span class="cm">&lt;!-- Disponivel em qualquer template .spt.html --&gt;</span>
+&#123;&#123; htmx.botao(<span class="str">"Carregar"</span>, <span class="str">"/dados"</span>, <span class="str">"get"</span>, <span class="str">"#alvo"</span>) &#125;&#125;
+&#123;&#123; htmx.link(<span class="str">"Clique aqui"</span>, <span class="str">"/pagina"</span>, <span class="str">"get"</span>, <span class="str">"#conteudo"</span>) &#125;&#125;
+&#123;&#123; htmx.input_texto(<span class="str">"nome"</span>, <span class="str">"/buscar"</span>, <span class="str">"change"</span>, <span class="str">"#resultados"</span>) &#125;&#125;
+&#123;&#123; htmx.formulario(<span class="str">"/enviar"</span>, <span class="str">"post"</span>) &#125;&#125;
+&#123;&#123; htmx.mostrar(<span class="str">"/status"</span>, <span class="str">"5"</span>) &#125;&#125;
+&#123;&#123; htmx.deletar(<span class="str">"/item/1"</span>, <span class="str">"#lista"</span>, <span class="str">"Tem certeza?"</span>) &#125;&#125;</code></pre>
+</div>
+
+<p>Cada helper gera HTML puro com os atributos <code>hx-*</code>. Basta incluir o script HTMX via CDN no cabecalho. Veja a <a href="/docs#htmx">documentação completa</a> para a lista de todos os helpers e seus parametros.</p>
+</section>
+
+<section class="secao" id="exercicios">
+<h2>Exercicios</h2>
+<p>Abra o <a href="/playground" target="_blank">Playground</a> e resolva:</p>
+
+<div class="exercicio">
+<h3>1. Ola, Mundo!</h3>
+<p>Crie uma rota <code class="inline-code">GET /</code> que retorna <strong>"Ola, Mundo!"</strong>.</p>
+</div>
+
+<div class="exercicio">
+<h3>2. Saudacao Personalizada</h3>
+<p>Crie uma rota <code class="inline-code">GET /saudar/:nome</code> que retorna <strong>"Ola, {nome}!"</strong> usando <code class="inline-code">req.params</code>.</p>
+</div>
+
+<div class="exercicio">
+<h3>3. Pagina com Template</h3>
+<p>Crie uma rota que renderiza um template HTML com uma lista de itens usando loop <code class="inline-code">{% para %}</code>.</p>
+</div>
+
+<div class="exercicio">
+<h3>4. Desafio: API de Tarefas</h3>
+<p>Construa uma API REST de tarefas com <code class="inline-code">GET /tarefas</code> (listar) e <code class="inline-code">POST /tarefas</code> (criar). Use um vetor para armazenar os dados em memoria.</p>
+</div>
+</section>
+
+<div class="nav-modulos">
+<a href="/tutorial_m5" class="anterior">&larr; Modulo 5</a>
+<button class="check-mod" id="btn-concluir">&#10003;</button>
+<a href="/tutorial_m7" class="proximo">Modulo 7 &rarr;</a>
+</div>
+</main>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'simplipt_tutorial_progress';
+  function carregar() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch(e) { return {} } }
+  function salvar(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)) } catch(e) {} }
+  var btn = document.getElementById('btn-concluir');
+  if (btn) {
+    var prog = carregar();
+    if (prog.m6) btn.classList.add('marcado');
+    btn.addEventListener('click', function() {
+      var p = carregar();
+      p.m6 = !p.m6;
+      salvar(p);
+      this.classList.toggle('marcado');
+    });
+  }
+  var sidebar = document.querySelector('.aula-sidebar');
+  if (sidebar) {
+    var links = sidebar.querySelectorAll('.indice a');
+    var titles = [];
+    links.forEach(function(a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) titles.push({ el: el, link: a });
+    });
+    function onScroll() {
+      var found = false;
+      for (var i = titles.length - 1; i >= 0; i--) {
+        var rect = titles[i].el.getBoundingClientRect();
+        if (rect.top <= 120) {
+          links.forEach(function(l) { l.classList.remove('ativo'); });
+          titles[i].link.classList.add('ativo');
+          found = true; break;
+        }
+      }
+      if (!found && links.length) { links.forEach(function(l) { l.classList.remove('ativo'); }); links[0].classList.add('ativo'); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

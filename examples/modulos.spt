@@ -1,0 +1,10 @@
+usar sistema
+usar arquivos
+
+info = sistema.info()
+falar "Sistema: " + info.sistema
+falar "Hostname: " + info.hostname
+
+arquivos.escrever("teste.txt", "Olá, SimpliPT!")
+conteudo = arquivos.ler("teste.txt")
+falar "Arquivo: " + conteudo

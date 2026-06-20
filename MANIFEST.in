@@ -1,0 +1,2 @@
+recursive-include modelos *.spt.html *.css
+recursive-include src *.spt.html *.css

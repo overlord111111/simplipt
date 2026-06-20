@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>{% se tipo == "play" %}Playground{% senao %}Editando {{ nome }}{% fim %} — SimpliPT IDE</title>
+<link rel="stylesheet" href="/_admin/estatico/ide.css">
+</head>
+<body>
+<div class="topo">
+    <a href="/_admin/" class="logo">&#x2B21; SimpliPT</a>
+    <a href="/_admin/">Inicio</a>
+    {% se tipo != "play" %}
+    <a href="/_admin/executar/{{ nome }}">Executar</a>
+    {% fim %}
+    <a href="/_admin/playground">Playground</a>
+    <div class="spacer"></div>
+    <div class="info-bar"><span>v5.1</span></div>
+</div>
+<div class="conteudo">
+    {% se tipo == "play" %}
+    <div class="grade">
+        <div class="cartao">
+            <h2>Codigo</h2>
+            <p class="subtitulo"><span class="tecla">Ctrl</span>+<span class="tecla">Enter</span> para executar</p>
+            <textarea id="playCode" name="codigo">{{ codigo }}</textarea>
+            <div class="barra-status">
+                <span>Linhas: <strong id="playLinhas">1</strong></span>
+                <button class="btn btn-primario" id="playExecutar" style="margin-left:auto">Executar</button>
+            </div>
+        </div>
+        <div class="cartao">
+            <h2>Saida</h2>
+            <div id="playSaida" class="saida-box tipo-info">Clique em Executar para rodar o codigo</div>
+        </div>
+    </div>
+    <script>
+    var code = document.getElementById('playCode');
+    var saida = document.getElementById('playSaida');
+    function execPlay() {
+        saida.className = 'saida-box tipo-info';
+        saida.textContent = 'Executando...';
+        fetch('/_admin/playground', {
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'codigo=' + encodeURIComponent(code.value)
+        }).then(function(r){return r.text()}).then(function(html){
+            var m = html.match(/<(?:pre|div)\s+class="saida-box[^"]*"[^>]*>([\s\S]*?)<\/(?:pre|div)>/);
+            if (m) {
+                var txt = m[1].replace(/<[^>]+>/g,'').trim();
+                if (html.indexOf('tipo-erro')>-1) saida.className = 'saida-box tipo-erro';
+                else saida.className = 'saida-box tipo-saida';
+                saida.textContent = txt || '(sem saida)';
+            } else { saida.className = 'saida-box tipo-erro'; saida.textContent = 'Erro ao processar'; }
+        })["catch"](function(e){ saida.className = 'saida-box tipo-erro'; saida.textContent = 'Erro: ' + e; });
+    }
+    document.getElementById('playExecutar').addEventListener('click', execPlay);
+    code.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); execPlay(); }
+    });
+    code.addEventListener('input', function(){
+        document.getElementById('playLinhas').textContent = this.value.split('\n').length;
+    });
+    document.getElementById('playLinhas').textContent = code.value.split('\n').length;
+    </script>
+    {% senao %}
+    <div class="cartao">
+        <h2>Editando: {{ nome }}</h2>
+        <p class="subtitulo"><span class="tecla">Ctrl</span>+<span class="tecla">S</span> para salvar</p>
+        <form action="/_admin/salvar/{{ nome }}" method="POST" id="editorForm">
+            <textarea name="codigo" id="codigoEditor">{{ codigo }}</textarea>
+            <div class="barra-status">
+                <span>Linhas: <strong id="edLinhas">1</strong></span>
+                <span>Tamanho: <strong id="edTamanho">0 B</strong></span>
+            </div>
+            <div class="acoes">
+                <button type="submit" class="btn btn-primario">Salvar</button>
+                <a href="/_admin/executar/{{ nome }}" class="btn btn-azul">Executar</a>
+                <a href="/_admin/" class="btn btn-cinza">Voltar</a>
+                <button type="button" class="btn btn-perigo" onclick="if(confirm('Deletar {{ nome }}?')){var f=document.createElement('form');f.method='POST';f.action='/_admin/deletar/{{ nome }}';document.body.appendChild(f);f.submit()}">Deletar</button>
+            </div>
+        </form>
+    </div>
+    <script>
+    var ed = document.getElementById('codigoEditor');
+    ed.addEventListener('keydown', function(e){
+        if (e.key === 's' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); document.getElementById('editorForm').submit(); }
+    });
+    function stats(){
+        var l = ed.value.split('\n').length;
+        var b = new TextEncoder().encode(ed.value).length;
+        document.getElementById('edLinhas').textContent = l;
+        document.getElementById('edTamanho').textContent = b < 1024 ? b + ' B' : (b/1024).toFixed(1) + ' KB';
+    }
+    ed.addEventListener('input', stats);
+    stats();
+    </script>
+    {% fim %}
+</div>
+<div class="rodape">SimpliPT v5.1 — Linguagem em portugues</div>
+</body>
+</html>

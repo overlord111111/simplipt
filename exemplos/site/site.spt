@@ -1,0 +1,119 @@
+usar servidor
+usar sistema
+
+caminho = sistema.caminho_atual()
+pasta_site = caminho + "/exemplos/site"
+
+servidor.estatico("/estatico", pasta_site + "/estatico")
+servidor.modelos(pasta_site + "/modelos")
+
+fn pagina(nome, ctx)
+    ctx.pagina = nome
+    retornar servidor.html(nome + ".spt.html", ctx)
+fim
+
+servidor.rota("GET", "/", fn(req)
+    retornar pagina("index", {titulo: "SimpliPT — Linguagem em Portugues"})
+fim)
+
+servidor.rota("GET", "/docs", fn(req)
+    retornar pagina("docs", {titulo: "Documentacao — SimpliPT"})
+fim)
+
+servidor.rota("GET", "/exemplos", fn(req)
+    retornar pagina("exemplos", {titulo: "Exemplos — SimpliPT"})
+fim)
+
+servidor.rota("GET", "/htmx-demo", fn(req)
+    retornar pagina("htmx_demo", {titulo: "HTMX Demo — SimpliPT"})
+fim)
+
+servidor.rota("GET", "/api/hora", fn(req)
+    usar data
+    retornar {hora: data.agora()}
+fim)
+
+servidor.rota("GET", "/api/status", fn(req)
+    retornar "<span style='color:var(--accent)'>&#9679; Online</span>"
+fim)
+
+servidor.rota("GET", "/api/eco", fn(req)
+    texto = req.params.pegar("texto")
+    retornar "Voce digitou: " + (texto se texto senao "(vazio)")
+fim)
+
+servidor.rota("GET", "/sobre", fn(req)
+    retornar pagina("sobre", {titulo: "Sobre — SimpliPT"})
+fim)
+
+# ─── TUTORIAL ───
+servidor.rota("GET", "/tutorial", fn(req)
+    retornar pagina("tutorial", {titulo: "Tutorial — SimpliPT"})
+fim)
+
+fn criar_rota_modulo(num)
+    dados = [
+        {n: "Fundamentos", d: "Variaveis, tipos, operadores, textos"},
+        {n: "Controle de Fluxo", d: "Condicoes, loops, match/case"},
+        {n: "Funcoes", d: "Criar, parametros, retorno, escopo"},
+        {n: "Dados", d: "Listas, dicionarios, ranges, listcomp"},
+        {n: "Arquivos e Erros", d: "Tentar/capturar, ler/escrever, JSON"},
+        {n: "Web", d: "Servidor, rotas, templates, APIs"},
+        {n: "Banco de Dados", d: "SQLite com banco.modelo(), CRUD"},
+        {n: "Alem dos Limites", d: "Classes, async, CLI, build, pacotes"}
+    ]
+    mod = dados[num-1]
+    pasta = "tutorial_m" + texto(num)
+    servidor.rota("GET", "/" + pasta, fn(req)
+        ctx = {
+            titulo: "Modulo " + texto(num) + ": " + mod.n + " — SimpliPT",
+            modulo: num,
+            total_modulos: 8,
+            nome_modulo: mod.n,
+            desc_modulo: mod.d
+        }
+        retornar pagina(pasta, ctx)
+    fim)
+fim
+
+criar_rota_modulo(1); criar_rota_modulo(2); criar_rota_modulo(3); criar_rota_modulo(4)
+criar_rota_modulo(5); criar_rota_modulo(6); criar_rota_modulo(7); criar_rota_modulo(8)
+
+servidor.rota("GET", "/playground", fn(req)
+    retornar pagina("playground", {titulo: "Playground — SimpliPT"})
+fim)
+
+servidor.rota("GET", "/tutorial_projetos", fn(req)
+    retornar pagina("tutorial_projetos", {titulo: "Projetos Finais — SimpliPT"})
+fim)
+
+# ─── API TUTORIAL ───
+servidor.rota("POST", "/api/executar", fn(req)
+    se req.corpo eh nada
+        retornar {saida: "Nenhum codigo enviado."}
+    fim
+    se tipo(req.corpo) eh "dict"
+        codigo = req.corpo.codigo se req.corpo.codigo senao ""
+    senao
+        codigo = req.corpo
+    fim
+    tentar
+        resultado = servidor.codigo(codigo)
+        retornar {saida: resultado}
+    capturar
+        retornar {saida: "Erro ao executar codigo"}
+    fim
+fim)
+
+servidor.rota("GET", "/api/modulo_atual", fn(req)
+    retornar {modulo: req.params.pegar("m", "0")}
+fim)
+
+falar "=== SimpliPT Site ==="
+falar "http://localhost:3000"
+falar servidor.iniciar(3000)
+falar "Servidor rodando. Pressione Ctrl+C para parar."
+
+enquanto verdadeiro
+    pausa 1
+fim

@@ -1,0 +1,64 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="page-header">
+<div class="inner">
+<h1>&#9889; HTMX + SimpliPT</h1>
+<p>Frontend interativo sem JavaScript. Tudo gerado pelo template engine.</p>
+</div>
+</div>
+
+<section>
+<div class="inner">
+
+<div class="cards">
+
+<div class="card">
+<span class="icon">&#128640;</span>
+<h3>Carregar Dados</h3>
+<p>Clique no botão para carregar a hora atual do servidor sem recarregar a página.</p>
+<div style="margin-top:1rem">
+{{ htmx.botao("Carregar hora", "/api/hora", "get", "#hora-resultado", "primario") }}
+<div id="hora-resultado" style="margin-top:.5rem;font-family:var(--mono);font-size:.9rem;color:var(--text2)"></div>
+</div>
+</div>
+
+<div class="card">
+<span class="icon">&#9679;</span>
+<h3>Status Automático</h3>
+<p>Esta área atualiza sozinha a cada 5 segundos — sem JavaScript.</p>
+<div style="margin-top:1rem">
+<div hx-get="/api/status" hx-trigger="every 5s" style="background:var(--surface);padding:1rem;border-radius:var(--radius);border:1px solid var(--border)"></div>
+</div>
+</div>
+
+<div class="card">
+<span class="icon">&#128221;</span>
+<h3>Formulário ao Vivo</h3>
+<p>Digite no campo — o resultado aparece sem submit.</p>
+<div style="margin-top:1rem">
+<input type="text" name="texto" placeholder="Digite algo..." hx-get="/api/eco" hx-trigger="keyup delay:300ms" hx-target="#eco-resultado" hx-include="closest div" style="width:100%;padding:.6rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text)">
+<div id="eco-resultado" style="margin-top:.5rem;font-family:var(--mono);font-size:.85rem;color:var(--text2)"></div>
+</div>
+</div>
+
+</div>
+
+<div class="code-block" style="margin-top:2rem">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT + HTMX</span></div>
+<pre><code><span class="cm">&#123;% raw %}&#123;% incluir "cabecalho.spt.html" %}&#123;% endraw %&#125;</span>
+
+<span class="cm">&lt;!-- Botão que carrega dados via GET --&gt;</span>
+&#123;&#123; <span class="fn">htmx.botao</span>(<span class="str">"Carregar hora"</span>, <span class="str">"/api/hora"</span>, <span class="str">"get"</span>, <span class="str">"#resultado"</span>) &#125;&#125;
+
+<span class="cm">&lt;!-- Polling automático a cada 5s --&gt;</span>
+&lt;div <span class="kw">hx-get</span>=<span class="str">"/api/status"</span> <span class="kw">hx-trigger</span>=<span class="str">"every 5s"</span>&gt;&lt;/div&gt;
+
+<span class="cm">&lt;!-- Input com debounce --&gt;</span>
+&lt;input <span class="kw">hx-get</span>=<span class="str">"/api/eco"</span> <span class="kw">hx-trigger</span>=<span class="str">"keyup delay:300ms"</span>
+       <span class="kw">hx-target</span>=<span class="str">"#eco"</span>&gt;</code></pre>
+</div>
+
+</div>
+</section>
+
+{% incluir "rodape.spt.html" %}

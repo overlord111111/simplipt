@@ -1,0 +1,252 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="page-header">
+<div class="inner">
+<h1>Exemplos</h1>
+<p>Código real que você pode copiar, colar e rodar.</p>
+</div>
+</div>
+
+<section>
+<div class="inner">
+
+<h2 style="margin-top:0">API REST com SQLite</h2>
+<p class="sub">Um CRUD completo de tarefas com servidor web e banco: listar, criar, deletar e atualizar.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">api_tarefas.spt</span></div>
+<pre><code><span class="kw">usar</span> servidor
+<span class="kw">usar</span> json
+<span class="kw">usar</span> arquivos
+
+ARQUIVO = <span class="str">"tarefas.json"</span>
+
+<span class="kw">fn</span> carregar()
+    se arquivos.existe(ARQUIVO)
+        retornar json.arquivo(ARQUIVO)
+    fim
+    retornar []
+fim
+
+<span class="kw">fn</span> salvar(lista)
+    json.salvar(ARQUIVO, lista)
+fim
+
+<span class="cm"># GET /tarefas — lista todas</span>
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/tarefas"</span>, <span class="kw">fn</span>(req)
+    retornar carregar()
+fim)
+
+<span class="cm"># POST /tarefas — cria uma</span>
+servidor.rota(<span class="str">"POST"</span>, <span class="str">"/tarefas"</span>, <span class="kw">fn</span>(req)
+    se req.corpo eh nada <span class="kw">ou</span> req.corpo.titulo eh nada
+        retornar {erro: <span class="str">"JSON invalido"</span>}
+    fim
+    tarefas = carregar()
+    ultimo = 0
+    <span class="kw">para</span> t <span class="kw">em</span> tarefas
+        se t.id > ultimo
+            ultimo = t.id
+        fim
+    fim
+    nova = {id: ultimo + 1, titulo: req.corpo.titulo, concluido: falso}
+    tarefas = tarefas + [nova]
+    salvar(tarefas)
+    retornar {ok: verdadeiro, tarefa: nova}
+fim)
+
+<span class="kw">falar</span> servidor.iniciar(3000)</code></pre>
+</div>
+
+<h2 style="margin-top:3rem">Template String + Loop</h2>
+<p class="sub">Interpolação de texto com <span class="inline-code">{expressao}</span> dentro de strings e iteração sobre listas.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">template.spt</span></div>
+<pre><code><span class="kw">usar</span> servidor
+
+<span class="kw">fn</span> montar_lista(itens)
+    html = <span class="str">"&lt;ul&gt;"</span>
+    <span class="kw">para</span> i <span class="kw">em</span> itens
+        html = html + <span class="str">"&lt;li&gt;{i.nome}&lt;/li&gt;"</span>
+    fim
+    html = html + <span class="str">"&lt;/ul&gt;"</span>
+    retornar html
+fim
+
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/"</span>, <span class="kw">fn</span>(req)
+    dados = [{nome: <span class="str">"Alice"</span>}, {nome: <span class="str">"Bob"</span>}, {nome: <span class="str">"Carlos"</span>}]
+    retornar montar_lista(dados)
+fim)
+
+falar servidor.iniciar(3000)</code></pre>
+</div>
+
+<h2 style="margin-top:3rem">Ternário em Expressão</h2>
+<p class="sub">Condicional inline que funciona em qualquer lugar: atribuição, argumento, lista, dict.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">ternario.spt</span></div>
+<pre><code><span class="cm"># Ternário em atribuição</span>
+status = <span class="str">"ativo"</span> se idade >= 18 <span class="kw">senao</span> <span class="str">"inativo"</span>
+
+<span class="cm"># Ternário dentro de chamada de função</span>
+falar dobro(10 se 5 > 3 <span class="kw">senao</span> 0)
+
+<span class="cm"># Ternário dentro de lista</span>
+itens = [1 se falso <span class="kw">senao</span> 2, 3 se verdadeiro <span class="kw">senao</span> 4]
+<span class="cm"># Resultado: [2, 3]</span>
+
+<span class="cm"># Ternário em list comprehension</span>
+pares = [n se n % 2 eh 0 <span class="kw">senao</span> 0 <span class="kw">para</span> n <span class="kw">em</span> [1,2,3,4]]
+<span class="cm"># Resultado: [0, 2, 0, 4]</span>
+
+<span class="cm"># Ternário dentro de dicionário</span>
+d = {valor: 10 se teste <span class="kw">senao</span> 0}
+
+<span class="cm"># Ternário aninhado</span>
+r = <span class="str">"A"</span> se nota >= 9 <span class="kw">senao</span> <span class="str">"B"</span> se nota >= 7 <span class="kw">senao</span> <span class="str">"C"</span></code></pre>
+</div>
+
+<h2 style="margin-top:3rem">Orientação a Objetos</h2>
+<p class="sub">Classes completas com construtor, métodos, herança e super.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">classes.spt</span></div>
+<pre><code><span class="kw">classe</span> Animal
+    construtor(nome)
+        este.nome = nome
+    fim
+    metodo falar()
+        retornar <span class="str">"..."</span>
+    fim
+fim
+
+<span class="kw">classe</span> Cachorro extende Animal
+    construtor(nome, raca)
+        super(nome)
+        este.raca = raca
+    fim
+    metodo falar()
+        retornar <span class="str">"Au au! Sou {este.nome}"</span>
+    fim
+fim
+
+rex = novo Cachorro(<span class="str">"Rex"</span>, <span class="str">"Vira-lata"</span>)
+falar rex.falar()  <span class="cm"># "Au au! Sou Rex"</span></code></pre>
+</div>
+
+<h2 style="margin-top:3rem">Tipagem Opcional</h2>
+<p class="sub">Declare tipos para variáveis com validação automática em runtime.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">tipagem.spt</span></div>
+<pre><code>nome: texto = <span class="str">"João"</span>
+idade: inteiro = 25
+altura: numero = 1.75
+ativo: booleano = verdadeiro
+nada_ai: nada = nada
+
+<span class="cm"># Erro: tipo incompatível em runtime</span>
+<span class="cm"># x: inteiro = "texto" → RuntimeError</span></code></pre>
+</div>
+
+<h2 style="margin-top:3rem">Modo Debug</h2>
+<p class="sub">Execute scripts passo a passo com breakpoints, inspeção de variáveis e avaliação de expressões.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">terminal</span></div>
+<pre><code><span class="cm"># Modo debug interativo</span>
+simplipt --debug script.spt
+
+<span class="cm"># Com breakpoints nas linhas 10 e 42</span>
+simplipt --debug -b 10,42 script.spt
+
+<span class="cm"># Comandos do debugger:</span>
+<span class="cm">#  (enter)   Próxima linha (passo)</span>
+<span class="cm">#  c         Continuar até próximo breakpoint</span>
+<span class="cm">#  v         Mostrar variáveis do escopo atual</span>
+<span class="cm">#  p 2 + 2   Avaliar expressão SimpliPT</span>
+<span class="cm">#  l         Listar código fonte ao redor</span>
+<span class="cm">#  q         Encerrar execução</span></code></pre>
+</div>
+
+<h2 style="margin-top:3rem">Build + Executável</h2>
+<p class="sub">Compile seu script SimpliPT para um arquivo portátil .pyz ou um executável .exe standalone.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">terminal</span></div>
+<pre><code><span class="cm"># Compilar para zipapp (portátil, precisa de Python)</span>
+simplipt build app.spt
+<span class="cm"># Cria: app.pyz</span>
+python app.pyz
+
+<span class="cm"># Compilar para .exe (standalone, sem Python)</span>
+pip install pyinstaller
+simplipt build --exe app.spt
+<span class="cm"># Cria: dist/app.exe</span>
+dist/app.exe</code></pre>
+</div>
+
+<h2 style="margin-top:3rem">Modo Estrito (Strict)</h2>
+<p class="sub">Checagem estática de tipos antes de executar o script. Útil para CI e desenvolvimento.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">terminal</span></div>
+<pre><code><span class="cm"># testar.spt</span>
+nome: texto = <span class="str">"João"</span>
+idade: inteiro = <span class="str">"vinte"</span>  <span class="cm"># Erro!</span>
+
+<span class="cm"># Verificar sem executar</span>
+simplipt --strict testar.spt
+<span class="cm"># Saída:</span>
+<span class="cm">#   Tipo incompativel em 'idade': declarado como 'inteiro', valor é 'texto'</span></code></pre>
+</div>
+
+<h2 style="margin-top:3rem">Hot-Reload no Servidor</h2>
+<p class="sub">Desenvolva servidores web com recarga automática ao salvar o arquivo.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">servidor_hot.spt</span></div>
+<pre><code><span class="kw">usar</span> servidor
+
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/"</span>, <span class="kw">fn</span>(req)
+    retornar <span class="str">"Hello! Recarregue esta pagina apos editar"</span>
+fim)
+
+falarm servidor.iniciar(3000)
+<span class="cm"># Rode com: simplipt --hot servidor_hot.spt</span>
+<span class="cm"># Edite o arquivo → rotas recarregam automaticamente</span></code></pre>
+</div>
+
+<h2 style="margin-top:3rem">HTMX Interativo</h2>
+<p class="sub">Botões, formulários e atualizações automáticas com <span class="inline-code">htmx.*</span> helpers do template engine — sem JavaScript.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">htmx_demo.spt.html</span></div>
+<pre><code><span class="cm">&lt;!-- Botão com helper htmx --&gt;</span>
+&#123;&#123; <span class="fn">htmx.botao</span>(<span class="str">"Carregar"</span>, <span class="str">"/api/dados"</span>, <span class="str">"get"</span>, <span class="str">"#alvo"</span>) &#125;&#125;
+
+<span class="cm">&lt;!-- Deletar com confirmação --&gt;</span>
+&#123;&#123; <span class="fn">htmx.deletar</span>(<span class="str">"/api/item/1"</span>, <span class="str">"#lista"</span>, <span class="str">"Tem certeza?"</span>) &#125;&#125;
+
+<span class="cm">&lt;!-- Input com debounce inline --&gt;</span>
+&lt;input name=<span class="str">"q"</span> <span class="kw">hx-get</span>=<span class="str">"/api/buscar"</span>
+       <span class="kw">hx-trigger</span>=<span class="str">"keyup delay:300ms"</span>
+       <span class="kw">hx-target</span>=<span class="str">"#resultados"</span>&gt;
+
+<span class="cm">&lt;!-- Polling automático com helper --&gt;</span>
+&#123;&#123; <span class="fn">htmx.mostrar</span>(<span class="str">"/api/status"</span>, <span class="str">"5"</span>) &#125;&#125;</code></pre>
+</div>
+<p><a href="/htmx-demo" class="primario" style="display:inline-block;margin-top:.5rem">Ver demonstração ao vivo &#8594;</a></p>
+
+<h2 style="margin-top:3rem">Pipe Operator</h2>
+<p class="sub">Encadeie chamadas de funções com <span class="inline-code">|&gt;</span> para código mais limpo.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">pipe.spt</span></div>
+<pre><code><span class="kw">fn</span> dobrar(n) retornar n * 2 fim
+<span class="kw">fn</span> adicionar(n) retornar n + 10 fim
+<span class="kw">fn</span> fmt(n) retornar <span class="str">"Resultado: {n}"</span> fim
+
+<span class="cm"># Sem pipe:</span>
+falar fmt(adicionar(dobrar(5)))  <span class="cm"># Resultado: 20</span>
+
+<span class="cm"># Com pipe (mais legível):</span>
+falar 5 |&gt; dobrar |&gt; adicionar |&gt; fmt
+<span class="cm"># Resultado: "Resultado: 20"</span></code></pre>
+</div>
+
+</div>
+</section>
+
+{% incluir "rodape.spt.html" %}

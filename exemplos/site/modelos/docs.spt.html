@@ -1,0 +1,612 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="page-header">
+<div class="inner">
+<h1>Documentação</h1>
+<p>Referência completa da linguagem SimpliPT.</p>
+</div>
+</div>
+
+<div class="docs-grid">
+
+<div class="docs-sidebar">
+<h4>Linguagem</h4>
+<a href="#sintaxe">Sintaxe</a>
+<a href="#variaveis">Variáveis</a>
+<a href="#tipagem">Tipagem</a>
+<a href="#condicionais">Condicionais</a>
+<a href="#loops">Loops</a>
+<a href="#funcoes">Funções</a>
+<a href="#classes">Classes</a>
+<a href="#listas">Listas</a>
+<a href="#dicionarios">Dicionários</a>
+<a href="#ternario">Ternário</a>
+<a href="#template">Template Strings</a>
+<a href="#pipe">Pipe</a>
+<a href="#compreensao">List Comprehension</a>
+<a href="#corresponder">Corresponder</a>
+<a href="#erros">Tratamento de Erros</a>
+<a href="#garantir">Garantir</a>
+<a href="#modulos">Módulos</a>
+<a href="#debug">Modo Debug</a>
+<a href="#build">Build</a>
+<a href="#strict">Modo Estrito</a>
+<a href="#profile">Profiling</a>
+<a href="#json">JSON Mode</a>
+<a href="#hot">Hot-Reload</a>
+<a href="#test">Test Runner</a>
+<a href="#scaffold">Scaffolding</a>
+<a href="#async">Async/Await</a>
+<a href="#debugweb">Debugger Web</a>
+<a href="#extmod">Módulos Externos</a>
+<a href="#htmx">HTMX</a>
+<a href="#lsp">LSP</a>
+<a href="#vscode">VS Code</a>
+</div>
+
+<div class="docs-content">
+
+<h2 id="sintaxe">Sintaxe</h2>
+<p>SimpliPT usa indentação e palavras em português. Cada linha é uma instrução. Blocos são delimitados por <span class="inline-code">fim</span>.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Comentário</span>
+x = 10
+se x > 5
+    falar <span class="str">"maior"</span>
+fim</code></pre>
+</div>
+
+<h2 id="tipagem">Tipagem Opcional</h2>
+<p>Declare tipos opcionais com <span class="inline-code">nome: tipo = valor</span>. Tipos disponíveis: <span class="inline-code">texto</span>, <span class="inline-code">inteiro</span>, <span class="inline-code">numero</span>, <span class="inline-code">booleano</span>, <span class="inline-code">nada</span>, <span class="inline-code">lista</span>, <span class="inline-code">dicionario</span>.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code>nome: texto = <span class="str">"João"</span>
+idade: inteiro = 25
+altura: numero = 1.75
+ativo: booleano = verdadeiro
+
+<span class="cm"># Erro de tipo em tempo de execução</span>
+x: inteiro = <span class="str">"texto"</span>  <span class="cm"># Runtime: incompatível</span></code></pre>
+</div>
+
+<h2 id="variaveis">Variáveis</h2>
+<p>Tipagem dinâmica. Atribuição com <span class="inline-code">=</span>, atribuição composta com <span class="inline-code">+=</span> e <span class="inline-code">-=</span>.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code>nome = <span class="str">"João"</span>
+idade = 25
+preco = 19.99
+ativo = verdadeiro
+nulo = nada
+lista = [1, 2, 3]
+dict = {chave: valor}
+
+<span class="cm"># Atribuição composta</span>
+x += 5
+y -= 3
+
+<span class="cm"># Acesso seguro a dict (retorna nada se chave não existe)</span>
+d = {}
+falar d.chave  <span class="cm"># nada</span></code></pre>
+</div>
+
+<h2 id="condicionais">Condicionais</h2>
+<p><span class="inline-code">se</span>, <span class="inline-code">senao</span>, comparadores <span class="inline-code">é</span>, <span class="inline-code">não é</span>, <span class="inline-code">&gt;</span>, <span class="inline-code">&lt;</span>, <span class="inline-code">&gt;=</span>, <span class="inline-code">&lt;=</span>, operadores <span class="inline-code">e</span>, <span class="inline-code">ou</span>, <span class="inline-code">nao</span>.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code>se idade >= 18 e tem_carteira
+    falar <span class="str">"Pode dirigir"</span>
+senao se idade >= 16
+    falar <span class="str">"Pode aprender"</span>
+senao
+    falar <span class="str">"Muito novo"</span>
+fim
+
+se nome nao é <span class="str">""</span>
+    falar <span class="str">"Ola, {nome}"</span>
+fim</code></pre>
+</div>
+
+<h2 id="loops">Loops</h2>
+<p>Três tipos de loop: <span class="inline-code">para...ate</span>, <span class="inline-code">para...em</span>, <span class="inline-code">enquanto</span>.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Para...ate (1 a N inclusive)</span>
+para i ate 5
+    falar i
+fim  <span class="cm"># 1 2 3 4 5</span>
+
+<span class="cm"># Para...em (iterar coleção)</span>
+para item em [10, 20, 30]
+    falar item
+fim
+
+<span class="cm"># Enquanto</span>
+x = 0
+enquanto x < 5
+    x = x + 1
+fim</code></pre>
+</div>
+
+<h2 id="funcoes">Funções</h2>
+<p>Funções nomeadas e anônimas. <span class="inline-code">fn</span> é atalho para <span class="inline-code">funcao</span>.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Função nomeada</span>
+fn somar(a, b)
+    retornar a + b
+fim
+
+<span class="cm"># Função anônima (inline)</span>
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/"</span>, fn(req)
+    retornar <span class="str">"OK"</span>
+fim)
+
+<span class="cm"># Função sem retorno retorna nada</span>
+fn log(msg)
+    falar <span class="str">"[LOG] {msg}"</span>
+fim</code></pre>
+</div>
+
+<h2 id="classes">Classes</h2>
+<p>Orientação a objetos completa com construtor, métodos, herança e super.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code>classe Veiculo
+    construtor(marca)
+        este.marca = marca
+    fim
+    metodo info()
+        retornar <span class="str">"Marca: {este.marca}"</span>
+    fim
+fim
+
+classe Carro extende Veiculo
+    construtor(marca, modelo)
+        super(marca)
+        este.modelo = modelo
+    fim
+    metodo info()
+        retornar super() + <span class="str">", Modelo: {este.modelo}"</span>
+    fim
+fim
+
+meu = novo Carro(<span class="str">"Honda"</span>, <span class="str">"Civic"</span>)
+falar meu.info()</code></pre>
+</div>
+
+<h2 id="listas">Listas</h2>
+<p>Listas dinâmicas com suporte a indexação e concatenação.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code>nums = [10, 20, 30]
+falar nums[0]      <span class="cm"># 10</span>
+nums = nums + [40] <span class="cm"># Concatena</span>
+falar tamanho(nums) <span class="cm"># 4</span>
+nums[1] = 25       <span class="cm"># Modifica</span></code></pre>
+</div>
+
+<h2 id="dicionarios">Dicionários</h2>
+<p>Chaves podem ser texto ou identificador. Acesso via <span class="inline-code">.</span> (ponto) ou <span class="inline-code">[]</span>.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code>pessoa = {nome: <span class="str">"João"</span>, idade: 30, <span class="str">"cargo"</span>: <span class="str">"Dev"</span>}
+falar pessoa.nome     <span class="cm"># "João"</span>
+falar pessoa.cargo    <span class="cm"># "Dev"</span>
+falar pessoa.inexiste <span class="cm"># nada (seguro)</span>
+pessoa.idade = 31</code></pre>
+</div>
+
+<h2 id="ternario">Ternário</h2>
+<p>Condicional inline. Funciona em <strong>qualquer expressão</strong>: atribuição, argumento de função, lista, dicionário, list comprehension.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Sintaxe: &lt;valor se condicao senao fallback&gt;</span>
+status = <span class="str">"aprovado"</span> se nota >= 7 <span class="kw">senao</span> <span class="str">"reprovado"</span>
+
+<span class="cm"># Pode aninhar</span>
+r = <span class="str">"A"</span> se nota >= 9 <span class="kw">senao</span> <span class="str">"B"</span> se nota >= 7 <span class="kw">senao</span> <span class="str">"C"</span></code></pre>
+</div>
+
+<h2 id="template">Template Strings</h2>
+<p>Dentro de strings com aspas duplas, use <span class="inline-code">{expressão}</span> para interpolar valores.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code>nome = <span class="str">"Mundo"</span>
+falar <span class="str">"Olá, {nome}!"</span>       <span class="cm"># "Olá, Mundo!"</span>
+falar <span class="str">"2 + 2 = {2 + 2}"</span>  <span class="cm"># "2 + 2 = 4"</span>
+
+<span class="cm"># Aspas simples não interpolam</span>
+falar <span class="str">'Olá, {nome}!'</span>       <span class="cm"># "Olá, {nome}!" (literal)</span></code></pre>
+</div>
+
+<h2 id="pipe">Pipe Operator</h2>
+<p>Encadeie chamadas de funções com <span class="inline-code">|&gt;</span> para código mais legível.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Sem pipe: de dentro pra fora</span>
+falar formatar(ordenar(filtrar(lista)))
+
+<span class="cm"># Com pipe: esquerda pra direita</span>
+lista |&gt; filtrar |&gt; ordenar |&gt; formatar |&gt; falar</code></pre>
+</div>
+
+<h2 id="compreensao">List Comprehension</h2>
+<p>Crie listas transformando e filtrando elementos em uma linha.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># [expressao para var em colecao se filtro]</span>
+pares = [x * 2 para x em [1,2,3,4,5] se x % 2 eh 0]
+<span class="cm"># Resultado: [4, 8]</span>
+
+<span class="cm"># Com ternário dentro</span>
+itens = [n se n > 0 <span class="kw">senao</span> 0 para n em [-1, 0, 1, 2]]
+<span class="cm"># Resultado: [0, 0, 1, 2]</span></code></pre>
+</div>
+
+<h2 id="corresponder">Corresponder (Match/Case)</h2>
+<p>Equivalente ao switch/case de outras linguagens.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code>corresponder status
+    caso 200
+        falar <span class="str">"OK"</span>
+    caso 404
+        falar <span class="str">"Não encontrado"</span>
+    caso 500
+        falar <span class="str">"Erro interno"</span>
+    senao
+        falar <span class="str">"Desconhecido"</span>
+fim</code></pre>
+</div>
+
+<h2 id="erros">Tratamento de Erros</h2>
+<p>Capture e trate exceções com <span class="inline-code">tentar...capturar</span>.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code>tentar
+    resultado = 10 / 0
+capturar erro
+    falar <span class="str">"Erro: {erro}"</span>
+fim</code></pre>
+</div>
+
+<h2 id="debug">Modo Debug</h2>
+<p>Execute scripts passo a passo, inspecione variáveis e avalie expressões com o depurador embutido.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Terminal</span>
+simplipt --debug script.spt
+simplipt --debug -b 10,42 script.spt
+
+<span class="cm"># Comandos do debugger:</span>
+<span class="cm">#  (enter)  Próxima linha</span>
+<span class="cm">#  s        Passo (step)</span>
+<span class="cm">#  c        Continuar</span>
+<span class="cm">#  v        Ver variáveis</span>
+<span class="cm">#  p 2 + 2  Avaliar expressão</span>
+<span class="cm">#  l        Ver código fonte</span>
+<span class="cm">#  q        Sair</span></code></pre>
+</div>
+
+<h2 id="build">Build (Compilar)</h2>
+<p>Compile scripts SimpliPT para executáveis portáteis sem precisar do Python instalado.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Criar zipapp portátil (.pyz)</span>
+simplipt build script.spt
+
+<span class="cm"># Criar executável Windows (.exe) — requer PyInstaller</span>
+simplipt build --exe script.spt
+
+<span class="cm"># Executar o .pyz</span>
+python script.pyz
+
+<span class="cm"># O .exe é standalone — não precisa de Python</span>
+dist/script.exe</code></pre>
+</div>
+
+<h2 id="strict">Modo Estrito (--strict)</h2>
+<p>Checagem estática de tipos <strong>sem executar</strong> o script. Útil para encontrar erros antes do runtime, em CI/CD ou editores.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Verificar tipos sem rodar</span>
+simplipt --strict script.spt
+
+<span class="cm"># Exemplo: vai acusar erro de tipo</span>
+<span class="cm"># script.spt:</span>
+nome: texto = 123      <span class="cm"># Erro: declarado como 'texto', valor é 'inteiro'</span>
+idade: inteiro = <span class="str">"vinte"</span>  <span class="cm"># Erro: incompatível</span></code></pre>
+</div>
+<p>O analisador infere tipos de literais (texto, número, booleano, lista, dict, nada) e ternários, verificando compatibilidade com as anotações.</p>
+
+<h2 id="profile">Profiling (--profile)</h2>
+<p>Meça o desempenho do seu script com <span class="inline-code">--profile</span>. Cada função é cronometrada individualmente, mostrando tempo total e contagem de chamadas.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Rodar com profiling</span>
+simplipt --profile script.spt
+
+<span class="cm"># Relatório no final:</span>
+<span class="cm"># Funcao         Chamadas   Tempo (s)    %</span>
+<span class="cm"># ----------------------------------------</span>
+<span class="cm"># processar      500        2.3450      78.2</span>
+<span class="cm"># carregar       1          0.4321      14.4</span>
+<span class="cm"># salvar         1          0.2219       7.4</span>
+<span class="cm"># ----------------------------------------</span>
+<span class="cm"># TOTAL                     2.9990     100.00</span></code></pre>
+</div>
+
+<h2 id="json">JSON Mode (--json)</h2>
+<p>Execute scripts com saída estruturada em JSON. Útil para integrar SimpliPT com outras ferramentas, CI/CD ou editores.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Saída JSON</span>
+simplipt --json script.spt
+
+<span class="cm"># Exemplo de saída:</span>
+{<span class="str">"sucesso"</span>: verdadeiro, <span class="str">"saida"</span>: <span class="str">"Olá!\n"</span>, <span class="str">"erro"</span>: nulo}</code></pre>
+</div>
+<p>Em caso de erro, retorna <span class="inline-code">tipo_erro</span> (sintaxe/runtime/interno) e a saída parcial capturada até o momento do erro.</p>
+
+<h2 id="hot">Hot-Reload (--hot)</h2>
+<p>Desenvolvimento de servidores web sem restartar o processo. O SimpliPT monitora o arquivo .spt e recarrega as rotas automaticamente ao salvar.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Iniciar servidor com hot-reload</span>
+simplipt --hot server.spt
+
+<span class="cm"># Agora edite server.spt — as rotas recarregam sozinhas</span>
+<span class="cm"># sem precisar parar e iniciar o servidor</span></code></pre>
+</div>
+<p>O método <span class="inline-code">servidor.vigiar(caminho)</span> também pode ser chamado diretamente no código. Ele monitora o arquivo em uma thread separada (polling a cada 1s) e recarrega as rotas automaticamente.</p>
+
+<h2 id="test">Test Runner (simplipt test)</h2>
+<p>Execute scripts .spt como testes. O runner varre o diretório recursivamente, executa cada arquivo e reporta o resultado.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Rodar todos os testes no diretório atual</span>
+simplipt test
+
+<span class="cm"># Rodar testes em diretório específico</span>
+simplipt test testes/
+
+<span class="cm"># Modo verbose com tempos</span>
+simplipt test -v
+
+<span class="cm"># Exemplo de saída:</span>
+<span class="cm"># Rodando 3 teste(s)...</span>
+<span class="cm">#   PASS  test_math.spt (0.002s)</span>
+<span class="cm">#   FAIL  test_db.spt</span>
+<span class="cm">#       Garantia falhou: conexao deve existir</span>
+<span class="cm">#   PASS  test_api.spt (0.151s)</span>
+<span class="cm">#</span>
+<span class="cm"># Resultado: 2/3 passaram, 1 falhou</span></code></pre>
+</div>
+<p>Dica: use <span class="inline-code">garantir()</span> dentro dos scripts de teste para validações. Qualquer exceção não capturada conta como FAIL.</p>
+
+<h2 id="scaffold">Scaffolding (simplipt new)</h2>
+<p>Crie projetos completos com um comando. Gera estrutura de diretórios, CRUD com servidor web + banco SQLite + templates HTML.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Criar projeto</span>
+simplipt new blog
+
+<span class="cm"># Estrutura gerada:</span>
+<span class="cm">#   blog/</span>
+<span class="cm">#     main.spt          — CRUD + servidor + banco</span>
+<span class="cm">#     modelos/</span>
+<span class="cm">#       index.spt.html   — template com lista + formulário</span>
+<span class="cm">#     estatico/</span>
+<span class="cm">#       style.css        — tema dark profissional</span>
+
+<span class="cm"># Rodar</span>
+<span class="cm"># cd blog && simplipt main.spt</span></code></pre>
+</div>
+<p>O template gerado inclui: servidor web na porta 3000, SQLite, API REST (GET/POST), interface HTML com formulário e lista, CSS dark moderno.</p>
+
+<h2 id="async">Async/Await</h2>
+<p>Funções assíncronas com <span class="inline-code">async funcao</span> e <span class="inline-code">esperar</span>. Usa asyncio do Python por baixo para I/O concorrente.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Declarar função assíncrona</span>
+async funcao buscar_dados(id)
+    <span class="cm"># Simula I/O demorado</span>
+    pausa 0.1
+    retornar {id: id, nome: <span class="str">"Item {id}"</span>}
+fim
+
+<span class="cm"># Chamar com esperar</span>
+async funcao main()
+    resultado = esperar buscar_dados(42)
+    falar resultado.nome
+fim
+
+<span class="cm"># Executar</span>
+esperar main()</code></pre>
+</div>
+
+<h2 id="debugweb">Debugger Web</h2>
+<p>Interface gráfica no navegador para depurar scripts SimpliPT passo a passo.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Iniciar debugger web</span>
+simplipt debug [--porta 5000] [diretorio]
+
+<span class="cm"># Abre no navegador: http://localhost:5000</span>
+<span class="cm"># Interface com:</span>
+<span class="cm"># — Sidebar com scripts .spt do diretório</span>
+<span class="cm"># — Botões: Iniciar, Passo, Continuar, Parar</span>
+<span class="cm"># — Destaque da linha atual no código</span>
+<span class="cm"># — Painel de variáveis e pilha de chamadas</span>
+<span class="cm"># — Avaliador de expressões em tempo real</span></code></pre>
+</div>
+
+<h2 id="extmod">Módulos Externos</h2>
+<p>Instale pacotes Python e use como módulos SimpliPT. O sistema baixa o pacote via pip e cria um proxy automático.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Instalar pacote Python como módulo SimpliPT</span>
+simplipt modulo install requests
+
+<span class="cm"># Usar no código</span>
+usar requests
+resposta = requests.get(<span class="str">"https://api.exemplo.com"</span>)
+falar resposta.status_code
+
+<span class="cm"># Listar módulos instalados</span>
+simplipt modulo listar
+
+<span class="cm"># Instalar com nome diferente</span>
+simplipt modulo install beautifulsoup4 bs4</code></pre>
+</div>
+
+<h2 id="htmx">HTMX — Frontend Interativo</h2>
+<p>O template engine do SimpliPT inclui helpers <span class="inline-code">htmx.*</span> que geram HTML com atributos htmx — frontend dinâmico sem JavaScript.</p>
+<p>Basta incluir o script htmx via CDN no cabeçalho (já incluso no template padrão) e usar os helpers nos seus <span class="inline-code">.spt.html</span>.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm">&#123;% raw %}&#123;% incluir "cabecalho.spt.html" %}&#123;% endraw %&#125;</span>
+
+<span class="cm">&lt;!-- Botão que faz GET e coloca resultado em #alvo --&gt;</span>
+&#123;&#123; <span class="fn">htmx.botao</span>(<span class="str">"Carregar"</span>, <span class="str">"/api/dados"</span>, <span class="str">"get"</span>, <span class="str">"#alvo"</span>) &#125;&#125;
+
+<span class="cm">&lt;!-- Link que faz POST --&gt;</span>
+&#123;&#123; <span class="fn">htmx.link</span>(<span class="str">"Salvar"</span>, <span class="str">"/api/salvar"</span>, <span class="str">"post"</span>, <span class="str">"#msg"</span>) &#125;&#125;
+
+<span class="cm">&lt;!-- Botão de deletar com confirmação --&gt;</span>
+&#123;&#123; <span class="fn">htmx.deletar</span>(<span class="str">"/api/item/1"</span>, <span class="str">"#lista"</span>, <span class="str">"Tem certeza?"</span>) &#125;&#125;
+
+<span class="cm">&lt;!-- Input que valida ao sair do campo (blur) --&gt;</span>
+&#123;&#123; <span class="fn">htmx.input_texto</span>(<span class="str">"email"</span>, <span class="str">"/api/validar"</span>, <span class="str">"blur"</span>, <span class="str">"#erro"</span>) &#125;&#125;
+
+<span class="cm">&lt;!-- Área que atualiza sozinha a cada 5s --&gt;</span>
+&#123;&#123; <span class="fn">htmx.mostrar</span>(<span class="str">"/api/status"</span>, <span class="str">"5"</span>) &#125;&#125;
+
+<span class="cm">&lt;!-- Formulário que envia via POST --&gt;</span>
+&#123;&#123; <span class="fn">htmx.formulario</span>(<span class="str">"/api/cadastrar"</span>) &#125;&#125;
+    &lt;input name="nome"&gt;
+    &lt;button&gt;Enviar&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+</div>
+
+<h3>Helpers disponíveis</h3>
+<table class="mod-table">
+<tr><th>Helper</th><th>Descrição</th></tr>
+<tr><td><span class="inline-code">botao(texto, url, metodo?, alvo?, classe?, extras?)</span></td><td>Gera &lt;button&gt; com atributo hx-{metodo}</td></tr>
+<tr><td><span class="inline-code">link(texto, url, metodo?, alvo?, classe?, extras?)</span></td><td>Gera &lt;a&gt; com atributo hx-{metodo}</td></tr>
+<tr><td><span class="inline-code">input_texto(nome, url, gatilho?, alvo?, classe?)</span></td><td>Gera &lt;input&gt; com hx-post e hx-trigger</td></tr>
+<tr><td><span class="inline-code">formulario(url, metodo?, alvo?, enctype?, classe?)</span></td><td>Gera &lt;form&gt; com hx-{metodo}</td></tr>
+<tr><td><span class="inline-code">mostrar(url, intervalo_segundos?, metodo?, alvo?, classe?)</span></td><td>Gera &lt;div&gt; com polling automático</td></tr>
+<tr><td><span class="inline-code">enviar(url, metodo?, alvo?, gatilho?)</span></td><td>Botão "Enviar" para submissão</td></tr>
+<tr><td><span class="inline-code">deletar(url, alvo?, confirmacao?, classe?)</span></td><td>Botão deletar com confirmação opcional</td></tr>
+<tr><td><span class="inline-code">carregar(url, alvo, modo?, classe?)</span></td><td>Carrega HTML no alvo ao clicar</td></tr>
+</table>
+
+<p>Parâmetros com <code>?</code> são opcionais. Os helpers geram HTML puro — você pode inspecionar os atributos no navegador ou complementar com outros atributos estáticos.</p>
+
+<h2 id="lsp">Servidor LSP</h2>
+<p>Integração com editores via Language Server Protocol. Fornece diagnóstico em tempo real, autocomplete, informações ao passar o mouse e lista de símbolos do documento.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Iniciar servidor LSP (stdin/stdout)</span>
+simplipt lsp
+
+<span class="cm"># Use com VS Code, Neovim, Emacs, ou qualquer editor LSP</span></code></pre>
+</div>
+<p>Funcionalidades do LSP:</p>
+<ul>
+<li><strong>Diagnóstico</strong> — erros de sintaxe e léxico em tempo real ao digitar</li>
+<li><strong>Completion</strong> — palavras-chave (se, para, funcao, etc.) e módulos stdlib</li>
+<li><strong>Hover</strong> — descrição de palavras-chave e definições do documento</li>
+<li><strong>Document Symbols</strong> — lista de funções, variáveis e classes definidas</li>
+</ul>
+
+<h2 id="vscode">Extensão VS Code</h2>
+<p>Extensão oficial do SimpliPT para VS Code na pasta <span class="inline-code">vscode-simplipt/</span>.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Instalar localmente:</span>
+<span class="cm"># 1. Abrir VS Code</span>
+<span class="cm"># 2. Extensões (Ctrl+Shift+X) → ... → Install from VSIX</span>
+<span class="cm"># 3. Ou copiar vscode-simplipt/ para ~/.vscode/extensions/</span></code></pre>
+</div>
+<p>Recursos da extensão:</p>
+<ul>
+<li><strong>Syntax Highlight</strong> — 7 categorias de tokens com cores distintas</li>
+<li><strong>20 Snippets</strong> — se, para, funcao, rota, servidor, ternário, classe, etc.</li>
+<li><strong>Hover</strong> — descrição de palavras-chave ao passar o mouse</li>
+<li><strong>Comandos</strong> — Run, Dashboard, Format, Start LSP pelo Command Palette</li>
+<li><strong>Language Config</strong> — auto-fechamento de brackets, folding markers</li>
+</ul>
+
+<h2 id="garantir">Garantir (Assert)</h2>
+<p>Verifique condições com <span class="inline-code">garantir(condicao, "mensagem")</span>. Lança <span class="inline-code">ErroRuntime</span> se a condição for falsa. Ideal para pré-condições, pós-condições e testes.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code><span class="cm"># Sintaxe básica</span>
+x = 10
+garantir(x > 0, <span class="str">"x deve ser positivo"</span>)
+
+<span class="cm"># Mensagem opcional (mostra a expressão se omitida)</span>
+garantir(x &lt; 100)
+
+<span class="cm"># Útil em funções</span>
+fn dividir(a, b)
+    garantir(b != 0, <span class="str">"divisor nao pode ser zero"</span>)
+    retornar a / b
+fim</code></pre>
+</div>
+
+<h2 id="banco-modelo">banco.modelo() — ORM</h2>
+<p>Crie um ORM automático a partir de um schema. O banco cria a tabela e retorna um objeto com métodos CRUD.</p>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div></div>
+<pre><code>usar banco
+
+banco.conectar(<span class="str">"app.db"</span>)
+
+<span class="cm"># Definir schema → tabela + ORM automático</span>
+Usuario = banco.modelo(<span class="str">"usuarios"</span>, {nome: <span class="str">"texto"</span>, idade: <span class="str">"inteiro"</span>})
+
+<span class="cm"># CRUD sem escrever SQL</span>
+id = Usuario.criar(nome: <span class="str">"João"</span>, idade: 30)
+u = Usuario.buscar(id)
+Usuario.atualizar(id, idade: 31)
+todos = Usuario.todos()
+Usuario.deletar(id)
+total = Usuario.contar()</code></pre>
+</div>
+<p>Tipos suportados no schema: <span class="inline-code">texto</span>, <span class="inline-code">inteiro</span>, <span class="inline-code">real</span>, <span class="inline-code">booleano</span>, <span class="inline-code">binario</span>. O campo <span class="inline-code">id</span> é criado automaticamente.</p>
+
+<h2 id="modulos">Módulos</h2>
+<p>Use <span class="inline-code">usar</span> para carregar qualquer módulo da stdlib.</p>
+
+<table class="mod-table">
+<tr><th>Módulo</th><th>O que faz</th></tr>
+<tr><td>sistema</td><td>Variáveis de ambiente, caminhos, info do sistema</td></tr>
+<tr><td>arquivos</td><td>Ler, escrever, copiar, deletar, listar arquivos e pastas</td></tr>
+<tr><td>json</td><td>Ler, gerar, salvar e carregar JSON</td></tr>
+<tr><td>http</td><td>Requisições GET/POST para APIs externas</td></tr>
+<tr><td>servidor</td><td>Servidor web completo: rotas, HTML, sessões, estáticos, templates</td></tr>
+<tr><td>banco</td><td>SQLite: criar tabelas, inserir, buscar, atualizar, deletar, transações</td></tr>
+<tr><td>cache</td><td>Cache temporário com expiração automática (TTL)</td></tr>
+<tr><td>fila</td><td>Fila de tarefas com workers em background</td></tr>
+<tr><td>data</td><td>Data/hora atual, timestamps, diferença entre datas</td></tr>
+<tr><td>matematica</td><td>Raiz quadrada, aleatório, PI, arredondar, min/max</td></tr>
+<tr><td>regex</td><td>Buscar, substituir, dividir texto com expressões regulares</td></tr>
+<tr><td>hashes</td><td>MD5, SHA1, SHA256</td></tr>
+<tr><td>config</td><td>Configuração persistente em arquivo</td></tr>
+<tr><td>http_cliente</td><td>Cliente HTTP avançado com headers, timeout</td></tr>
+<tr><td>processo</td><td>Executar comandos do sistema</td></tr>
+<tr><td>navegador</td><td>Abrir URLs no navegador padrão</td></tr>
+<tr><td>template</td><td>Motor de templates .spt.html (compila para Python)</td></tr>
+<tr><td>executar</td><td>Executar código SimpliPT de dentro do SimpliPT (meta)</td></tr>
+</table>
+
+</div>
+</div>
+
+{% incluir "rodape.spt.html" %}

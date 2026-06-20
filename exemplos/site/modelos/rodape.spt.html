@@ -1,0 +1,70 @@
+<footer>
+<div class="inner">
+<div class="links">
+<a href="/">Inicio</a>
+<a href="/docs">Documentacao</a>
+<a href="/exemplos">Exemplos</a>
+<a href="/sobre">Sobre</a>
+</div>
+<p>SimpliPT &mdash; Interpretador em Python &middot; Zero dependencias &middot; MIT License</p>
+</div>
+</footer>
+
+<script>
+(function() {
+  // Docs sidebar: highlight active section on scroll
+  var sidebar = document.querySelector('.docs-sidebar');
+  if (sidebar) {
+    var links = sidebar.querySelectorAll('a');
+    var titles = [];
+    links.forEach(function(a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) titles.push({ el: el, link: a });
+    });
+    function onScroll() {
+      var found = false;
+      for (var i = titles.length - 1; i >= 0; i--) {
+        var rect = titles[i].el.getBoundingClientRect();
+        if (rect.top <= 120) {
+          links.forEach(function(l) { l.classList.remove('ativo'); });
+          titles[i].link.classList.add('ativo');
+          found = true;
+          break;
+        }
+      }
+      if (!found && links.length) {
+        links.forEach(function(l) { l.classList.remove('ativo'); });
+        links[0].classList.add('ativo');
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // Copy buttons for code blocks
+  document.querySelectorAll('.code-block .bar').forEach(function(bar) {
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'Copiar';
+    bar.appendChild(btn);
+    var pre = bar.nextElementSibling;
+    btn.addEventListener('click', function() {
+      var code = pre ? pre.textContent : '';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code);
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = code; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+      }
+      btn.textContent = 'Copiado!';
+      btn.classList.add('copiado');
+      setTimeout(function() { btn.textContent = 'Copiar'; btn.classList.remove('copiado'); }, 2000);
+    });
+  });
+})();
+</script>
+</body>
+</html>

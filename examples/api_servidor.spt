@@ -1,0 +1,18 @@
+usar servidor
+usar json
+
+usuarios = [
+    { id: 1, nome: "Jarbs" },
+    { id: 2, nome: "Over" },
+]
+
+servidor.rota("GET", "/", funcao(req)
+    retornar { api: "SimpliPT", versao: "0.2" }
+fim)
+
+servidor.rota("GET", "/usuarios", funcao(req)
+    retornar usuarios
+fim)
+
+falar "Servidor iniciando em http://localhost:3000"
+servidor.iniciar(3000)

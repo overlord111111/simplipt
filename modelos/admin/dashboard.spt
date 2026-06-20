@@ -1,0 +1,84 @@
+usar servidor
+usar arquivos
+usar sistema
+
+# Config: diretorio dos scripts .spt
+diretorio_spt = sistema.caminho_atual()
+
+# Dashboard templates
+modelos_dir = diretorio_spt + "/modelos/admin"
+servidor.modelos(modelos_dir)
+servidor.estatico("/_admin/estatico", modelos_dir + "/estatico")
+
+# Home - list .spt files
+servidor.rota("GET", "/_admin/", fn(req)
+    todos = arquivos.listar(diretorio_spt)
+    spt = []
+    para arq em todos
+        se arq.endswith(".spt")
+            spt = spt + [arq]
+        fim
+    fim
+    retornar servidor.html("index.spt.html", {"arquivos": spt, "total": tamanho(spt)})
+fim)
+
+# Editor
+servidor.rota("GET", "/_admin/editar/:nome", fn(req)
+    caminho = diretorio_spt + "/" + req.params.nome
+    conteudo = ""
+    se arquivos.existe(caminho)
+        conteudo = arquivos.ler(caminho)
+    fim
+    retornar servidor.html("editor.spt.html", {"nome": req.params.nome, "codigo": conteudo})
+fim)
+
+# Save
+servidor.rota("POST", "/_admin/salvar/:nome", fn(req)
+    caminho = diretorio_spt + "/" + req.params.nome
+    codigo = "nada"
+    se req.formulario
+        codigo = req.formulario.codigo
+    fim
+    arquivos.escrever(caminho, codigo)
+    retornar servidor.html("executar.spt.html", {"nome": req.params.nome, "saida": "Arquivo salvo!"})
+fim)
+
+# Create
+servidor.rota("POST", "/_admin/criar", fn(req)
+    nome = req.formulario.nome se req.formulario senao "novo.spt"
+    se nao nome.endswith(".spt")
+        nome = nome + ".spt"
+    fim
+    caminho = diretorio_spt + "/" + nome
+    se nao arquivos.existe(caminho)
+        arquivos.escrever(caminho, 'falar "Ola, mundo!"\n')
+    fim
+    retornar servidor.html("executar.spt.html", {"nome": nome, "saida": "Arquivo criado: " + nome})
+fim)
+
+# Execute
+servidor.rota("GET", "/_admin/executar/:nome", fn(req)
+    caminho = diretorio_spt + "/" + req.params.nome
+    se arquivos.existe(caminho)
+        conteudo = arquivos.ler(caminho)
+        saida = servidor.codigo(conteudo)
+    senao
+        saida = "Arquivo nao encontrado: " + req.params.nome
+    fim
+    retornar servidor.html("executar.spt.html", {"nome": req.params.nome, "saida": saida})
+fim)
+
+# Redirect root to admin
+servidor.rota("GET", "/", fn(req)
+    retornar servidor.html("executar.spt.html", {"nome": "SimpliPT", "saida": "Bem-vindo ao SimpliPT! Dashboard em /_admin/"})
+fim)
+
+falar "=== SimpliPT IDE ==="
+falar "Dashboard: http://localhost:8080/_admin/"
+falar "===================="
+falar servidor.iniciar()
+
+# Keep alive
+enquanto servidor.rodando()
+    pausa(1)
+fim

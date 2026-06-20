@@ -1,0 +1,13 @@
+funcao saudacao(nome)
+    falar "Olá, " + nome
+fim
+
+saudacao("Jarbs")
+saudacao("Over")
+
+funcao soma(a, b)
+    retornar a + b
+fim
+
+resultado = soma(3, 4)
+falar "3 + 4 = " + resultado

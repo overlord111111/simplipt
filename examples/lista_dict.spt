@@ -1,0 +1,11 @@
+numeros = [1, 2, 3, 4, 5]
+falar "Primeiro: " + numeros[0]
+falar "Último: " + numeros[4]
+
+pessoa = { nome: "Jarbs", idade: 27, ativo: verdadeiro }
+falar "Nome: " + pessoa.nome
+falar "Idade: " + pessoa.idade
+
+se pessoa.ativo
+    falar "Usuário ativo"
+fim

@@ -1,0 +1,444 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="aula">
+<aside class="aula-sidebar">
+<a href="/tutorial" class="voltar">&larr; Voltar</a>
+<h4>Modulo 8</h4>
+<ul class="indice">
+<li><a href="#intro" class="ativo">Introducao</a></li>
+<li><a href="#aula1">Classes</a></li>
+<li><a href="#aula2">Async</a></li>
+<li><a href="#aula3">CLI e Build</a></li>
+<li><a href="#aula4">Pacotes</a></li>
+<li><a href="#exercicios">Exercicios</a></li>
+</ul>
+</aside>
+
+<main class="aula-content">
+<div class="cabecalho">
+<div class="bread"><a href="/tutorial">Tutorial</a> / Modulo 8</div>
+<h1>Modulo 8: Alem dos Limites</h1>
+<p>Classes, async/await, CLI, build, pacotes, debug, profiling</p>
+</div>
+
+<div class="secao" id="intro">
+<h2>Introducao</h2>
+<p>Voce chegou ao ultimo modulo do tutorial. Aqui vamos destravar o que o SimpliPT tem de mais poderoso: orientacao a objetos de verdade, programacao assincrona, ferramentas de build e publicacao de pacotes. Depois disso, voce estra pronto para construir qualquer coisa.</p>
+<p>Nao se engane pela posicao — este modulo nao e dificil, e libertador. Cada conceito aqui vai expandir seu cenario de possibilidades.</p>
+</div>
+
+<div class="secao" id="aula1">
+<h2>1. Orientacao a Objetos</h2>
+<p>SimpliPT tem suporte completo a OOP com sintaxe limpa. Tudo que voce espera de uma linguagem moderna: classes, heranca, polimorfismo.</p>
+
+<h3>Declarando uma classe</h3>
+<p>Use <code class="inline-code">classe</code> para definir, <code class="inline-code">construtor</code> para inicializar e <code class="inline-code">metodo</code> para comportamentos.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">simplipt</span></div>
+<pre><code>classe Pessoa
+  construtor(nome, idade)
+    este.nome = nome
+    este.idade = idade
+  fim
+
+  metodo apresentar()
+    retornar "Ola, sou " + este.nome
+  fim
+fim
+
+joao = Pessoa("Joao", 30)
+falar joao.apresentar()
+</code></pre>
+</div>
+
+<p>Repare no <code class="inline-code">este</code> — ele e a referencia para a instancia atual, igual ao <code class="inline-code">self</code> do Python ou <code class="inline-code">this</code> do JavaScript.</p>
+
+<h3>Heranca com <code class="inline-code">extende</code></h3>
+<p>Uma classe pode herdar todos os metodos e atributos de outra usando <code class="inline-code">extende</code>. Use <code class="inline-code">super</code> para chamar o construtor ou metodo da classe pai.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">simplipt</span></div>
+<pre><code>classe Animal
+  construtor(nome)
+    este.nome = nome
+  fim
+
+  metodo falar()
+    retornar "..."
+  fim
+fim
+
+classe Cachorro extende Animal
+  construtor(nome, raca)
+    super(nome)
+    este.raca = raca
+  fim
+
+  metodo falar()
+    retornar este.nome + " diz: Au Au!"
+  fim
+fim
+
+rex = Cachorro("Rex", "Pastor")
+falar rex.falar()
+</code></pre>
+</div>
+
+<p>O metodo <code class="inline-code">falar()</code> foi sobrescrito na classe filha. Isso e polimorfismo na pratica: cada animal pode falar de um jeito diferente, mas o codigo que chama <code class="inline-code">.falar()</code> nao precisa saber qual e o tipo concreto.</p>
+
+<div class="dica">
+<strong>Dica:</strong> Use heranca quando a relacao for "e um" (Cachorro <strong>e um</strong> Animal). Para "tem um", prefira composicao (Carro <strong>tem um</strong> Motor).
+</div>
+</div>
+
+<div class="secao" id="aula2">
+<h2>2. Async/Await</h2>
+<p>Programacao assincrona permite que seu codigo execute operacoes demoradas (chamadas de API, leitura de arquivos, consultas em banco) sem travar o programa.</p>
+
+<h3>Funcoes assincronas</h3>
+<p>Use <code class="inline-code">async funcao</code> para definir e <code class="inline-code">esperar</code> para aguardar o resultado.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">simplipt</span></div>
+<pre><code>async funcao buscar_dados(url)
+  falar "Buscando " + url + "..."
+  retornar http.obter(url)
+fim
+
+async funcao main()
+  dados = esperar buscar_dados("https://api.exemplo.com/dados")
+  falar "Recebido: " + dados
+fim
+
+esperar main()
+</code></pre>
+</div>
+
+<h3>Executando em paralelo</h3>
+<p>Use <code class="inline-code">paralelo</code> para rodar varias tarefas ao mesmo tempo e aguardar todas.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">simplipt</span></div>
+<pre><code>async funcao main()
+  resultado1, resultado2 = paralelo(
+    buscar_dados("https://api.exemplo.com/dados1"),
+    buscar_dados("https://api.exemplo.com/dados2")
+  )
+  falar "Resultado 1: " + resultado1
+  falar "Resultado 2: " + resultado2
+fim
+</code></pre>
+</div>
+
+<p>Enquanto as duas requisicoes rodam em paralelo, o programa nao bloqueia. Isso e essencial para aplicacoes que precisam de performance, como servidores web e ferramentas de linha de comando.</p>
+
+<div class="aviso">
+<strong>Atencao:</strong> <code class="inline-code">esperar</code> so pode ser usado dentro de funcoes marcadas com <code class="inline-code">async</code>. Chamar <code class="inline-code">esperar</code> fora de uma funcao async vai gerar erro.
+</div>
+</div>
+
+<div class="secao" id="aula3">
+<h2>3. CLI e Build</h2>
+<p>O SimpliPT vem com ferramentas de linha de comando para construir, depurar e analisar seus programas. Nada de configuracao complexa — um comando resolve.</p>
+
+<h3>Build gerando .pyz</h3>
+<p>Empacote seu script em um unico arquivo .pyz portatil:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt build meu_app.spt</code></pre>
+</div>
+<p>Isso gera <code class="inline-code">meu_app.pyz</code> — um arquivo que roda em qualquer maquina com Python instalado. Ideal para distribuir sem depender do SimpliPT instalado.</p>
+
+<h3>Build gerando .exe</h3>
+<p>Quer um executavel nativo do Windows? So adicionar a flag <code class="inline-code">--exe</code>:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt build --exe meu_app.spt</code></pre>
+</div>
+<p>Pronto. Voce tem um <code class="inline-code">meu_app.exe</code> que roda em qualquer maquina Windows sem nenhuma dependencia.</p>
+
+<h3>Modo Debug</h3>
+<p>Execute passo a passo para entender o fluxo do programa:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt meu_app.spt --debug</code></pre>
+</div>
+<p>O debugger mostra cada linha sendo executada, valores de variaveis e pausa a cada passo. Perfeito para encontrar bugs complicados.</p>
+
+<h3>Modo Profile</h3>
+<p>Descubra onde seu codigo esta gastando tempo:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt meu_app.spt --profile</code></pre>
+</div>
+<p>O profiler exibe uma tabela com o tempo gasto em cada funcao, numero de chamadas e tempo acumulado. Essencial para otimizar performance.</p>
+
+<h3>Web Debugger</h3>
+<p>Para uma experiencia visual completa:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt dashboard</code></pre>
+</div>
+<p>Isso abre um painel web com debugger grafico, visualizador de memoria e console interativo. Tudo rodando no seu navegador.</p>
+
+<div class="dica">
+<strong>Dica:</strong> Use <code class="inline-code">--debug</code> durante o desenvolvimento e <code class="inline-code">--profile</code> quando quiser otimizar. Sao ferramentas que todo desenvolvedor deveria ter.
+</div>
+</div>
+
+<div class="secao" id="aula4">
+<h2>4. Pacotes e Ferramentas</h2>
+<p>O ecossistema do SimpliPT tem ferramentas para gerenciar dependencias, formatar codigo, rodar testes e ate converter para Python puro.</p>
+
+<h3>Instalando pacotes</h3>
+<p>Pacotes sao bibliotecas que estendem o SimpliPT. Instale com:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt modulo install nome_do_pacote</code></pre>
+</div>
+<p>Depois de instalado, e so importar no seu codigo:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">simplipt</span></div>
+<pre><code>usar "json"
+usar "http"
+
+resposta = http.obter("https://api.github.com")
+dados = json.decodificar(resposta.corpo)
+</code></pre>
+</div>
+
+<h3>Formatador de codigo</h3>
+<p>Mantenha seu codigo limpo sem esforco:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt formatar arquivo.spt</code></pre>
+</div>
+<p>O formatador ajusta indentacao, espacos e quebras de linha seguindo as convencoes da linguagem. Rode antes de cada commit.</p>
+
+<h3>Testes</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt test</code></pre>
+</div>
+<p>Roda todos os testes do projeto. Funciona com qualquer framework de testes compatível com Python.</p>
+
+<h3>Transpilando para Python</h3>
+<p>Precisa migrar para Python puro? O SimpliPT pode converter seu codigo automaticamente:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt transpilar arquivo.spt</code></pre>
+</div>
+<p>Gera um <code class="inline-code">arquivo.py</code> equivalente, 100% legivel e pronto para ser publicado no PyPI ou integrado em projetos Python existentes.</p>
+
+<h3>Exportando para PyPI</h3>
+<p>Quer compartilhar sua biblioteca com o mundo? Crie um pacote PyPI com:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt build --pypi minha_biblioteca.spt</code></pre>
+</div>
+<p>Isso gera toda a estrutura necessaria: <code class="inline-code">setup.py</code>, <code class="inline-code">pyproject.toml</code>, pasta do modulo e ate um README basico. Depois e so publicar com <code class="inline-code">pip publish</code>.</p>
+
+<div class="dica">
+<strong>Dica:</strong> O ecossistema SimpliPT foi desenhado para ser pratico. Voce nao precisa de 5 ferramentas diferentes — um unico comando <code class="inline-code">simplipt</code> faz tudo.
+</div>
+</div>
+
+<div class="secao" id="exercicios">
+<h2>Exercicios</h2>
+<p>Abra o <a href="/playground" target="_blank">Playground</a> e resolva:</p>
+
+<div class="exercicio">
+<h4>Exercicio 1: Classe Carro</h4>
+<p>Crie uma classe <code class="inline-code">Carro</code> com atributos <code class="inline-code">marca</code>, <code class="inline-code">modelo</code>, <code class="inline-code">ano</code> e um metodo <code class="inline-code">acelerar()</code> que retornar uma string como <code class="inline-code">"Vrum! O Fusca acelerou!"</code>.</p>
+<p>Crie duas instancias com marcas diferentes e chame o metodo.</p>
+<p><a href="/playground?ex=m8-1" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">simplipt</span></div>
+<pre><code>classe Carro
+  construtor(marca, modelo, ano)
+    este.marca = marca
+    este.modelo = modelo
+    este.ano = ano
+  fim
+
+  metodo acelerar()
+    retornar "Vrum! O " + este.modelo + " acelerou!"
+  fim
+fim
+
+fusca = Carro("VW", "Fusca", 1978)
+falar fusca.acelerar()
+
+mustang = Carro("Ford", "Mustang", 2024)
+falar mustang.acelerar()
+</code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h4>Exercicio 2: Hierarquia de Funcionarios (Desafio)</h4>
+<p>Crie uma hierarquia de classes: <code class="inline-code">Funcionario</code> &rarr; <code class="inline-code">Gerente</code> e <code class="inline-code">Estagiario</code>.</p>
+<ul>
+<li><code class="inline-code">Funcionario</code>: construtor com nome e salario_base; metodo <code class="inline-code">calcular_salario()</code> que retornar o salario_base.</li>
+<li><code class="inline-code">Gerente</code>: recebe um bonus de 20% sobre o salario_base.</li>
+<li><code class="inline-code">Estagiario</code>: recebe metade do salario_base (bolsa-auxilio).</li>
+</ul>
+<p>Crie um funcionario de cada tipo e exiba os salarios.</p>
+<p><a href="/playground?ex=m8-2" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">simplipt</span></div>
+<pre><code>classe Funcionario
+  construtor(nome, salario_base)
+    este.nome = nome
+    este.salario_base = salario_base
+  fim
+
+  metodo calcular_salario()
+    retornar este.salario_base
+  fim
+fim
+
+classe Gerente extende Funcionario
+  metodo calcular_salario()
+    retornar este.salario_base * 1.2
+  fim
+fim
+
+classe Estagiario extende Funcionario
+  metodo calcular_salario()
+    retornar este.salario_base * 0.5
+  fim
+fim
+
+joao = Funcionario("Joao", 3000)
+maria = Gerente("Maria", 5000)
+ana = Estagiario("Ana", 1500)
+
+falar joao.nome + ": R$ " + joao.calcular_salario()
+falar maria.nome + ": R$ " + maria.calcular_salario()
+falar ana.nome + ": R$ " + ana.calcular_salario()
+</code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h4>Exercicio 3: Busca Assincrona</h4>
+<p>Use <code class="inline-code">async</code> e <code class="inline-code">esperar</code> para buscar dados de duas APIs diferentes em paralelo e exibir os resultados.</p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">simplipt</span></div>
+<pre><code>async funcao buscar_dados(url)
+  falar "Buscando " + url + "..."
+  dados = http.obter(url)
+  retornar dados.corpo
+fim
+
+async funcao main()
+  api1 = "https://api.exemplo.com/dados1"
+  api2 = "https://api.exemplo.com/dados2"
+
+  resultado1, resultado2 = paralelo(
+    buscar_dados(api1),
+    buscar_dados(api2)
+  )
+
+  falar "API 1: " + resultado1
+  falar "API 2: " + resultado2
+  falar "Busca concluida com sucesso!"
+fim
+
+esperar main()
+</code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h4>Exercicio 4: App CLI com Build (Desafio)</h4>
+<p>Crie um aplicativo de linha de comando que pergunta o nome do usuario e exibe uma saudacao personalizada. Depois use <code class="inline-code">simplipt build --exe</code> para gerar um executavel.</p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">simplipt</span></div>
+<pre><code># saudacao.spt
+usar data
+
+funcao main()
+  falar "=== Saudacao Personalizada ==="
+  nome = ler("Digite seu nome: ")
+  hoje = data.hoje()
+
+  falar "Ola, " + nome + "!"
+  falar "Hoje eh " + hoje
+  falar "Bem-vindo ao mundo SimpliPT!"
+fim
+
+main()
+</code></pre>
+</div>
+<p>Depois de criar o arquivo <code class="inline-code">saudacao.spt</code>, execute:</p>
+<div class="code-block">
+<div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt build --exe saudacao.spt
+./saudacao.exe</code></pre>
+</div>
+</details>
+</div>
+</div>
+
+<div class="nav-modulos">
+<a href="/tutorial_m7" class="anterior">&larr; Modulo 7</a>
+<button class="check-mod" id="btn-concluir">&#10003;</button>
+<a href="/tutorial_projetos" class="proximo">Projetos Finais &rarr;</a>
+</div>
+</main>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'simplipt_tutorial_progress';
+  function carregar() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch(e) { return {} } }
+  function salvar(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)) } catch(e) {} }
+  var btn = document.getElementById('btn-concluir');
+  if (btn) {
+    var prog = carregar();
+    if (prog.m8) btn.classList.add('marcado');
+    btn.addEventListener('click', function() {
+      var p = carregar();
+      p.m8 = !p.m8; salvar(p); this.classList.toggle('marcado');
+    });
+  }
+  var sidebar = document.querySelector('.aula-sidebar');
+  if (sidebar) {
+    var links = sidebar.querySelectorAll('.indice a');
+    var titles = [];
+    links.forEach(function(a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) titles.push({ el: el, link: a });
+    });
+    function onScroll() {
+      var found = false;
+      for (var i = titles.length - 1; i >= 0; i--) {
+        var rect = titles[i].el.getBoundingClientRect();
+        if (rect.top <= 120) {
+          links.forEach(function(l) { l.classList.remove('ativo'); });
+          titles[i].link.classList.add('ativo'); found = true; break;
+        }
+      }
+      if (!found && links.length) { links.forEach(function(l) { l.classList.remove('ativo'); }); links[0].classList.add('ativo'); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  }
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

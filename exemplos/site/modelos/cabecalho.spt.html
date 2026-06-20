@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ titulo }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/estatico/style.css">
+<script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+</head>
+<body>
+
+<nav>
+<div class="inner">
+<a href="/" class="logo">&#9889; <span>Simpli</span>PT <small>v5.2</small></a>
+<div class="links">
+<a href="/" {% se pagina == "index" %}class="ativo"{% fim %}>Inicio</a>
+<a href="/tutorial" {% se pagina[:8] == "tutorial" %}class="ativo"{% fim %}>Tutorial</a>
+<a href="/docs" {% se pagina == "docs" %}class="ativo"{% fim %}>Docs</a>
+<a href="/exemplos" {% se pagina == "exemplos" %}class="ativo"{% fim %}>Exemplos</a>
+<a href="/playground" {% se pagina == "playground" %}class="ativo"{% fim %}>Playground</a>
+<a href="/htmx-demo" {% se pagina == "htmx_demo" %}class="ativo"{% fim %}>HTMX</a>
+<a href="/sobre" {% se pagina == "sobre" %}class="ativo"{% fim %}>Sobre</a>
+</div>
+</div>
+</nav>

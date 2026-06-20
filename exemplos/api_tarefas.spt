@@ -1,0 +1,80 @@
+usar servidor
+usar json
+usar arquivos
+
+ARQUIVO = "tarefas_api.json"
+
+fn carregar()
+    se arquivos.existe(ARQUIVO)
+        retornar json.arquivo(ARQUIVO)
+    fim
+    retornar []
+fim
+
+fn salvar(lista)
+    json.salvar(ARQUIVO, lista)
+fim
+
+servidor.rota("GET", "/tarefas", fn(req)
+    retornar carregar()
+fim)
+
+servidor.rota("POST", "/tarefas", fn(req)
+    se req.corpo é nada ou req.corpo.titulo é nada
+        retornar {"erro": "JSON invalido. Envie um JSON com campo titulo"}
+    fim
+    tarefas = carregar()
+    ultimo = 0
+    para t em tarefas
+        se t.id > ultimo
+            ultimo = t.id
+        fim
+    fim
+    nova = {"id": ultimo + 1, "titulo": req.corpo.titulo, "concluido": falso}
+    tarefas = tarefas + [nova]
+    salvar(tarefas)
+    retornar {"ok": verdadeiro, "tarefa": nova}
+fim)
+
+servidor.rota("DELETE", "/tarefas/:id", fn(req)
+    id = inteiro(req.params.id)
+    tarefas = carregar()
+    novas = []
+    removida = falso
+    para t em tarefas
+        se t.id nao é id
+            novas = novas + [t]
+        senao
+            removida = verdadeiro
+        fim
+    fim
+    se removida
+        salvar(novas)
+        retornar {"ok": verdadeiro}
+    senao
+        retornar {"erro": "Tarefa nao encontrada"}
+    fim
+fim)
+
+servidor.rota("PATCH", "/tarefas/:id", fn(req)
+    id = inteiro(req.params.id)
+    tarefas = carregar()
+    alterou = falso
+    tarefa_alterada = nada
+    para t em tarefas
+        se t.id é id
+            t.concluido = nao t.concluido
+            tarefa_alterada = t
+            alterou = verdadeiro
+        fim
+    fim
+    se alterou
+        salvar(tarefas)
+        retornar {"ok": verdadeiro, "tarefa": tarefa_alterada}
+    senao
+        retornar {"erro": "Tarefa nao encontrada"}
+    fim
+fim)
+
+falar "API rodando em http://localhost:3000"
+falar servidor.iniciar(3000)

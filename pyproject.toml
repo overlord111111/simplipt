@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simplipt"
+version = "5.3.0"
+description = "Linguagem de programação em português para scripts e automação"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+authors = [
+    {name = "Over", email = "over@simplipt.dev"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Other",
+    "Topic :: Software Development :: Interpreters",
+    "Topic :: Software Development :: Code Generators",
+]
+
+[project.urls]
+Homepage = "https://simplipt.dev"
+Source = "https://github.com/overlord111111/simplipt"
+
+[project.scripts]
+simplipt = "src.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest", "build", "twine"]
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.setuptools.package-data]
+src = ["**/*.spt.html", "**/*.css"]
+modelos = ["**/*.spt.html", "**/*.css"]
+
+

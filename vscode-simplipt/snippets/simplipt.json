@@ -1,0 +1,97 @@
+{
+  "Se condicao": {
+    "prefix": ["se", "if"],
+    "body": ["se ${1:condicao}", "\t$0", "fim"],
+    "description": "Bloco se condicional"
+  },
+  "Se Senao": {
+    "prefix": ["se-senao", "if-else"],
+    "body": ["se ${1:condicao}", "\t$0", "senao", "\t", "fim"],
+    "description": "Bloco se com senao"
+  },
+  "Senao Se": {
+    "prefix": ["senao-se", "elif"],
+    "body": ["senao se ${1:condicao}", "\t$0"],
+    "description": "Else if chain"
+  },
+  "Para em": {
+    "prefix": ["para", "for"],
+    "body": ["para ${1:item} em ${2:lista}", "\t$0", "fim"],
+    "description": "Loop para em colecao"
+  },
+  "Para ate": {
+    "prefix": ["para-ate", "for-to"],
+    "body": ["para ${1:i} ate ${2:10}", "\t$0", "fim"],
+    "description": "Loop numerico"
+  },
+  "Enquanto": {
+    "prefix": ["enquanto", "while"],
+    "body": ["enquanto ${1:condicao}", "\t$0", "fim"],
+    "description": "Loop enquanto"
+  },
+  "Funcao": {
+    "prefix": ["funcao", "fn", "function"],
+    "body": ["funcao ${1:nome}(${2:params})", "\t$0", "fim"],
+    "description": "Declaracao de funcao"
+  },
+  "Funcao anonima": {
+    "prefix": ["fn-anonima", "lambda"],
+    "body": ["fn(${1:params})", "\t$0", "fim"],
+    "description": "Funcao anonima"
+  },
+  "Falar": {
+    "prefix": ["falar", "print"],
+    "body": ["falar ${1:mensagem}"],
+    "description": "Exibir mensagem"
+  },
+  "Tentar Capturar": {
+    "prefix": ["tentar", "try"],
+    "body": ["tentar", "\t$0", "capturar", "\t", "fim"],
+    "description": "Bloco tentar capturar"
+  },
+  "Usar modulo": {
+    "prefix": ["usar", "import"],
+    "body": ["usar ${1:servidor}"],
+    "description": "Importar modulo"
+  },
+  "Servidor rota": {
+    "prefix": ["servidor-rota", "rota", "route"],
+    "body": ["servidor.rota(\"${1|GET,POST,PUT,DELETE|}\", \"${2:/caminho/:param}\", fn(${3:req})", "\t$0", "fim)"],
+    "description": "Declarar rota HTTP"
+  },
+  "Servidor iniciar": {
+    "prefix": ["servidor-iniciar", "iniciar"],
+    "body": ["falar servidor.iniciar(${1:8080})"],
+    "description": "Iniciar servidor HTTP"
+  },
+  "Servidor HTML": {
+    "prefix": ["servidor-html", "html"],
+    "body": ["retornar servidor.html(\"${1:template.spt.html}\", {${2:chave}: ${3:valor}})"],
+    "description": "Renderizar template"
+  },
+  "Ternario": {
+    "prefix": ["ternario", "se-senao-expr"],
+    "body": ["${1:valor} se ${2:condicao} senao ${3:fallback}"],
+    "description": "Expressao ternaria"
+  },
+  "Classe": {
+    "prefix": ["classe", "class"],
+    "body": ["classe ${1:Nome}", "\t${2:construtor()}", "\t\t$0", "\tfim", "fim"],
+    "description": "Declaracao de classe"
+  },
+  "Lista compreensao": {
+    "prefix": ["lista-comp", "comprehension"],
+    "body": ["[${1:x} para ${2:x} em ${3:lista} se ${4:filtro}]"],
+    "description": "List comprehension"
+  },
+  "Servidor estatico": {
+    "prefix": ["servidor-estatico", "static"],
+    "body": ["servidor.estatico(\"/${1:prefixo}\", \"${2:diretorio}\")"],
+    "description": "Servir arquivos estaticos"
+  },
+  "Corresponder": {
+    "prefix": ["corresponder", "match"],
+    "body": ["corresponder ${1:valor}", "\tcaso ${2:padrao}", "\t\t$0", "fim"],
+    "description": "Match/case"
+  }
+}

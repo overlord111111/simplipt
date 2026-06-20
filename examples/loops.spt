@@ -1,0 +1,17 @@
+falar "Contando de 1 a 5:"
+para i ate 5
+    falar i
+fim
+
+falar "Iterando sobre lista:"
+itens = [10, 20, 30]
+para item em itens
+    falar "Item: " + item
+fim
+
+falar "Loop enquanto:"
+x = 1
+enquanto x <= 3
+    falar x
+    x = x + 1
+fim

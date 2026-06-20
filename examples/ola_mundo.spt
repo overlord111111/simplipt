@@ -1,0 +1,7 @@
+falar "Olá, mundo!"
+mostrar "Isso é um mostrar"
+dizer "Isso é um dizer"
+escrever "Isso é um escrever"
+
+nome = ler "Digite seu nome: "
+falar "Olá, " + nome

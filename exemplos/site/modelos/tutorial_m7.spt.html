@@ -1,0 +1,339 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="aula">
+<aside class="aula-sidebar">
+<a href="/tutorial" class="voltar">&larr; Voltar</a>
+<h4>Modulo 7</h4>
+<ul class="indice">
+<li><a href="#intro" class="ativo">Introdução</a></li>
+<li><a href="#aula1">Modelos</a></li>
+<li><a href="#aula2">Criar e Listar</a></li>
+<li><a href="#aula3">Atualizar e Deletar</a></li>
+<li><a href="#aula4">Consultas Avancadas</a></li>
+<li><a href="#aula5">API Persistente</a></li>
+<li><a href="#exercicios">Exercicios</a></li>
+</ul>
+</aside>
+
+<main class="aula-content">
+<div class="cabecalho">
+<div class="bread"><a href="/tutorial">Tutorial</a> / Modulo 7</div>
+<h1>Modulo 7: Banco de Dados</h1>
+<p>Armazene e consulte dados com SQLite e o ORM embutido do SimpliPT.</p>
+</div>
+
+<section class="secao" id="intro">
+<h2>Introdução</h2>
+<p>O que é um banco de dados? É onde você guarda informações de forma <strong>persistente</strong> — diferente de variáveis em memória que desaparecem quando o programa fecha. O SimpliPT usa <strong>SQLite</strong> embutido: zero configuração, zero instalação, o banco vive em um único arquivo <code>.db</code>.</p>
+<p>O modulo <code class="inline-code">banco</code> oferece um ORM (Object-Relational Mapping) próprio. Você define <strong>modelos</strong> que representam tabelas, e o ORM traduz chamadas de função em SQL automaticamente. Nada de escrever <code>SELECT * FROM</code> na mao.</p>
+</section>
+
+<section class="secao" id="aula1">
+<h2>Conectando e Definindo Modelos</h2>
+<p>Antes de tudo, conecte ao banco com <code class="inline-code">banco.conectar()</code>. Depois use <code class="inline-code">banco.modelo()</code> para definir a estrutura.</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code><span class="kw">usar</span> banco
+
+<span class="cm"># Conecta (cria o arquivo se não existir)</span>
+banco.conectar(<span class="str">"meu_banco.db"</span>)
+
+<span class="cm"># Define o modelo "Tarefa" na tabela "tarefas"</span>
+Tarefa = banco.modelo(<span class="str">"tarefas"</span>, {
+    titulo: <span class="str">"texto"</span>,
+    feita: <span class="str">"booleano"</span>
+})</code></pre>
+</div>
+
+<p>O banco e criado no arquivo <code>meu_banco.db</code>. A tabela <code>tarefas</code> e criada automaticamente com as colunas que você definiu, mais um <code>id</code> auto-incrementado.</p>
+
+<h3>Tipos disponíveis</h3>
+<table class="mod-table">
+<tr><th>Tipo SimpliPT</th><th>Tipo SQLite</th><th>Exemplo</th></tr>
+<tr><td><code class="inline-code">texto</code></td><td>TEXT</td><td><code class="inline-code">"Joao"</code></td></tr>
+<tr><td><code class="inline-code">inteiro</code></td><td>INTEGER</td><td><code class="inline-code">42</code></td></tr>
+<tr><td><code class="inline-code">numero</code></td><td>REAL</td><td><code class="inline-code">3.14</code></td></tr>
+<tr><td><code class="inline-code">booleano</code></td><td>INTEGER (0/1)</td><td><code class="inline-code">verdadeiro</code></td></tr>
+</table>
+</section>
+
+<section class="secao" id="aula2">
+<h2>Criar e Listar (CREATE / READ)</h2>
+<p>Com o modelo definido, use <code class="inline-code">criar()</code> para inserir registros, <code class="inline-code">todos()</code> para listar e <code class="inline-code">buscar()</code> para encontrar por ID.</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code><span class="cm"># Criar registros (argumentos nomeados)</span>
+Tarefa.criar(titulo=<span class="str">"Estudar SimpliPT"</span>, feita=falso)
+Tarefa.criar(titulo=<span class="str">"Fazer exercicios"</span>, feita=falso)
+Tarefa.criar(titulo=<span class="str">"Publicar pacote"</span>, feita=falso)
+
+<span class="cm"># Listar todos os registros</span>
+todas = Tarefa.todos()
+<span class="kw">para</span> t <span class="kw">em</span> todas
+    falar t.id + <span class="str">": "</span> + t.titulo
+<span class="kw">fim</span>
+<span class="cm"># 1: Estudar SimpliPT</span>
+<span class="cm"># 2: Fazer exercicios</span>
+<span class="cm"># 3: Publicar pacote</span>
+
+<span class="cm"># Buscar por ID</span>
+uma = Tarefa.buscar(<span class="num">1</span>)
+falar uma.titulo  <span class="cm"># "Estudar SimpliPT"</span></code></pre>
+</div>
+
+<p><code class="inline-code">todos()</code> retorna uma lista de dicionários. Cada dicionário tem as chaves do modelo mais o <code>id</code>. <code class="inline-code">buscar()</code> retorna um único dicionário ou <code>nada</code> se o ID não existir.</p>
+
+<h3>Filtrando com WHERE</h3>
+<p>Use <code class="inline-code">onde()</code> para buscar registros que atendem uma condição. O <code class="inline-code">?</code> e um placeholder para o valor — isso evita ataques de injeção SQL.</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code><span class="cm"># Buscar tarefas pendentes (feita = 0/falso)</span>
+pendentes = Tarefa.onde(<span class="str">"feita = ?"</span>, <span class="num">0</span>)
+falar <span class="str">"Pendentes: "</span> + tamanho(pendentes)</code></pre>
+</div>
+</section>
+
+<section class="secao" id="aula3">
+<h2>Atualizar e Deletar (UPDATE / DELETE)</h2>
+<p>Para modificar um registro, chame <code class="inline-code">atualizar(id, chave=valor, ...)</code>. Para remover, chame <code class="inline-code">deletar(id)</code>.</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code><span class="cm"># Marcar tarefa 1 como concluida</span>
+Tarefa.atualizar(<span class="num">1</span>, feita=verdadeiro)
+
+<span class="cm"># Verificar</span>
+tarefa = Tarefa.buscar(<span class="num">1</span>)
+falar tarefa.feita  <span class="cm"># verdadeiro</span>
+
+<span class="cm"># Deletar tarefa 2</span>
+Tarefa.deletar(<span class="num">2</span>)</code></pre>
+</div>
+
+<div class="aviso">
+<strong>Atenção:</strong> <code class="inline-code">deletar()</code> remove permanentemente. Não tem "lixeira" — o registro vai embora de vez.
+</div>
+</section>
+
+<section class="secao" id="aula4">
+<h2>Consultas Avancadas</h2>
+<p>O ORM do SimpliPT suporta filtros complexos, contagem e ordenacao.</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code><span class="cm"># Contar registros</span>
+total = Tarefa.contar()
+falar <span class="str">"Total de tarefas: "</span> + total
+
+<span class="cm"># Contar com filtro</span>
+concluidas = Tarefa.contar(<span class="str">"feita = ?"</span>, <span class="num">1</span>)
+falar <span class="str">"Concluidas: "</span> + concluidas
+
+<span class="cm"># Busca com LIKE (parte do texto)</span>
+estudo = Tarefa.onde(<span class="str">"titulo LIKE ?"</span>, <span class="str">"%SimpliPT%"</span>)
+
+<span class="cm"># Ordenar resultados</span>
+recentes = Tarefa.todos(<span class="str">"id DESC"</span>)
+
+<span class="cm"># Multiplos filtros</span>
+antigas = Tarefa.onde(<span class="str">"id < ? AND feita = ?"</span>, <span class="num">10</span>, <span class="num">0</span>)</code></pre>
+</div>
+
+<p>O placeholder <code>?</code> funciona para qualquer valor. O ORM escapa automaticamente, então você não precisa se preocupar com injeção SQL.</p>
+
+<h3 id="aula5">Mini-projeto: API de Tarefas persistente</h3>
+<p>Combinando banco + servidor, você tem uma API REST completa em poucas linhas:</p>
+
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code><span class="kw">usar</span> servidor
+usar banco
+
+banco.conectar(<span class="str">"tarefas.db"</span>)
+
+Tarefa = banco.modelo(<span class="str">"tarefas"</span>, {
+    titulo: <span class="str">"texto"</span>,
+    feita: <span class="str">"booleano"</span>
+})
+
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/tarefas"</span>, fn(req)
+    retornar Tarefa.todos()
+fim)
+
+servidor.rota(<span class="str">"POST"</span>, <span class="str">"/tarefas"</span>, fn(req)
+    Tarefa.criar(titulo=req.corpo.titulo, feita=falso)
+    retornar { sucesso: verdadeiro }
+fim)
+
+servidor.rota(<span class="str">"PUT"</span>, <span class="str">"/tarefas/:id"</span>, fn(req)
+    Tarefa.atualizar(numero(req.params.id), feita=verdadeiro)
+    retornar { sucesso: verdadeiro }
+fim)
+
+servidor.rota(<span class="str">"DELETE"</span>, <span class="str">"/tarefas/:id"</span>, fn(req)
+    Tarefa.deletar(numero(req.params.id))
+    retornar { sucesso: verdadeiro }
+fim)
+
+servidor.iniciar(<span class="num">3000</span>)</code></pre>
+</div>
+
+<p>Isso e um CRUD completo com banco SQLite, servidor HTTP e JSON, tudo embutido no SimpliPT. Rode e teste com <code>curl</code> ou pelo navegador.</p>
+</section>
+
+<section class="secao" id="exercicios">
+<h2>Exercicios</h2>
+<p>Abra o <a href="/playground">Playground</a> para testar suas soluções. Todos os exemplos usam SQLite em memória — só rodar e ver o resultado.</p>
+
+<div class="exercicio">
+<h3>1. Modelo Pessoa</h3>
+<p>Crie um modelo <strong>"Pessoa"</strong> com campos <code class="inline-code">nome</code> (texto) e <code class="inline-code">idade</code> (inteiro). Insira 3 pessoas e liste todas com <code class="inline-code">todos()</code>.</p>
+<p><a href="/playground?ex=m7-1" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code>usar banco
+banco.conectar(":memory:")
+
+Pessoa = banco.modelo("pessoas", {
+    nome: "texto",
+    idade: "inteiro"
+})
+
+Pessoa.criar(nome="Ana", idade=25)
+Pessoa.criar(nome="Bia", idade=30)
+Pessoa.criar(nome="Caio", idade=22)
+
+para p em Pessoa.todos()
+    falar p.nome + " - " + p.idade
+fim</code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h3>2. Buscar por Nome com LIKE</h3>
+<p>Use <code class="inline-code">onde()</code> com <code class="inline-code">LIKE</code> para buscar pessoas cujo nome comeca com uma letra especifica.</p>
+<p><a href="/playground?ex=m7-2" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code>usar banco
+banco.conectar(":memory:")
+
+Pessoa = banco.modelo("pessoas", {
+    nome: "texto",
+    idade: "inteiro"
+})
+
+Pessoa.criar(nome="Ana", idade=25)
+Pessoa.criar(nome="Bruno", idade=30)
+Pessoa.criar(nome="Alice", idade=22)
+Pessoa.criar(nome="Carlos", idade=28)
+
+resultado = Pessoa.onde("nome LIKE ?", "A%")
+para p em resultado
+    falar p.nome
+fim
+# Ana
+# Alice</code></pre>
+</div>
+</details>
+</div>
+
+<div class="exercicio">
+<h3>3. Desafio: CRUD completo com servidor</h3>
+<p>Crie uma API REST para gerenciar produtos com as quatro operações usando <code class="inline-code">banco.modelo()</code> e o modulo <code class="inline-code">servidor</code>:</p>
+<ul>
+<li><code class="inline-code">GET /produtos</code> — listar todos</li>
+<li><code class="inline-code">POST /produtos</code> — criar novo (corpo JSON com nome e preco)</li>
+<li><code class="inline-code">PUT /produtos/:id</code> — atualizar preco</li>
+<li><code class="inline-code">DELETE /produtos/:id</code> — deletar</li>
+</ul>
+<details>
+<summary>Ver solucao</summary>
+<div class="code-block"><div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">simplipt</span></div>
+<pre><code>usar servidor
+usar banco
+
+banco.conectar("produtos.db")
+
+Produto = banco.modelo("produtos", {
+    nome: "texto",
+    preco: "numero"
+})
+
+servidor.rota("GET", "/produtos", fn(req)
+    retornar Produto.todos()
+fim)
+
+servidor.rota("POST", "/produtos", fn(req)
+    Produto.criar(nome=req.corpo.nome, preco=req.corpo.preco)
+    retornar { sucesso: verdadeiro }
+fim)
+
+servidor.rota("PUT", "/produtos/:id", fn(req)
+    Produto.atualizar(numero(req.params.id), preco=req.corpo.preco)
+    retornar { sucesso: verdadeiro }
+fim)
+
+servidor.rota("DELETE", "/produtos/:id", fn(req)
+    Produto.deletar(numero(req.params.id))
+    retornar { sucesso: verdadeiro }
+fim)
+
+servidor.iniciar(3000)</code></pre>
+</div>
+</details>
+</div>
+</section>
+
+<div class="nav-modulos">
+<a href="/tutorial_m6" class="anterior">&larr; Modulo 6</a>
+<button class="check-mod" id="btn-concluir">&#10003;</button>
+<a href="/tutorial_m8" class="proximo">Modulo 8 &rarr;</a>
+</div>
+</main>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'simplipt_tutorial_progress';
+  function carregar() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch(e) { return {} } }
+  function salvar(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)) } catch(e) {} }
+  var btn = document.getElementById('btn-concluir');
+  if (btn) {
+    var prog = carregar();
+    if (prog.m7) btn.classList.add('marcado');
+    btn.addEventListener('click', function() {
+      var p = carregar();
+      p.m7 = !p.m7;
+      salvar(p);
+      this.classList.toggle('marcado');
+    });
+  }
+  var sidebar = document.querySelector('.aula-sidebar');
+  if (sidebar) {
+    var links = sidebar.querySelectorAll('.indice a');
+    var titles = [];
+    links.forEach(function(a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) titles.push({ el: el, link: a });
+    });
+    function onScroll() {
+      var found = false;
+      for (var i = titles.length - 1; i >= 0; i--) {
+        var rect = titles[i].el.getBoundingClientRect();
+        if (rect.top <= 120) {
+          links.forEach(function(l) { l.classList.remove('ativo'); });
+          titles[i].link.classList.add('ativo');
+          found = true; break;
+        }
+      }
+      if (!found && links.length) { links.forEach(function(l) { l.classList.remove('ativo'); }); links[0].classList.add('ativo'); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

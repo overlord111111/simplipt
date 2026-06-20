@@ -1,0 +1,611 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="page-header">
+<div class="inner">
+<h1>Projetos Guiados</h1>
+<p>3 projetos passo-a-passo. Cada passo mostra exatamente o que adicionar e por que. Nao pule etapas — cada uma se apoia na anterior.</p>
+</div>
+</div>
+
+<section>
+<div class="inner">
+
+<div class="cards">
+
+<div class="card">
+<h2>Projeto 1: Gerenciador de Tarefas CLI</h2>
+<p class="tag-list"><span class="tag">variaveis</span> <span class="tag">funcoes</span> <span class="tag">arquivos JSON</span> <span class="tag">CLI</span></p>
+
+<h3>O que voce vai construir</h3>
+<p>Um gerenciador de tarefas completo que roda no terminal: adicionar, listar, concluir e deletar tarefas. Tudo salvo em JSON.</p>
+
+<div class="guiado" id="proj1">
+<div class="step-nav">
+<button class="step-btn ativo" data-step="0">Visao Geral</button>
+<button class="step-btn" data-step="1">Passo 1</button>
+<button class="step-btn" data-step="2">Passo 2</button>
+<button class="step-btn" data-step="3">Passo 3</button>
+<button class="step-btn" data-step="4">Passo 4</button>
+<button class="step-btn" data-step="5">Pronto</button>
+</div>
+
+<div class="step-content ativo" data-step="0">
+<h4>O que voce vai aprender</h4>
+<ul>
+<li>Ler e escrever JSON com <code>json.ler()</code> e <code>json.gerar()</code></li>
+<li>Criar loops de menu interativo com <code>enquanto</code></li>
+<li>Estruturar um programa em funcoes modulares</li>
+<li>Usar <code>se/senao se</code> para tratar comandos</li>
+</ul>
+<h4>Estrutura final dos arquivos</h4>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">texto</span></div>
+<pre><code>tarefas.spt       # codigo principal
+tarefas.json      # gerado automaticamente</code></pre>
+</div>
+</div>
+
+<div class="step-content" data-step="1">
+<h4>Passo 1: Estrutura base e persistencia JSON</h4>
+<p>Crie <code>tarefas.spt</code>. Comece com as importacoes e as funcoes de persistencia:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> json
+<span class="kw">usar</span> arquivos
+
+ARQUIVO = <span class="str">"tarefas.json"</span>
+
+<span class="kw">fn</span> carregar()
+    <span class="kw">se</span> arquivos.existe(ARQUIVO)
+        conteudo = arquivos.ler(ARQUIVO)
+        <span class="kw">retornar</span> json.ler(conteudo)
+    <span class="kw">fim</span>
+    <span class="kw">retornar</span> []
+<span class="kw">fim</span>
+
+<span class="kw">fn</span> salvar(lista)
+    arquivos.escrever(ARQUIVO, json.gerar(lista, indentado=<span class="kw">verdadeiro</span>))
+<span class="kw">fim</span></code></pre>
+</div>
+<p><code>carregar()</code> le o JSON do disco e retorna uma lista vazia se o arquivo nao existir. <code>salvar()</code> recebe a lista e grava formatada no disco.</p>
+</div>
+
+<div class="step-content" data-step="2">
+<h4>Passo 2: Listar tarefas</h4>
+<p>Adicione a funcao que exibe as tarefas com seu status:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">fn</span> listar(lista)
+    <span class="kw">se</span> tamanho(lista) <span class="kw">eh</span> <span class="num">0</span>
+        falar <span class="str">"  Nenhuma tarefa."</span>
+        <span class="kw">retornar</span>
+    <span class="kw">fim</span>
+    <span class="kw">para</span> i <span class="kw">ate</span> tamanho(lista)
+        t = lista[i-<span class="num">1</span>]
+        status = <span class="str">"[X]"</span> <span class="kw">se</span> t.feita <span class="kw">senao</span> <span class="str">"[ ]"</span>
+        falar texto(i) + <span class="str">". "</span> + status + <span class="str">" "</span> + t.titulo
+    <span class="kw">fim</span>
+<span class="kw">fim</span></code></pre>
+</div>
+<p>Cada tarefa e um dicionario <code>{titulo, feita}</code>. O operador ternario escolhe <code>[X]</code> ou <code>[ ]</code> conforme o status.</p>
+</div>
+
+<div class="step-content" data-step="3">
+<h4>Passo 3: Adicionar e concluir tarefas</h4>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">fn</span> adicionar(lista)
+    titulo = ler(<span class="str">"Titulo: "</span>)
+    lista.adicionar({titulo: titulo, feita: <span class="kw">falso</span>})
+    salvar(lista)
+    falar <span class="str">"Adicionada!"</span>
+<span class="kw">fim</span>
+
+<span class="kw">fn</span> concluir(lista)
+    listar(lista)
+    n = inteiro(ler(<span class="str">"Numero: "</span>))
+    <span class="kw">se</span> n >= <span class="num">1</span> <span class="kw">e</span> n <= tamanho(lista)
+        lista[n<span class="num">-1</span>].feita = <span class="kw">verdadeiro</span>
+        salvar(lista)
+        falar <span class="str">"Concluida!"</span>
+    <span class="kw">senao</span>
+        falar <span class="str">"Numero invalido."</span>
+    <span class="kw">fim</span>
+<span class="kw">fim</span></code></pre>
+</div>
+<p><code>adicionar()</code> pergunta o titulo, insere na lista e salva. <code>concluir()</code> lista, pergunta o numero, marca como feita e salva.</p>
+</div>
+
+<div class="step-content" data-step="4">
+<h4>Passo 4: Deletar e menu principal</h4>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">fn</span> deletar(lista)
+    listar(lista)
+    n = inteiro(ler(<span class="str">"Numero: "</span>))
+    <span class="kw">se</span> n >= <span class="num">1</span> <span class="kw">e</span> n <= tamanho(lista)
+        lista.remover(n<span class="num">-1</span>)
+        salvar(lista)
+        falar <span class="str">"Deletada!"</span>
+    <span class="kw">senao</span>
+        falar <span class="str">"Numero invalido."</span>
+    <span class="kw">fim</span>
+<span class="kw">fim</span>
+
+<span class="kw">fn</span> main()
+    tarefas = carregar()
+    <span class="kw">enquanto</span> <span class="kw">verdadeiro</span>
+        falar <span class="str">""</span>
+        falar <span class="str">"=== GERENCIADOR DE TAREFAS ==="</span>
+        falar <span class="str">"1. Listar"</span>
+        falar <span class="str">"2. Adicionar"</span>
+        falar <span class="str">"3. Concluir"</span>
+        falar <span class="str">"4. Deletar"</span>
+        falar <span class="str">"5. Sair"</span>
+        op = ler(<span class="str">"Escolha: "</span>)
+        <span class="kw">se</span> op <span class="kw">eh</span> <span class="str">"1"</span>; listar(tarefas)
+        <span class="kw">senao se</span> op <span class="kw">eh</span> <span class="str">"2"</span>; adicionar(tarefas)
+        <span class="kw">senao se</span> op <span class="kw">eh</span> <span class="str">"3"</span>; concluir(tarefas)
+        <span class="kw">senao se</span> op <span class="kw">eh</span> <span class="str">"4"</span>; deletar(tarefas)
+        <span class="kw">senao se</span> op <span class="kw">eh</span> <span class="str">"5"</span>
+            falar <span class="str">"Ate mais!"</span>
+            <span class="kw">retornar</span>
+        <span class="kw">senao</span>
+            falar <span class="str">"Opcao invalida."</span>
+        <span class="kw">fim</span>
+    <span class="kw">fim</span>
+<span class="kw">fim</span>
+
+main()</code></pre>
+</div>
+<p><code>deletar()</code> usa <code>lista.remover()</code> para remover pelo indice. <code>main()</code> carrega as tarefas, mostra o menu em loop e redireciona para a funcao certa.</p>
+</div>
+
+<div class="step-content" data-step="5">
+<h4>Pronto! Como testar</h4>
+<p>Execute no terminal:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt tarefas.spt</code></pre>
+</div>
+<p>O programa cria <code>tarefas.json</code> automaticamente. Teste: adicione algumas, feche e reabra — os dados persistem.</p>
+<div class="dica">
+<strong>Dica:</strong> Quer ir alem? Adicione uma opcao para editar o titulo, ou prioridades (alta, media, baixa). O JSON aceita qualquer campo extra nos dicionarios.
+</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Projeto 2: Site Pessoal + Blog</h2>
+<p class="tag-list"><span class="tag">servidor</span> <span class="tag">rotas</span> <span class="tag">templates</span> <span class="tag">API</span></p>
+
+<h3>O que voce vai construir</h3>
+<p>Um site pessoal completo com servidor web, paginas estaticas e blog com posts carregados de JSON.</p>
+
+<div class="guiado" id="proj2">
+<div class="step-nav">
+<button class="step-btn ativo" data-step="0">Visao Geral</button>
+<button class="step-btn" data-step="1">Passo 1</button>
+<button class="step-btn" data-step="2">Passo 2</button>
+<button class="step-btn" data-step="3">Passo 3</button>
+<button class="step-btn" data-step="4">Passo 4</button>
+<button class="step-btn" data-step="5">Pronto</button>
+</div>
+
+<div class="step-content ativo" data-step="0">
+<h4>O que voce vai aprender</h4>
+<ul>
+<li>Criar um servidor HTTP com rotas</li>
+<li>Servir templates .spt.html com dados dinamicos</li>
+<li>Estruturar um projeto web com pastas organizadas</li>
+<li>Construir uma mini API para servir dados</li>
+</ul>
+<h4>Estrutura final dos arquivos</h4>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">texto</span></div>
+<pre><code>meu_site/
+  |-- servidor.spt
+  |-- estaticos/
+  |     |-- estilo.css
+  |     |-- script.js
+  |-- modelos/
+  |     |-- cabecalho.spt.html
+  |     |-- rodape.spt.html
+  |     |-- home.spt.html
+  |     |-- sobre.spt.html
+  |     |-- blog.spt.html
+  |-- dados/
+        |-- posts.json</code></pre>
+</div>
+</div>
+
+<div class="step-content" data-step="1">
+<h4>Passo 1: Servidor basico</h4>
+<p>Crie <code>servidor.spt</code> com as importacoes e a primeira rota:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> servidor
+<span class="kw">usar</span> json
+<span class="kw">usar</span> arquivos
+<span class="kw">usar</span> sistema
+
+caminho = sistema.caminho_atual()
+
+servidor.estatico(<span class="str">"/estaticos"</span>, caminho + <span class="str">"/estaticos"</span>)
+servidor.modelos(caminho + <span class="str">"/modelos"</span>)
+
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/"</span>, <span class="kw">fn</span>(req)
+    <span class="kw">retornar</span> servidor.html(<span class="str">"home.spt.html"</span>, {titulo: <span class="str">"Bem-vindo!"</span>})
+<span class="kw">fim</span>)
+
+falar <span class="str">"Servidor em http://localhost:8080"</span>
+falar servidor.iniciar(<span class="num">8080</span>)
+
+<span class="kw">enquanto</span> <span class="kw">verdadeiro</span>
+    pausa <span class="num">1</span>
+<span class="kw">fim</span></code></pre>
+</div>
+<p><code>servidor.estatico()</code> mapeia a URL <code>/estaticos</code> para a pasta local. <code>servidor.modelos()</code> diz onde estao os templates. <code>servidor.rota()</code> registra uma rota GET na raiz.</p>
+</div>
+
+<div class="step-content" data-step="2">
+<h4>Passo 2: Templates cabecalho, rodape e paginas</h4>
+<p>Crie <code>modelos/cabecalho.spt.html</code>:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">html+simplipt</span></div>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;{&#123; titulo }} - Meu Site&lt;/title&gt;
+    &lt;link rel="stylesheet" href="/estaticos/estilo.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;nav&gt;
+        &lt;a href="/"&gt;Home&lt;/a&gt;
+        &lt;a href="/sobre"&gt;Sobre&lt;/a&gt;
+        &lt;a href="/blog"&gt;Blog&lt;/a&gt;
+    &lt;/nav&gt;
+    &lt;main&gt;</code></pre>
+</div>
+<p>Crie <code>modelos/rodape.spt.html</code>:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">html+simplipt</span></div>
+<pre><code>    &lt;/main&gt;
+    &lt;script src="/estaticos/script.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+<p>Crie <code>modelos/home.spt.html</code>:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">html+simplipt</span></div>
+<pre><code>&#123;% incluir "cabecalho.spt.html" %}
+
+&lt;h1&gt;Bem-vindo ao Meu Site!&lt;/h1&gt;
+&lt;p&gt;Este site foi feito com SimpliPT.&lt;/p&gt;
+
+&#123;% incluir "rodape.spt.html" %}</code></pre>
+</div>
+<p>Crie <code>modelos/sobre.spt.html</code> similar, com <code>&#123;% incluir "cabecalho.spt.html" %}</code> e conteudo sobre voce.</p>
+<p>Adicione a rota <code>/sobre</code> no <code>servidor.spt</code>:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code>servidor.rota(<span class="str">"GET"</span>, <span class="str">"/sobre"</span>, <span class="kw">fn</span>(req)
+    <span class="kw">retornar</span> servidor.html(<span class="str">"sobre.spt.html"</span>, {titulo: <span class="str">"Sobre Mim"</span>})
+<span class="kw">fim</span>)</code></pre>
+</div>
+</div>
+
+<div class="step-content" data-step="3">
+<h4>Passo 3: Blog com dados JSON</h4>
+<p>Crie <code>dados/posts.json</code>:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">json</span></div>
+<pre><code>[
+  {
+    "id": 1,
+    "titulo": "Primeiro Post",
+    "data": "2026-01-15",
+    "resumo": "Meu primeiro post no blog usando SimpliPT!"
+  },
+  {
+    "id": 2,
+    "titulo": "Aprendendo Rotas",
+    "data": "2026-02-20",
+    "resumo": "Como criar rotas dinamicas com o servidor HTTP."
+  },
+  {
+    "id": 3,
+    "titulo": "Templates na Pratica",
+    "data": "2026-03-10",
+    "resumo": "Usando variaveis e includes nos templates .spt.html."
+  }
+]</code></pre>
+</div>
+<p>Crie <code>modelos/blog.spt.html</code>:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">html+simplipt</span></div>
+<pre><code>&#123;% incluir "cabecalho.spt.html" %}
+
+&lt;h1&gt;Blog&lt;/h1&gt;
+
+&#123;% para post em posts %}
+  &lt;article class="post"&gt;
+    &lt;h2&gt;{&#123; post.titulo }}&lt;/h2&gt;
+    &lt;small&gt;{&#123; post.data }}&lt;/small&gt;
+    &lt;p&gt;{&#123; post.resumo }}&lt;/p&gt;
+  &lt;/article&gt;
+&#123;% fim %}
+
+&#123;% incluir "rodape.spt.html" %}</code></pre>
+</div>
+<p>Adicione no <code>servidor.spt</code> a funcao <code>carregar_posts()</code> e a rota <code>/blog</code>:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">fn</span> carregar_posts()
+    conteudo = arquivos.ler(caminho + <span class="str">"/dados/posts.json"</span>)
+    <span class="kw">retornar</span> json.ler(conteudo)
+<span class="kw">fim</span>
+
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/blog"</span>, <span class="kw">fn</span>(req)
+    posts = carregar_posts()
+    <span class="kw">retornar</span> servidor.html(<span class="str">"blog.spt.html"</span>, {titulo: <span class="str">"Blog"</span>, posts: posts})
+<span class="kw">fim</span>)</code></pre>
+</div>
+</div>
+
+<div class="step-content" data-step="4">
+<h4>Passo 4: API de posts</h4>
+<p>Adicione uma rota JSON que retorna os posts como dados — util se quiser consumir de um frontend JS ou testar:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code>servidor.rota(<span class="str">"GET"</span>, <span class="str">"/api/posts"</span>, <span class="kw">fn</span>(req)
+    <span class="kw">retornar</span> carregar_posts()
+<span class="kw">fim</span>)</code></pre>
+</div>
+<p>Crie <code>estatico/estilo.css</code> com um estilo basico:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">css</span></div>
+<pre><code>body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; }
+nav a { margin-right: 1rem; color: #333; }
+.post { border-bottom: 1px solid #ccc; padding: 1rem 0; }</code></pre>
+</div>
+</div>
+
+<div class="step-content" data-step="5">
+<h4>Pronto! Como testar</h4>
+<p>Execute e acesse no navegador:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt servidor.spt</code></pre>
+</div>
+<p>Rotas disponiveis:</p>
+<ul>
+<li><code>http://localhost:8080</code> — Home</li>
+<li><code>http://localhost:8080/sobre</code> — Sobre</li>
+<li><code>http://localhost:8080/blog</code> — Blog</li>
+<li><code>http://localhost:8080/api/posts</code> — API JSON</li>
+</ul>
+<p>Altere qualquer template e recarregue a pagina — as mudancas aparecem na hora.</p>
+<div class="dica">
+<strong>Dica:</strong> Adicione uma pagina de portfolio (<code>/portfolio</code>) ou um formulario de contato que salva as mensagens em JSON. O template engine renderiza tudo no servidor, entao voce pode usar dados de arquivo, banco ou ate de uma API externa.
+</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Projeto 3: Chatbot de Terminal com Historico</h2>
+<p class="tag-list"><span class="tag">dicionarios</span> <span class="tag">regex</span> <span class="tag">arquivos</span> <span class="tag">loop</span></p>
+
+<h3>O que voce vai construir</h3>
+<p>Um chatbot interativo que roda no terminal, responde com base em palavras-chave usando regex e salva o historico da conversa em arquivo.</p>
+
+<div class="guiado" id="proj3">
+<div class="step-nav">
+<button class="step-btn ativo" data-step="0">Visao Geral</button>
+<button class="step-btn" data-step="1">Passo 1</button>
+<button class="step-btn" data-step="2">Passo 2</button>
+<button class="step-btn" data-step="3">Passo 3</button>
+<button class="step-btn" data-step="4">Passo 4</button>
+<button class="step-btn" data-step="5">Pronto</button>
+</div>
+
+<div class="step-content ativo" data-step="0">
+<h4>O que voce vai aprender</h4>
+<ul>
+<li>Criar um sistema de respostas baseado em padroes com regex</li>
+<li>Trabalhar com dicionarios para mapear entradas a respostas</li>
+<li>Salvar e recuperar historico de conversa em arquivo</li>
+<li>Implementar um loop de chat com comandos especiais</li>
+</ul>
+</div>
+
+<div class="step-content" data-step="1">
+<h4>Passo 1: Dicionario de respostas</h4>
+<p>Crie <code>chatbot.spt</code> com as respostas e a funcao que encontra a resposta certa:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> arquivos
+<span class="kw">usar</span> regex
+
+respostas = {
+    <span class="str">"ola"</span>: <span class="str">"Ola! Como posso ajudar?"</span>,
+    <span class="str">"nome"</span>: <span class="str">"Sou o JarbsBot, prazer!"</span>,
+    <span class="str">"tchau"</span>: <span class="str">"Ate logo!"</span>,
+    <span class="str">"piada"</span>: <span class="str">"O que o SQL disse pro NoSQL? Nao me esqueco de voce!"</span>
+}
+
+<span class="kw">fn</span> responder(texto)
+    <span class="kw">para</span> chave, valor <span class="kw">em</span> respostas
+        <span class="kw">se</span> regex.testar(chave, texto)
+            <span class="kw">retornar</span> valor
+        <span class="kw">fim</span>
+    <span class="kw">fim</span>
+    <span class="kw">retornar</span> <span class="str">"Nao entendi. Tente: ola, nome, piada, tchau"</span>
+<span class="kw">fim</span></code></pre>
+</div>
+<p>O dicionario mapeia padroes regex a respostas. <code>responder()</code> percorre os padroes e retorna a primeira correspondencia, ou um fallback.</p>
+</div>
+
+<div class="step-content" data-step="2">
+<h4>Passo 2: Loop de chat</h4>
+<p>Adicione o loop principal que interage com o usuario:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">fn</span> main()
+    falar <span class="str">"=== JarbsBot v1.0 ==="</span>
+    falar <span class="str">"Digite /sair para encerrar"</span>
+
+    <span class="kw">enquanto</span> <span class="kw">verdadeiro</span>
+        entrada = ler(<span class="str">"Voce: "</span>)
+
+        <span class="kw">se</span> entrada <span class="kw">eh</span> <span class="str">"/sair"</span>
+            falar <span class="str">"Ate logo!"</span>
+            <span class="kw">retornar</span>
+        <span class="kw">fim</span>
+
+        resposta = responder(entrada)
+        falar <span class="str">"JarbsBot: "</span> + resposta
+    <span class="kw">fim</span>
+<span class="kw">fim</span>
+
+main()</code></pre>
+</div>
+<p>O loop pede entrada, verifica se o usuario quer sair, e responde. Teste com <code>simplipt chatbot.spt</code>.</p>
+</div>
+
+<div class="step-content" data-step="3">
+<h4>Passo 3: Comandos uteis</h4>
+<p>Adicione comandos <code>/historico</code> e <code>/limpar</code> antes do bloco de resposta normal:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code>ARQUIVO = <span class="str">"historico.txt"</span>
+
+<span class="c"># dentro do loop, antes de responder:</span>
+<span class="kw">se</span> entrada <span class="kw">eh</span> <span class="str">"/historico"</span>
+    falar arquivos.ler(ARQUIVO) <span class="kw">se</span> arquivos.existe(ARQUIVO) <span class="kw">senao</span> <span class="str">"(vazio)"</span>
+<span class="kw">senao se</span> entrada <span class="kw">eh</span> <span class="str">"/limpar"</span>
+    arquivos.escrever(ARQUIVO, <span class="str">""</span>)
+    falar <span class="str">"Historico limpo."</span>
+<span class="kw">senao</span>
+    resposta = responder(entrada)
+    falar <span class="str">"JarbsBot: "</span> + resposta
+<span class="kw">fim</span></code></pre>
+</div>
+<p><code>/historico</code> exibe o conteudo do arquivo. <code>/limpar</code> o esvazia.</p>
+</div>
+
+<div class="step-content" data-step="4">
+<h4>Passo 4: Persistir historico automaticamente</h4>
+<p>Grave no arquivo cada mensagem da conversa. Adicione no inicio da <code>main()</code>:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code>    arquivos.adicionar(ARQUIVO, <span class="str">"[INICIO]\n"</span>)</code></pre>
+</div>
+<p>E dentro do loop, apos ler a entrada e apos gerar a resposta:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code>    <span class="c"># depois de ler a entrada:</span>
+    arquivos.adicionar(ARQUIVO, <span class="str">"Voce: "</span> + entrada + <span class="str">"\n"</span>)
+
+    <span class="c"># e depois de responder (dentro do senao):</span>
+    arquivos.adicionar(ARQUIVO, <span class="str">"JarbsBot: "</span> + resposta + <span class="str">"\n"</span>)</code></pre>
+</div>
+</div>
+
+<div class="step-content" data-step="5">
+<h4>Pronto! Como testar</h4>
+<p>Codigo completo esperado:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> arquivos
+<span class="kw">usar</span> regex
+
+ARQUIVO = <span class="str">"historico.txt"</span>
+
+respostas = {
+    <span class="str">"ola"</span>: <span class="str">"Ola! Como posso ajudar?"</span>,
+    <span class="str">"nome"</span>: <span class="str">"Sou o JarbsBot, prazer!"</span>,
+    <span class="str">"tchau"</span>: <span class="str">"Ate logo!"</span>,
+    <span class="str">"piada"</span>: <span class="str">"O que o SQL disse pro NoSQL? Nao me esqueco de voce!"</span>
+}
+
+<span class="kw">fn</span> responder(texto)
+    <span class="kw">para</span> chave, valor <span class="kw">em</span> respostas
+        <span class="kw">se</span> regex.testar(chave, texto)
+            <span class="kw">retornar</span> valor
+        <span class="kw">fim</span>
+    <span class="kw">fim</span>
+    <span class="kw">retornar</span> <span class="str">"Nao entendi. Tente: ola, nome, piada, tchau"</span>
+<span class="kw">fim</span>
+
+<span class="kw">fn</span> main()
+    falar <span class="str">"=== JarbsBot v1.0 ==="</span>
+    falar <span class="str">"Digite /sair para encerrar"</span>
+    arquivos.adicionar(ARQUIVO, <span class="str">"[INICIO]\n"</span>)
+
+    <span class="kw">enquanto</span> <span class="kw">verdadeiro</span>
+        entrada = ler(<span class="str">"Voce: "</span>)
+        arquivos.adicionar(ARQUIVO, <span class="str">"Voce: "</span> + entrada + <span class="str">"\n"</span>)
+
+        <span class="kw">se</span> entrada <span class="kw">eh</span> <span class="str">"/sair"</span>
+            falar <span class="str">"Ate logo!"</span>
+            <span class="kw">retornar</span>
+        <span class="kw">fim</span>
+
+        <span class="kw">se</span> entrada <span class="kw">eh</span> <span class="str">"/historico"</span>
+            falar arquivos.ler(ARQUIVO) <span class="kw">se</span> arquivos.existe(ARQUIVO) <span class="kw">senao</span> <span class="str">"(vazio)"</span>
+        <span class="kw">senao se</span> entrada <span class="kw">eh</span> <span class="str">"/limpar"</span>
+            arquivos.escrever(ARQUIVO, <span class="str">""</span>)
+            falar <span class="str">"Historico limpo."</span>
+        <span class="kw">senao</span>
+            resposta = responder(entrada)
+            falar <span class="str">"JarbsBot: "</span> + resposta
+            arquivos.adicionar(ARQUIVO, <span class="str">"JarbsBot: "</span> + resposta + <span class="str">"\n"</span>)
+        <span class="kw">fim</span>
+    <span class="kw">fim</span>
+<span class="kw">fim</span>
+
+main()</code></pre>
+</div>
+<p>Teste:</p>
+<div class="code-block"><div class="bar"><div class="dots"></div><span class="lang">bash</span></div>
+<pre><code>simplipt chatbot.spt</code></pre>
+</div>
+<p>Digite "ola", "qual e seu nome?", "conte uma piada". Depois veja o historico com <code>/historico</code>. O arquivo <code>historico.txt</code> sera criado na mesma pasta.</p>
+<div class="dica">
+<strong>Dica:</strong> Adicione mais padroes ao dicionario <code>respostas</code>, ou carregue as respostas de um JSON externo para nao precisar editar o codigo toda vez.
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="proxima-etapa">
+<h2>Parabens, voce chegou ao fim!</h2>
+<p>Voce completou todos os modulos e projetos guiados do tutorial SimpliPT. Agora voce tem base para construir qualquer coisa.</p>
+<p>O que fazer agora?</p>
+<ul>
+<li><strong>Contribua:</strong> O SimpliPT e open-source. Ajude a melhorar a linguagem.</li>
+<li><strong>Compartilhe:</strong> Mostre o que voce construiu para a comunidade.</li>
+<li><strong>Construa:</strong> Crie seus proprios projetos. A pratica e o que realmente ensina.</li>
+</ul>
+<button class="check-mod" id="btn-concluir">&#10003; Marcar como concluido</button>
+</div>
+
+</div>
+</section>
+
+<!-- styles in style.css @layer components -->
+
+<script>
+(function(){
+  var grupos = document.querySelectorAll('.guiado');
+  grupos.forEach(function(g) {
+    var botoes = g.querySelectorAll('.step-btn');
+    var conteudos = g.querySelectorAll('.step-content');
+    botoes.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var passo = this.getAttribute('data-step');
+        botoes.forEach(function(b) { b.classList.remove('ativo'); });
+        conteudos.forEach(function(c) { c.classList.remove('ativo'); });
+        this.classList.add('ativo');
+        g.querySelector('.step-content[data-step="'+passo+'"]').classList.add('ativo');
+      });
+    });
+  });
+
+  var STORAGE_KEY = 'simplipt_tutorial_progress';
+  function carregar() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch(e) { return {} } }
+  function salvar(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)) } catch(e) {} }
+  var btn = document.getElementById('btn-concluir');
+  if (btn) {
+    var prog = carregar();
+    if (prog.m9) btn.classList.add('marcado');
+    btn.addEventListener('click', function() {
+      var p = carregar(); p.m9 = !p.m9; salvar(p); this.classList.toggle('marcado');
+    });
+  }
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

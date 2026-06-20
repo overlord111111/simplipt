@@ -1,0 +1,287 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="aula">
+<aside class="aula-sidebar">
+<a href="/tutorial" class="voltar">&larr; Voltar</a>
+<h4>Modulo 1</h4>
+<ul class="indice">
+<li><a href="#intro" class="ativo">Introducao</a></li>
+<li><a href="#variaveis">Variaveis</a></li>
+<li><a href="#tipos">Tipos de Dados</a></li>
+<li><a href="#operadores">Operadores</a></li>
+<li><a href="#textos">Textos</a></li>
+<li><a href="#exercicios">Exercicios</a></li>
+</ul>
+</aside>
+
+<main class="aula-content">
+<div class="cabecalho">
+<div class="bread"><a href="/tutorial">Tutorial</a> / Modulo 1</div>
+<h1>Fundamentos</h1>
+<p>Variaveis, tipos de dados, operadores e textos — a base de tudo na programacao.</p>
+</div>
+
+<div class="secao" id="intro">
+<h2>Introducao</h2>
+<p>Bem-vindo ao SimpliPT! Se voce nunca programou antes, esta no lugar certo. Programar é dar instrucoes para o computador executar. O SimpliPT foi feito para ser natural: voce escreve em portugues, e o computador entende.</p>
+<p>Neste modulo, voce vai aprender os <strong>fundamentos</strong> que sao a base de qualquer programa: guardar informacoes (variaveis), trabalhar com diferentes tipos de dados (numeros, textos, verdadeiro/falso) e fazer operacoes com eles.</p>
+<div class="dica"><strong>Dica:</strong> Nao se preocupe em decorar tudo. Programacao se aprende praticando. Digite os exemplos, experimente, erre e tente de novo.</div>
+</div>
+
+<div class="secao" id="variaveis">
+<h2>Variaveis</h2>
+<p>Variavel é um "nome" que guarda um valor. Pense como uma caixinha com uma etiqueta: voce coloca algo dentro e usa a etiqueta para encontrar depois.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="cm"># Guardando valores em variaveis</span>
+nome = "Over"
+idade = 30
+altura = 1.75
+programador = verdadeiro
+
+falar nome
+falar idade
+falar altura
+falar programador</code></pre>
+</div>
+
+<p>Explicacao linha a linha:</p>
+<ul>
+<li><code class="inline-code">nome = "Over"</code> — cria a variavel <strong>nome</strong> e guarda o texto "Over"</li>
+<li><code class="inline-code">idade = 30</code> — guarda o numero 30</li>
+<li><code class="inline-code">altura = 1.75</code> — guarda um numero decimal</li>
+<li><code class="inline-code">programador = verdadeiro</code> — guarda um valor logico</li>
+<li><code class="inline-code">falar nome</code> — mostra o valor de <strong>nome</strong> na tela</li>
+</ul>
+
+<p>O sinal de <code class="inline-code">=</code> é o operador de <strong>atribuicao</strong>. Ele pega o valor da direita e guarda na variavel da esquerda.</p>
+
+<div class="dica"><strong>Importante:</strong> Nomes de variaveis nao podem comecar com numero e nao podem ter espacos. Use letras, numeros e sublinhado (_). Ex: <code class="inline-code">minha_idade</code>, <code class="inline-code">nomeCompleto</code>.</div>
+</div>
+
+<div class="secao" id="tipos">
+<h2>Tipos de Dados</h2>
+<p>Toda informacao no computador tem um <strong>tipo</strong>. Os principais tipos no SimpliPT sao:</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="cm"># Tipos basicos</span>
+texto   = "Isso eh uma string"     <span class="cm"># Texto (tambem chamado de string)</span>
+inteiro = 42                       <span class="cm"># Numero inteiro</span>
+decimal = 3.14                     <span class="cm"># Numero decimal</span>
+logico  = verdadeiro               <span class="cm"># Booleano: verdadeiro ou falso</span>
+vazio   = nada                     <span class="cm"># Nada (ausencia de valor)</span>
+
+falar texto
+falar inteiro
+falar decimal
+falar logico
+falar vazio</code></pre>
+</div>
+
+<table style="width:100%;border-collapse:collapse;margin:1rem 0;font-size:.86rem">
+<tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:.5rem .8rem;font-weight:600">Tipo</th><th style="text-align:left;padding:.5rem .8rem;font-weight:600">Exemplo</th><th style="text-align:left;padding:.5rem .8rem;font-weight:600">O que é</th></tr>
+<tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem .8rem;color:var(--accent3);font-family:var(--mono)">texto</td><td style="padding:.5rem .8rem"><code class="inline-code">"Ola"</code></td><td style="padding:.5rem .8rem;color:var(--text2)">Palavras, frases, caracteres</td></tr>
+<tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem .8rem;color:var(--accent3);font-family:var(--mono)">inteiro</td><td style="padding:.5rem .8rem"><code class="inline-code">42</code></td><td style="padding:.5rem .8rem;color:var(--text2)">Numeros sem virgula</td></tr>
+<tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem .8rem;color:var(--accent3);font-family:var(--mono)">numero</td><td style="padding:.5rem .8rem"><code class="inline-code">3.14</code></td><td style="padding:.5rem .8rem;color:var(--text2)">Numeros com virgula (ponto decimal)</td></tr>
+<tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem .8rem;color:var(--accent3);font-family:var(--mono)">booleano</td><td style="padding:.5rem .8rem"><code class="inline-code">verdadeiro</code></td><td style="padding:.5rem .8rem;color:var(--text2)">Verdadeiro ou falso</td></tr>
+<tr><td style="padding:.5rem .8rem;color:var(--accent3);font-family:var(--mono)">nada</td><td style="padding:.5rem .8rem"><code class="inline-code">nada</code></td><td style="padding:.5rem .8rem;color:var(--text2)">Ausencia de valor</td></tr>
+</table>
+
+<div class="dica"><strong>Lembrete:</strong> Texto sempre entre aspas duplas <code class="inline-code">"assim"</code>. Numeros escrevem sem aspas. <code class="inline-code">"42"</code> é texto, <code class="inline-code">42</code> é numero.</div>
+</div>
+
+<div class="secao" id="operadores">
+<h2>Operadores</h2>
+<p>Operadores fazem coisas com os valores. Os principais grupos:</p>
+
+<h3>Aritmeticos</h3>
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>soma    = 10 + 5     <span class="cm"># 15</span>
+difer   = 10 - 5     <span class="cm"># 5</span>
+mult    = 10 * 5     <span class="cm"># 50</span>
+div     = 10 / 5     <span class="cm"># 2</span>
+resto   = 10 % 3     <span class="cm"># 1 (resto da divisao)</span>
+
+falar soma
+falar difer
+falar mult
+falar div
+falar resto</code></pre>
+</div>
+
+<h3>Comparacao</h3>
+<p>Comparam dois valores e retornam <strong>verdadeiro</strong> ou <strong>falso</strong>:</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>falar 10 > 5       <span class="cm"># verdadeiro (10 eh maior que 5)</span>
+falar 10 < 5       <span class="cm"># falso</span>
+falar 10 >= 10     <span class="cm"># verdadeiro (10 eh maior ou igual a 10)</span>
+falar 10 <= 9      <span class="cm"># falso</span>
+falar 10 eh 10       <span class="cm"># verdadeiro (10 eh igual a 10)</span>
+falar 10 nao eh 5    <span class="cm"># verdadeiro (10 eh diferente de 5)</span></code></pre>
+</div>
+
+<h3>Logicos</h3>
+<p>Combinam condicoes:</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>falar verdadeiro e falso         <span class="cm"># falso (os dois precisam ser verdadeiros)</span>
+falar verdadeiro ou falso        <span class="cm"># verdadeiro (um dos dois ja basta)</span>
+falar nao verdadeiro              <span class="cm"># falso (inverte o valor)</span>
+
+falar (10 > 5) e (5 > 2)         <span class="cm"># verdadeiro</span>
+falar (10 > 5) e (5 < 2)         <span class="cm"># falso</span></code></pre>
+</div>
+
+<div class="aviso"><strong>Cuidado:</strong> O operador de igualdade é <code class="inline-code">==</code> (dois sinais de igual). Um sinal <code class="inline-code">=</code> é para <strong>atribuir</strong>, nao para comparar.</div>
+</div>
+
+<div class="secao" id="textos">
+<h2>Trabalhando com Textos</h2>
+<p>Textos (strings) sao super versateis. Voce pode juntar, repetir e ate interpolar valores dentro deles.</p>
+
+<h3>Concatenacao</h3>
+<p>Juntar textos com <code class="inline-code">+</code>:</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>nome = "Over"
+saudacao = "Ola, " + nome + "!"
+falar saudacao    <span class="cm"># "Ola, Over!"</span></code></pre>
+</div>
+
+<h3>Template Strings (interpolacao)</h3>
+<p>Forma mais moderna: use <code class="inline-code">{variavel}</code> dentro do texto:</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>nome = "Over"
+idade = 30
+falar "Meu nome eh {nome} e tenho {idade} anos."
+<span class="cm"># "Meu nome eh Over e tenho 30 anos."</span></code></pre>
+</div>
+
+<p>Voce pode colocar qualquer expressao dentro das chaves:</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>a = 10
+b = 5
+falar "{a} + {b} = {a + b}"
+<span class="cm"># "10 + 5 = 15"</span></code></pre>
+</div>
+
+<h3>Ternario (if em uma linha)</h3>
+<p>O operador ternario <code class="inline-code">valor se condicao senao outro_valor</code> permite escolher entre dois valores em uma linha:</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>idade = 18
+pode = "sim" se idade >= 18 senao "nao"
+falar "Pode dirigir? {pode}"   <span class="cm"># "Pode dirigir? sim"</span>
+
+<span class="cm"># Funciona em qualquer lugar, inclusive dentro de template strings:</span>
+falar "{'maior' se idade >= 18 senao 'menor'} de idade"</code></pre>
+</div>
+
+<div class="dica"><strong>Poderoso:</strong> O ternario em SimpliPT funciona em <strong>qualquer expressao</strong> — dentro de strings, argumentos de funcao, listas, etc.</div>
+</div>
+
+<div class="secao" id="exercicios">
+<h2>Exercicios</h2>
+<p>Hora de praticar! Abra o <a href="/playground" target="_blank">Playground</a> e tente resolver cada um.</p>
+
+<div class="exercicio">
+<div class="label">&#9997; Exercicio 1</div>
+<h3>Saudacao Personalizada</h3>
+<p>Crie uma variavel <code class="inline-code">nome</code> com seu nome e outra <code class="inline-code">linguagem</code> com "SimpliPT". Mostre: "Ola, [nome]! Voce esta aprendendo [linguagem]."</p>
+<p><a href="/playground?ex=m1-1" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+</div>
+
+<div class="exercicio">
+<div class="label">&#9997; Exercicio 2</div>
+<h3>Calculadora de Idade</h3>
+<p>Crie uma variavel <code class="inline-code">ano_nascimento</code> com o ano que voce nasceu. Calcule sua idade em 2026 e mostre: "Voce tem [idade] anos." (Dica: <code class="inline-code">2026 - ano_nascimento</code>)</p>
+<p><a href="/playground?ex=m1-2" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+</div>
+
+<div class="exercicio">
+<div class="label">&#9997; Exercicio 3</div>
+<h3>Maior de Idade</h3>
+<p>Crie uma variavel <code class="inline-code">idade</code>. Use o ternario para mostrar "Maior de idade" se idade >= 18, senao "Menor de idade".</p>
+<p><a href="/playground?ex=m1-3" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+</div>
+
+<div class="exercicio">
+<div class="label">&#9997; Exercicio 4 (Desafio)</div>
+<h3>Media Escolar</h3>
+<p>Crie 3 variaveis com notas (<code class="inline-code">nota1</code>, <code class="inline-code">nota2</code>, <code class="inline-code">nota3</code>). Calcule a media e mostre: "Media: [valor] — [APROVADO se media >= 7 senao REPROVADO]"</p>
+<p><a href="/playground?ex=m1-4" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+</div>
+</div>
+
+<div class="nav-modulos">
+<span></span>
+<a href="/tutorial_m2" class="proximo">Modulo 2: Controle de Fluxo &rarr;</a>
+</div>
+</main>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'simplipt_tutorial_progress';
+  function carregar() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch(e) { return {} } }
+  function salvar(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)) } catch(e) {} }
+
+  var btn = document.createElement('button');
+  btn.className = 'check-mod';
+  btn.id = 'btn-concluir';
+  btn.textContent = '\u2713';
+  btn.style.marginLeft = '12px';
+  document.querySelector('.nav-modulos .proximo').parentNode.insertBefore(btn, document.querySelector('.nav-modulos .proximo'));
+
+  var prog = carregar();
+  if (prog.m1) { btn.classList.add('marcado'); btn.title = 'Concluido' }
+  else { btn.title = 'Marcar como concluido' }
+
+  btn.addEventListener('click', function() {
+    var prog = carregar();
+    prog.m1 = !prog.m1;
+    salvar(prog);
+    this.classList.toggle('marcado');
+    this.title = prog.m1 ? 'Concluido' : 'Marcar como concluido';
+  });
+
+  var sidebar = document.querySelector('.aula-sidebar');
+  if (sidebar) {
+    var links = sidebar.querySelectorAll('.indice a');
+    var titles = [];
+    links.forEach(function(a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) titles.push({ el: el, link: a });
+    });
+    function onScroll() {
+      var found = false;
+      for (var i = titles.length - 1; i >= 0; i--) {
+        var rect = titles[i].el.getBoundingClientRect();
+        if (rect.top <= 120) {
+          links.forEach(function(l) { l.classList.remove('ativo'); });
+          titles[i].link.classList.add('ativo');
+          found = true; break;
+        }
+      }
+      if (!found && links.length) { links.forEach(function(l) { l.classList.remove('ativo'); }); links[0].classList.add('ativo'); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

@@ -1,0 +1,59 @@
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0d1117;color:#c9d1d9;min-height:100vh;display:flex;flex-direction:column}
+.topo{background:#161b22;border-bottom:1px solid #30363d;padding:0 24px;display:flex;align-items:center;gap:16px;height:48px;position:sticky;top:0;z-index:100}
+.topo .logo{font-size:16px;font-weight:700;color:#58a6ff;text-decoration:none;white-space:nowrap}
+.topo a:not(.logo){color:#8b949e;text-decoration:none;font-size:13px;padding:4px 8px;border-radius:4px;transition:all .15s}
+.topo a:not(.logo):hover{color:#f0f6fc;background:#21262d}
+.topo .spacer{flex:1}
+.topo .info-bar{display:flex;gap:16px;font-size:12px;color:#8b949e}
+.topo .info-bar strong{color:#c9d1d9}
+.conteudo{flex:1;padding:24px;max-width:1200px;margin:0 auto;width:100%}
+.cartao{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:20px;margin-bottom:16px}
+.cartao h2{font-size:15px;font-weight:600;margin-bottom:12px;color:#f0f6fc}
+.cartao .subtitulo{font-size:12px;color:#8b949e;margin-top:-8px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid #21262d;font-size:13px}
+th{color:#8b949e;font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+td a{color:#58a6ff;text-decoration:none;font-size:13px}
+td a:hover{text-decoration:underline}
+td .acoes-celula{display:flex;gap:8px}
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:500}
+.tag-spt{background:#1f6feb22;color:#58a6ff;border:1px solid #1f6feb44}
+textarea{width:100%;min-height:350px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#c9d1d9;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:13px;padding:12px;resize:vertical;tab-size:4;line-height:1.5}
+textarea:focus{outline:none;border-color:#58a6ff}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border:none;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .15s;white-space:nowrap}
+.btn-primario{background:#238636;color:#fff}
+.btn-primario:hover{background:#2ea043}
+.btn-perigo{background:#da3633;color:#fff}
+.btn-perigo:hover{background:#f85149}
+.btn-azul{background:#1f6feb;color:#fff}
+.btn-azul:hover{background:#388bfd}
+.btn-cinza{background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+.btn-cinza:hover{background:#30363d}
+.acoes{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.saida-box{background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:12px;font-family:'Cascadia Code',monospace;font-size:13px;overflow-x:auto;white-space:pre-wrap;line-height:1.5;max-height:400px;overflow-y:auto}
+.saida-box.tipo-saida{color:#7ee787}
+.saida-box.tipo-erro{color:#f85149}
+.saida-box.tipo-info{color:#8b949e}
+.status-msg{padding:8px 12px;border-radius:6px;font-size:13px;margin-bottom:12px}
+.status-msg.info{background:#1f6feb22;border:1px solid #1f6feb44;color:#58a6ff}
+.status-msg.erro{background:#da363322;border:1px solid #da363344;color:#f85149}
+.status-msg.sucesso{background:#23863622;border:1px solid #23863644;color:#3fb950}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:12px;color:#8b949e;margin-bottom:4px;font-weight:500}
+.form-group input{width:100%;padding:8px 12px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#c9d1d9;font-size:13px;transition:border-color .15s}
+.form-group input:focus{outline:none;border-color:#58a6ff}
+.vazio{text-align:center;padding:48px 24px;color:#8b949e}
+.vazio p{font-size:14px;margin-bottom:4px}
+.vazio .icone{font-size:32px;margin-bottom:8px;opacity:.5}
+.grade{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){.grade{grid-template-columns:1fr}}
+.play-area{display:flex;flex-direction:column;gap:12px}
+.play-editor{flex:1}
+.play-editor textarea{min-height:250px}
+.play-saida{flex:1}
+.barra-status{display:flex;gap:16px;font-size:12px;color:#8b949e;padding:4px 0}
+.barra-status span{display:flex;align-items:center;gap:4px}
+.tecla{display:inline-block;padding:1px 5px;background:#21262d;border:1px solid #30363d;border-radius:3px;font-size:11px;color:#8b949e;font-family:monospace}
+.separador{border:none;border-top:1px solid #21262d;margin:16px 0}
+.rodape{text-align:center;padding:16px 24px;font-size:12px;color:#30363d;border-top:1px solid #21262d}

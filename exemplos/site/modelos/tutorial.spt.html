@@ -1,0 +1,143 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="tutorial-hero">
+<div class="inner">
+<h1>&#128218; Tutorial Completo</h1>
+<p>Aprenda SimpliPT do zero — mesmo que nunca tenha programado antes. 8 modulos, decenas de aulas praticas, exercicios e projetos reais.</p>
+<div class="stats">
+<div class="stat"><span class="num" id="stat-modulos">8</span><span class="label">Modulos</span></div>
+<div class="stat"><span class="num" id="stat-aulas">32</span><span class="label">Aulas</span></div>
+<div class="stat"><span class="num" id="stat-exercicios">24</span><span class="label">Exercicios</span></div>
+<div class="stat"><span class="num" id="stat-projetos">3</span><span class="label">Projetos</span></div>
+</div>
+<div class="progress-geral">
+<div class="bar"><div class="fill" id="barra-progresso"></div></div>
+<span class="pct" id="pct-texto">0%</span>
+</div>
+</div>
+</div>
+
+<div class="modulos">
+<div class="inner">
+<div class="grid">
+<a href="/tutorial_m1" class="modulo-card" data-modulo="1" id="mod-card-1">
+<div class="num">1</div>
+<div class="info">
+<h3>Fundamentos</h3>
+<p>Variaveis, tipos, operadores, textos, ternario — a base de tudo</p>
+</div>
+<div class="check" id="check-1">&#10003;</div>
+</a>
+
+<a href="/tutorial_m2" class="modulo-card" data-modulo="2" id="mod-card-2">
+<div class="num">2</div>
+<div class="info">
+<h3>Controle de Fluxo</h3>
+<p>Condicoes, loops, match/case — faca seu programa decidir e repetir</p>
+</div>
+<div class="check" id="check-2">&#10003;</div>
+</a>
+
+<a href="/tutorial_m3" class="modulo-card" data-modulo="3" id="mod-card-3">
+<div class="num">3</div>
+<div class="info">
+<h3>Funcoes</h3>
+<p>Organize seu codigo com fn, parametros, retorno, pipe operator</p>
+</div>
+<div class="check" id="check-3">&#10003;</div>
+</a>
+
+<a href="/tutorial_m4" class="modulo-card" data-modulo="4" id="mod-card-4">
+<div class="num">4</div>
+<div class="info">
+<h3>Dados</h3>
+<p>Listas, dicionarios, ranges, list comprehension — dados em massa</p>
+</div>
+<div class="check" id="check-4">&#10003;</div>
+</a>
+
+<a href="/tutorial_m5" class="modulo-card" data-modulo="5" id="mod-card-5">
+<div class="num">5</div>
+<div class="info">
+<h3>Arquivos e Erros</h3>
+<p>Tentar/capturar, ler/escrever arquivos, JSON, expressoes regulares</p>
+</div>
+<div class="check" id="check-5">&#10003;</div>
+</a>
+
+<a href="/tutorial_m6" class="modulo-card" data-modulo="6" id="mod-card-6">
+<div class="num">6</div>
+<div class="info">
+<h3>Web</h3>
+<p>Servidor HTTP, rotas, templates, APIs JSON, HTMX — crie sites</p>
+</div>
+<div class="check" id="check-6">&#10003;</div>
+</a>
+
+<a href="/tutorial_m7" class="modulo-card" data-modulo="7" id="mod-card-7">
+<div class="num">7</div>
+<div class="info">
+<h3>Banco de Dados</h3>
+<p>SQLite com banco.modelo(), CRUD completo, consultas</p>
+</div>
+<div class="check" id="check-7">&#10003;</div>
+</a>
+
+<a href="/tutorial_m8" class="modulo-card" data-modulo="8" id="mod-card-8">
+<div class="num">8</div>
+<div class="info">
+<h3>Alem dos Limites</h3>
+<p>Classes, async/await, build --exe, pacotes, debug, profiling</p>
+</div>
+<div class="check" id="check-8">&#10003;</div>
+</a>
+
+<a href="/tutorial_projetos" class="modulo-card" data-modulo="9" id="mod-card-9">
+<div class="num" style="background:var(--accent3);border-color:var(--accent3);color:var(--bg)">&#9733;</div>
+<div class="info">
+<h3>Projetos Finais</h3>
+<p>3 projetos completos para consolidar tudo que voce aprendeu</p>
+</div>
+<div class="check" id="check-9">&#10003;</div>
+</a>
+</div>
+</div>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'simplipt_tutorial_progress';
+  function carregar() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch(e) { return {} }
+  }
+  function salvar(dados) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)) } catch(e) {}
+  }
+  function atualizar() {
+    var prog = carregar();
+    var total = 9;
+    var feitos = 0;
+    for (var i = 1; i <= total; i++) {
+      var card = document.getElementById('mod-card-' + i);
+      var check = document.getElementById('check-' + i);
+      if (prog['m' + i]) {
+        if (card) card.classList.add('completo');
+        feitos++;
+      } else {
+        if (card) card.classList.remove('completo');
+      }
+    }
+    var pct = Math.round((feitos / total) * 100);
+    var barra = document.getElementById('barra-progresso');
+    var texto = document.getElementById('pct-texto');
+    if (barra) barra.style.width = pct + '%';
+    if (texto) texto.textContent = pct + '%';
+  }
+  atualizar();
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

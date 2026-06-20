@@ -1,0 +1,226 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="page-header">
+<div class="inner">
+<h1>&#9889; Playground</h1>
+<p>Escreva codigo SimpliPT e veja o resultado. Resolva exercicios com verificacao automatica.</p>
+</div>
+</div>
+
+<div class="playground">
+<div class="bar">
+<h1>Editor</h1>
+<select id="exemplo-select" style="padding:.4rem .8rem;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:.82rem;font-family:var(--font);outline:none;cursor:pointer">
+<option value="">Carregar exemplo...</option>
+<option value='falar "Ola, Mundo!"'>Ola, Mundo</option>
+<option value='nome = "Maria"\nfalar "Ola, {nome}!"'>Template String</option>
+<option value='se 10 > 5\n    falar "10 eh maior que 5"\nsenao\n    falar "mentira"\nfim'>Condicional</option>
+<option value='para i ate 5\n    falar "Contagem: " + texto(i)\nfim'>Loop Para Ate</option>
+<option value='itens = ["python", "simplipt", "jarbs"]\npara item em itens\n    falar "Gosto de " + item\nfim'>Loop Para Em</option>
+<option value='fn soma(a, b)\n    retornar a + b\nfim\nfalar soma(3, 4)'>Funcao</option>
+<option value='numeros = [1,2,3,4,5]\npares = [x para x em numeros se x % 2 eh 0]\nfalar pares'>List Comprehension</option>
+<option value='dados = {nome: "Over", idade: 30, linguagem: "SimpliPT"}\npara chave, valor em dados\n    falar "{chave}: {valor}"\nfim'>Dicionario</option>
+<option value='tentar\n    x = 1 / 0\ncapturar\n    falar "Divisao por zero capturada!"\nfim'>Tratamento de Erro</option>
+<option value='usar data\nagora = data.agora()\nfalar "Data atual: " + agora'>Modulo Data</option>
+</select>
+<div class="bar-btns">
+<button class="btn-exec" id="btn-executar">&#9654; Executar</button>
+<button class="btn-verificar" id="btn-verificar" style="display:none">&#10003; Verificar</button>
+</div>
+</div>
+
+<div id="exercicio-painel" style="display:none;margin-bottom:1rem;padding:1rem;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);font-size:.9rem"></div>
+
+<textarea class="editor" id="code-editor" name="codigo" placeholder="escreva seu codigo SimpliPT aqui...&#10;ex: falar &quot;Ola, Mundo!&quot;">falar "Ola, Mundo!"</textarea>
+
+<div class="output vazio" id="output">Execute seu codigo para ver o resultado aqui</div>
+</div>
+
+<style>
+.bar { display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; margin-bottom:.8rem }
+.bar h1 { font-size:1rem; margin:0; min-width:fit-content }
+.bar-btns { display:flex; gap:.5rem; margin-left:auto }
+.btn-exec { padding:.5rem 1.2rem; border:none; border-radius:var(--radius); background:var(--accent); color:#fff; font-weight:600; cursor:pointer; font-size:.85rem }
+.btn-exec:hover { filter:brightness(1.1) }
+.btn-verificar { padding:.5rem 1.2rem; border:none; border-radius:var(--radius); background:var(--accent3); color:#fff; font-weight:600; cursor:pointer; font-size:.85rem }
+.btn-verificar:hover { filter:brightness(1.1) }
+.resultado-ok { color:var(--accent3) !important; border-color:var(--accent3) !important }
+.resultado-erro { color:#e74c3c !important; border-color:#e74c3c !important }
+#exercicio-painel h3 { margin:0 0 .3rem 0; font-size:1rem }
+#exercicio-painel .meta { font-size:.8rem; color:var(--text2); margin-bottom:.5rem }
+#exercicio-painel .desc { line-height:1.5; margin-bottom:.5rem }
+#exercicio-painel .esperado { font-size:.82rem; color:var(--text2); padding:.4rem .6rem; background:var(--bg); border-radius:var(--radius-sm); font-family:var(--mono); white-space:pre-wrap }
+#status-verif { font-weight:600; margin-left:.5rem }
+</style>
+
+<script>
+(function() {
+  var editor = document.getElementById('code-editor');
+  var btnExec = document.getElementById('btn-executar');
+  var btnVerif = document.getElementById('btn-verificar');
+  var select = document.getElementById('exemplo-select');
+  var output = document.getElementById('output');
+  var painel = document.getElementById('exercicio-painel');
+
+  // ─── DADOS DOS EXERCICIOS ───
+  var EXERCICIOS = {
+    "m1-1": { mod:1, num:1, titulo:"Saudacao Personalizada",
+      desc:'Crie as variaveis <code>nome</code> com seu nome e <code>linguagem</code> com "SimpliPT". Mostre "Ola, [nome]! Voce esta aprendendo [linguagem]."',
+      codigo:'nome = "Over"\nlinguagem = "SimpliPT"\nfalar "Ola, " + nome + "! Voce esta aprendendo " + linguagem + "."',
+      esperado:'Ola, Over! Voce esta aprendendo SimpliPT.' },
+    "m1-2": { mod:1, num:2, titulo:"Calculadora de Idade",
+      desc:'Crie <code>ano_nascimento</code> e calcule a idade em 2026.',
+      codigo:'ano_nascimento = 1995\nidade = 2026 - ano_nascimento\nfalar "Voce tem " + idade + " anos."',
+      esperado:'Voce tem 31 anos.' },
+    "m1-3": { mod:1, num:3, titulo:"Maior de Idade",
+      desc:'Use o ternario para mostrar "Maior de idade" se idade >= 18, senao "Menor de idade".',
+      codigo:'idade = 18\nresultado = "Maior de idade" se idade >= 18 senao "Menor de idade"\nfalar resultado',
+      esperado:'Maior de idade' },
+    "m1-4": { mod:1, num:4, titulo:"Media Escolar (Desafio)",
+      desc:'Crie 3 notas, calcule a media e mostre APROVADO/REPROVADO.',
+      codigo:'nota1 = 8\nnota2 = 7\nnota3 = 9\nmedia = (nota1 + nota2 + nota3) / 3\nstatus = "APROVADO" se media >= 7 senao "REPROVADO"\nfalar "Media: " + media + " — " + status',
+      esperado:'Media: 8.0 — APROVADO' },
+    "m2-1": { mod:2, num:1, titulo:"Par ou Impar",
+      desc:'Crie um numero e mostre se ele eh par ou impar usando <code>se</code>.',
+      codigo:'num = 7\nse num % 2 eh 0\n    falar "par"\nsenao\n    falar "impar"\nfim',
+      esperado:'impar' },
+    "m2-2": { mod:2, num:2, titulo:"Tabuada do 7",
+      desc:'Mostre a tabuada do 7 usando <code>para ate</code>.',
+      codigo:'n = 7\npara i ate 10\n    falar texto(n) + " x " + texto(i) + " = " + texto(n * i)\nfim',
+      esperado:'7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70' },
+    "m3-1": { mod:3, num:1, titulo:"Funcao de Saudacao",
+      desc:'Crie uma funcao <code>saudacao(nome)</code> que retorna "Ola, [nome]!".',
+      codigo:'fn saudacao(nome)\n    retornar "Ola, " + nome + "!"\nfim\nfalar saudacao("Mundo")',
+      esperado:'Ola, Mundo!' },
+    "m3-2": { mod:3, num:2, titulo:"Area do Retangulo",
+      desc:'Crie uma funcao <code>area_retangulo(largura, altura)</code>.',
+      codigo:'fn area_retangulo(largura, altura)\n    retornar largura * altura\nfim\nfalar area_retangulo(5, 3)',
+      esperado:'15' },
+    "m3-3": { mod:3, num:3, titulo:"Fatorial",
+      desc:'Crie uma funcao recursiva <code>fatorial(n)</code>.',
+      codigo:'fn fatorial(n)\n    se n <= 1\n        retornar 1\n    fim\n    retornar n * fatorial(n - 1)\nfim\nfalar fatorial(5)',
+      esperado:'120' },
+    "m4-1": { mod:4, num:1, titulo:"Soma de Lista",
+      desc:'Crie uma funcao que soma todos os elementos de uma lista.',
+      codigo:'fn somar_lista(lista)\n    total = 0\n    para n em lista\n        total = total + n\n    fim\n    retornar total\nfim\nfalar somar_lista([10, 20, 30])',
+      esperado:'60' },
+    "m4-2": { mod:4, num:2, titulo:"Agenda de Contatos",
+      desc:'Crie um dicionario com contatos e liste todos.',
+      codigo:'agenda = {}\nagenda["Maria"] = {email: "maria@email.com", tel: "11988888888"}\nagenda["Pedro"] = {email: "pedro@email.com", tel: "11977777777"}\npara nome em agenda\n    falar nome + ": " + agenda[nome].email\nfim',
+      esperado:'Maria: maria@email.com\nPedro: pedro@email.com' },
+    "m4-3": { mod:4, num:3, titulo:"Filtrar Pares com Listcomp",
+      desc:'Use list comprehension para filtrar numeros pares de 1 a 10.',
+      codigo:'nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\npares = [x para x em nums se x % 2 eh 0]\nfalar pares',
+      esperado:'[2, 4, 6, 8, 10]' },
+    "m5-1": { mod:5, num:1, titulo:"Calculadora Segura",
+      desc:'Crie uma calculadora com tentar/capturar para tratar erros.',
+      codigo:'fn dividir_seguro(a, b)\n    tentar\n        retornar a / b\n    capturar\n        retornar 0\n    fim\nfim\nfalar dividir_seguro(10, 2)\nfalar dividir_seguro(10, 0)',
+      esperado:'5.0\n0' },
+    "m8-1": { mod:8, num:1, titulo:"Classe Carro",
+      desc:'Crie uma classe Carro com metodo acelerar().',
+      codigo:'classe Carro\n  construtor(marca, modelo, ano)\n    este.marca = marca\n    este.modelo = modelo\n    este.ano = ano\n  fim\n  metodo acelerar()\n    retornar "Vrum! O " + este.modelo + " acelerou!"\n  fim\nfim\nfusca = Carro("VW", "Fusca", 1978)\nfalar fusca.acelerar()',
+      esperado:'Vrum! O Fusca acelerou!' },
+    "m8-2": { mod:8, num:2, titulo:"Hierarquia de Funcionarios",
+      desc:'Crie Funcionario, Gerente e Estagiario com polimorfismo.',
+      codigo:'classe Funcionario\n  construtor(nome, salario_base)\n    este.nome = nome\n    este.salario_base = salario_base\n  fim\n  metodo calcular_salario()\n    retornar este.salario_base\n  fim\nfim\nclasse Gerente extende Funcionario\n  metodo calcular_salario()\n    retornar este.salario_base * 1.2\n  fim\nfim\njoao = Funcionario("Joao", 3000)\nmaria = Gerente("Maria", 5000)\nfalar joao.nome + ": R$ " + texto(joao.calcular_salario())\nfalar maria.nome + ": R$ " + texto(maria.calcular_salario())',
+      esperado:'Joao: R$ 3000\nMaria: R$ 6000.0' },
+    "m7-1": { mod:7, num:1, titulo:"Modelo Pessoa",
+      desc:'Crie um modelo Pessoa com campos nome (texto) e idade (inteiro). Insira 3 pessoas e liste todas com <code>todos()</code>.',
+      codigo:'usar banco\nbanco.conectar(":memory:")\nPessoa = banco.modelo("pessoas", {nome: "texto", idade: "inteiro"})\nPessoa.criar(nome="Ana", idade=25)\nPessoa.criar(nome="Bia", idade=30)\nPessoa.criar(nome="Caio", idade=22)\npara p em Pessoa.todos()\n    falar p.nome + " - " + p.idade\nfim',
+      esperado:'Ana - 25\nBia - 30\nCaio - 22' },
+    "m7-2": { mod:7, num:2, titulo:"Buscar com LIKE",
+      desc:'Use <code>onde()</code> com <code>LIKE</code> para buscar pessoas cujo nome comeca com "A".',
+      codigo:'usar banco\nbanco.conectar(":memory:")\nPessoa = banco.modelo("pessoas", {nome: "texto", idade: "inteiro"})\nPessoa.criar(nome="Ana", idade=25)\nPessoa.criar(nome="Bruno", idade=30)\nPessoa.criar(nome="Alice", idade=22)\nPessoa.criar(nome="Carlos", idade=28)\nresultado = Pessoa.onde("nome LIKE ?", "A%")\npara p em resultado\n    falar p.nome\nfim',
+      esperado:'Ana\nAlice' }
+  };
+
+  // ─── CARREGAR EXERCICIO DA URL ───
+  function carregarExercicio(id) {
+    var ex = EXERCICIOS[id];
+    if (!ex) return;
+    painel.style.display = 'block';
+    painel.innerHTML =
+      '<h3>' + ex.titulo + '</h3>' +
+      '<div class="meta">Modulo ' + ex.mod + ', Exercicio ' + ex.num + '</div>' +
+      '<div class="desc">' + ex.desc + '</div>' +
+      '<div class="esperado">Saida esperada:<br>' + ex.esperado.replace(/\n/g, '<br>') + '</div>';
+    editor.value = ex.codigo;
+    btnVerif.style.display = 'inline-block';
+    btnVerif.dataset.exId = id;
+    output.className = 'output vazio';
+    output.textContent = 'Exercicio carregado. Clique Executar para testar ou Verificar para conferir.';
+  }
+
+  var params = new URLSearchParams(window.location.search);
+  var exId = params.get('ex');
+  if (exId && EXERCICIOS[exId]) carregarExercicio(exId);
+
+  // ─── EXECUTAR ───
+  function executar(codigo, callback) {
+    output.className = 'output';
+    output.textContent = 'Executando...';
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/executar', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+      try {
+        var resp = JSON.parse(xhr.responseText);
+        var saida = resp.saida || '';
+        if (saida === '(sem saida)') saida = '';
+        callback(saida);
+      } catch(e) { callback('Erro ao ler resposta'); }
+    };
+    xhr.onerror = function() { callback('Erro de conexao'); };
+    xhr.send(JSON.stringify({codigo: codigo}));
+  }
+
+  btnExec.addEventListener('click', function() {
+    executar(editor.value, function(saida) {
+      output.textContent = saida || '(codigo executou sem saida)';
+      output.className = 'output' + (saida.startsWith('Erro') ? ' erro' : '');
+    });
+  });
+
+  // ─── VERIFICAR ───
+  btnVerif.addEventListener('click', function() {
+    var codigo = editor.value;
+    executar(codigo, function(saida) {
+      var ex = EXERCICIOS[btnVerif.dataset.exId];
+      if (!ex) return;
+      var esperado = ex.esperado.trim();
+      var obtido = saida.trim();
+      var correto = (obtido === esperado);
+      output.textContent = obtido || '(sem saida)';
+      output.className = 'output';
+      if (correto) {
+        output.classList.add('resultado-ok');
+        output.textContent = '\u2713 Correto! ' + output.textContent;
+      } else {
+        output.classList.add('resultado-erro');
+        output.textContent = '\u2717 Incorreto. Esperado:\n' + esperado + '\n---\nSeu codigo produziu:\n' + obtido;
+      }
+    });
+  });
+
+  // ─── EXEMPLOS ───
+  select.addEventListener('change', function() {
+    if (this.value) {
+      btnVerif.style.display = 'none';
+      painel.style.display = 'none';
+      editor.value = this.value.replace(/\\n/g, '\n');
+    }
+  });
+
+  // ─── TAB ───
+  editor.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      var start = this.selectionStart, end = this.selectionEnd;
+      this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+      this.selectionStart = this.selectionEnd = start + 4;
+    }
+  });
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

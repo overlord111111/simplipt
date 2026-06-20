@@ -1,0 +1,69 @@
+{
+  "scopeName": "source.simplipt",
+  "name": "SimpliPT",
+  "fileTypes": [".spt", ".spt.html"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#builtins" },
+    { "include": "#operators" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "match": "#.*$", "name": "comment.line.number-sign.simplipt" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        { "begin": "\"", "end": "\"", "name": "string.quoted.double.simplipt",
+          "patterns": [{
+            "match": "\\\\[btnr\"\\\\]",
+            "name": "constant.character.escape.simplipt"
+          }, {
+            "begin": "\\{", "end": "\\}",
+            "name": "variable.interpolation.simplipt",
+            "patterns": [{ "include": "#keywords" }, { "include": "#builtins" }]
+          }]
+        },
+        { "begin": "'", "end": "'", "name": "string.quoted.single.simplipt" }
+      ]
+    },
+    "numbers": {
+      "match": "\\b[0-9]+(\\.[0-9]+)?\\b",
+      "name": "constant.numeric.simplipt"
+    },
+    "keywords": {
+      "patterns": [
+        { "match": "\\b(se|senao|fim|para|em|enquanto|funcao|fn|retornar|falar|mostrar|dizer|escrever|ler|limpar|pausa|info|aviso|erro|tentar|capturar|usar|classe|novo|este|super|extende|corresponder|caso|paralelo|nada|verdadeiro|falso|eh|e|ou|nao|not|ou|ou_entao|e_entao)\\b",
+          "name": "keyword.control.simplipt"
+        },
+        { "match": "\\b(de|ate)\\b", "name": "keyword.other.simplipt" }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        { "match": "\\b(tamanho|tipo|numero|texto|inteiro|booleano|lista|dicionario)\\b",
+          "name": "support.type.simplipt"
+        },
+        { "match": "\\b(servidor|arquivos|sistema|template|json|matematica|data|regex|banco|cache|hashes|http|processo|fila|executar|config|navegador|http_cliente)\\b",
+          "name": "support.module.simplipt"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        { "match": "\\+|-|\\*|/|%|\\|>|=|\\+=|-=|\\*=|/=|%=|\\|\\||&&|é|>|<|>=|<=\\b",
+          "name": "keyword.operator.simplipt" }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        { "match": "[\\(\\)\\[\\]\\{\\}:,;.]", "name": "punctuation.simplipt" }
+      ]
+    }
+  }
+}

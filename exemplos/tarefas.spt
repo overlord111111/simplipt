@@ -1,0 +1,111 @@
+usar arquivos
+usar json
+
+ARQUIVO = "tarefas.json"
+
+fn carregar()
+    se arquivos.existe(ARQUIVO)
+        retornar json.arquivo(ARQUIVO)
+    fim
+    retornar []
+fim
+
+fn salvar(lista)
+    json.salvar(ARQUIVO, lista)
+fim
+
+fn listar(lista)
+    se tamanho(lista) é 0
+        falar "Nenhuma tarefa."
+        retornar
+    fim
+    falar "--- TAREFAS ---"
+    para t em lista
+        status = "[x]" se t.concluido senao "[ ]"
+        falar status + " " + texto(t.id) + ". " + t.titulo
+    fim
+fim
+
+fn adicionar(lista)
+    titulo = ler("Titulo: ")
+    se titulo é ""
+        falar "Titulo vazio."
+        retornar lista
+    fim
+    ultimo = 0
+    para t em lista
+        se t.id > ultimo
+            ultimo = t.id
+        fim
+    fim
+    nova = {"id": ultimo + 1, "titulo": titulo, "concluido": falso}
+    lista = lista + [nova]
+    salvar(lista)
+    falar "Adicionada!"
+    retornar lista
+fim
+
+fn concluir(lista)
+    id = inteiro(ler("ID: "))
+    para i ate tamanho(lista)
+        t = lista[i - 1]
+        se t.id é id
+            lista[i - 1].concluido = verdadeiro
+            salvar(lista)
+            falar "Concluida!"
+            retornar lista
+        fim
+    fim
+    falar "Nao encontrada."
+    retornar lista
+fim
+
+fn remover(lista)
+    id = inteiro(ler("ID: "))
+    novas = []
+    tirou = falso
+    para t em lista
+        se t.id nao é id
+            novas = novas + [t]
+        senao
+            tirou = verdadeiro
+        fim
+    fim
+    se tirou
+        salvar(novas)
+        falar "Removida!"
+        retornar novas
+    fim
+    falar "Nao encontrada."
+    retornar lista
+fim
+
+tarefas = carregar()
+rodando = verdadeiro
+enquanto rodando
+    falar ""
+    falar "=== TAREFAS ==="
+    falar "1. Listar"
+    falar "2. Adicionar"
+    falar "3. Concluir"
+    falar "4. Remover"
+    falar "5. Sair"
+    op = ler("Escolha: ")
+
+    se op é "1"
+        listar(tarefas)
+    fim
+    se op é "2"
+        tarefas = adicionar(tarefas)
+    fim
+    se op é "3"
+        tarefas = concluir(tarefas)
+    fim
+    se op é "4"
+        tarefas = remover(tarefas)
+    fim
+    se op é "5"
+        rodando = falso
+    fim
+fim
+falar "Ate logo!"

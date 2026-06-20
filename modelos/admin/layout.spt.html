@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>{% se titulo %}{{ titulo }} — {% fim %}SimpliPT IDE</title>
+    <link rel="stylesheet" href="/_admin/estatico/ide.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+    <div class="topo">
+        <a href="/_admin/" class="logo">&#x2B21; SimpliPT</a>
+        <div class="spacer"></div>
+        <div class="info-bar">
+            {% se total_arquivos %}<span><strong>{{ total_arquivos }}</strong> arquivos</span>{% fim %}
+            <span>v5.1</span>
+        </div>
+    </div>
+    <div class="conteudo">
+        {% incluir "bloco.spt.html" %}
+    </div>
+    <script>document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el))})</script>
+</body>
+</html>

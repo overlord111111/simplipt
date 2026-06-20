@@ -1,0 +1,60 @@
+# Valida todos os exemplos e scripts .spt do projeto
+# Uso: simplipt validar_exemplos.spt
+
+usar json
+usar arquivo
+usar sistema
+
+funcao listar_arquivos_spt(diretorio)
+    arquivos = []
+    para item em arquivo.listar(diretorio)
+        se arquivo.e_diretorio(diretorio + "/" + item)
+            para sub em listar_arquivos_spt(diretorio + "/" + item)
+                arquivos.inserir(sub)
+            fim
+        senao se item.termina_com(".spt")
+            arquivos.inserir(diretorio + "/" + item)
+        fim
+    fim
+    retornar arquivos
+fim
+
+funcao validar_codigo(caminho)
+    tentar
+        codigo = arquivo.ler(caminho)
+        falsificar
+        resultado = sistema.executar("simplipt " + caminho + " --check")
+        retornar {caminho: caminho, valido: verdadeiro}
+    capturar
+        retornar {caminho: caminho, valido: falso, erro: erro}
+    fim
+fim
+
+arquivos = listar_arquivos_spt("exemplos")
+arquivos.inserir("validar_exemplos.spt")
+falar "=== VALIDAÇÃO DE EXEMPLOS SIMPLIPT ==="
+falar ""
+
+total = 0
+validos = 0
+invalidos = 0
+
+para item em arquivos
+    total = total + 1
+    resultado = validar_codigo(item)
+    se resultado.valido
+        validos = validos + 1
+        mostrar "  [OK] " + item
+    senao
+        invalidos = invalidos + 1
+        mostrar "[ERR] " + item + ": " + resultado.erro
+    fim
+fim
+
+falar ""
+falar "=== RESUMO ==="
+falar "Total: " + total.to_texto() + " | Válidos: " + validos.to_texto() + " | Inválidos: " + invalidos.to_texto()
+
+se invalidos > 0
+    sistema.sair(1)
+fim

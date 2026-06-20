@@ -1,0 +1,57 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="page-header">
+<div class="inner">
+<h1>Sobre o SimpliPT</h1>
+<p>Uma linguagem de programação em português, construída do zero.</p>
+</div>
+</div>
+
+<section>
+<div class="inner">
+
+<div style="max-width:720px">
+
+<h2>O que é?</h2>
+<p>SimpliPT é uma linguagem de programação completa onde você escreve código em português. Não é um tradutor ou uma camada por cima de outra linguagem — é um ecossistema próprio: lexer, parser, AST, interpretador, runtime, CLI e 18 módulos de biblioteca padrão, tudo escrito do zero em Python.</p>
+
+<h2>Como funciona</h2>
+<p>O código SimpliPT passa por quatro estágios:</p>
+<ul>
+<li><strong>Lexer</strong> — Divide o texto em tokens (palavras reservadas como <span class="inline-code">se</span>, <span class="inline-code">para</span>, operadores, números, strings)</li>
+<li><strong>Parser</strong> — Constrói uma Árvore Sintática Abstrata (AST) a partir dos tokens</li>
+<li><strong>Interpretador</strong> — Percorre a AST e executa cada nó, gerenciando escopo de variáveis</li>
+<li><strong>Runtime</strong> — Funções nativas e módulos stdlib disponíveis durante a execução</li>
+</ul>
+
+<h2>Stack técnica</h2>
+<ul>
+<li><strong>Python 3.12+</strong> — sem dependências externas</li>
+<li><strong>245 testes</strong> — cobrindo lexer, parser, interpretador e todos os módulos stdlib</li>
+<li><strong>~6000 linhas</strong> de código fonte</li>
+<li><strong>18 módulos</strong> na biblioteca padrão</li>
+</ul>
+
+<h2>Filosofia</h2>
+<p>SimpliPT foi feito para ser <strong>prático</strong>. Sem firulas, sem camadas de abstração desnecessárias. Código que você lê e entende na hora, em português, e que resolve problemas reais: servidor web, scripts de automação, manipulação de arquivos, banco de dados, APIs.</p>
+
+<h2>Quem fez</h2>
+<p>SimpliPT foi criado por <strong>Over</strong>, com assistência de <strong>Jarbs</strong>, um assistente de IA com personalidade forte e acesso total ao sistema. O desenvolvimento ocorreu entre 17 e 18 de junho de 2026.</p>
+
+<h2>Versões</h2>
+<table>
+<tr><th>Versão</th><th>O que trouxe</th></tr>
+<tr><td>V1</td><td>Core da linguagem: lexer, parser, AST, interpretador, REPL, CLI, stdlib básica (sistema, arquivos, json, http)</td></tr>
+<tr><td>V2</td><td>Config, tentar/capturar, data, matemática, regex, hashes, módulos .spt, intervalo, atribuição membro — 159 testes</td></tr>
+<tr><td>V3</td><td>Servidor HTTP, banco SQLite (transações), cache TTL, fila com workers, funções anônimas — 186 testes</td></tr>
+<tr><td>V4</td><td>Classes/herança, template strings, pipe operator, corresponder, listcomp, CLI expandida — 201 testes</td></tr>
+<tr><td>V5</td><td>Template engine .spt.html, ternário em qualquer expressão, servidor expandido, dashboard IDE, comando global — 225 testes</td></tr>
+<tr><td>V5.1</td><td>Tipagem opcional, modo debug passo a passo, REPL colorido com histórico, PyPI-ready, highlight.js na dashboard — 245 testes</td></tr>
+<tr><td>V5.2</td><td>Build zipapp/exe, strict mode, hot-reload no servidor, LSP, VS Code extension, dashboard auto-instalável com playground — 245 testes</td></tr>
+</table>
+
+</div>
+</div>
+</section>
+
+{% incluir "rodape.spt.html" %}

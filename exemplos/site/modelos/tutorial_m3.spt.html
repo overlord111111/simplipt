@@ -1,0 +1,303 @@
+{% incluir "cabecalho.spt.html" %}
+
+<div class="aula">
+<aside class="aula-sidebar">
+<a href="/tutorial" class="voltar">&larr; Voltar</a>
+<h4>Modulo 3</h4>
+<ul class="indice">
+<li><a href="#intro" class="ativo">Introducao</a></li>
+<li><a href="#aula1">Aula 1</a></li>
+<li><a href="#aula2">Aula 2</a></li>
+<li><a href="#aula3">Aula 3</a></li>
+<li><a href="#aula4">Aula 4</a></li>
+<li><a href="#exercicios">Exercicios</a></li>
+</ul>
+</aside>
+
+<main class="aula-content">
+<div class="cabecalho">
+<div class="bread"><a href="/tutorial">Tutorial</a> / Modulo 3</div>
+<h1>Modulo 3: Funcoes</h1>
+<p>Aprenda a criar funcoes para organizar, reutilizar e dar nome a blocos de codigo. Descubra parametros, retorno, funcoes anonimas e o operador pipe.</p>
+</div>
+
+<div class="secao" id="intro">
+<h2>Introducao</h2>
+<p>Conforme seus programas crescem, voce percebe que precisa repetir a mesma logica varias vezes. Funcoes resolvem isso: sao como <strong>receitas</strong> que voce escreve uma vez e usa quantas vezes quiser. Elas organizam o codigo, evitam repeticao e tornam tudo mais facil de ler e dar manutencao.</p>
+<p>No SimpliPT, toda funcao comeca com <code class="inline-code">fn</code> e termina com <code class="inline-code">fim</code>. Vamos aprender do basico ate tecnicas avancadas como pipe operator.</p>
+</div>
+
+<div class="secao" id="aula1">
+<h2>Aula 1: Criando Funcoes</h2>
+
+<p>Para criar uma funcao use a palavra-chave <code class="inline-code">fn</code>, de um nome para ela, liste os parametros (se houver) entre parenteses e escreva o corpo entre <code class="inline-code">fn</code> e <code class="inline-code">fim</code>.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="fn">fn</span> saudacao(nome)
+    falar <span class="str">"Ola, {nome}!"</span>
+<span class="fn">fim</span>
+
+<span class="cm"># Chamando a funcao</span>
+saudacao(<span class="str">"Over"</span>)</code></pre>
+</div>
+
+<h3>Exemplo: Funcao de boas-vindas</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="fn">fn</span> boas_vindas(usuario, hora)
+    <span class="kw">se</span> hora &lt; <span class="num">12</span>
+        falar <span class="str">"Bom dia, {usuario}!"</span>
+    <span class="kw">senao se</span> hora &lt; <span class="num">18</span>
+        falar <span class="str">"Boa tarde, {usuario}!"</span>
+    <span class="kw">senao</span>
+        falar <span class="str">"Boa noite, {usuario}!"</span>
+    <span class="kw">fim</span>
+<span class="fn">fim</span>
+
+boas_vindas(<span class="str">"Jarbs"</span>, <span class="num">14</span>)</code></pre>
+</div>
+
+<p>Note que as funcoes <strong>precisam ser definidas antes de serem chamadas</strong> (ou o interpretador precisa encontra-las no mesmo arquivo).</p>
+</div>
+
+<div class="secao" id="aula2">
+<h2>Aula 2: Parametros e Retorno</h2>
+
+<p>Parametros sao as <strong>entradas</strong> da funcao &mdash; valores que voce passa para ela trabalhar. O <strong>retorno</strong> eh a <strong>saida</strong> &mdash; o valor que a funcao devolve para quem a chamou.</p>
+
+<p>Use <code class="inline-code">retornar valor</code> para devolver um resultado.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="fn">fn</span> soma(a, b)
+    retornar a + b
+<span class="fn">fim</span>
+
+resultado = soma(<span class="num">10</span>, <span class="num">5</span>)
+falar resultado  <span class="cm"># 15</span></code></pre>
+</div>
+
+<h3>Exemplo: Quadrado de um numero</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="fn">fn</span> quadrado(x)
+    retornar x * x
+<span class="fn">fim</span>
+
+falar quadrado(<span class="num">7</span>)  <span class="cm"># 49</span></code></pre>
+</div>
+
+<h3>Exemplo: Verificar se eh par</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="fn">fn</span> eh_par(n)
+    retornar n % <span class="num">2</span> <span class="kw">eh</span> <span class="num">0</span>
+<span class="fn">fim</span>
+
+falar eh_par(<span class="num">10</span>)  <span class="cm"># Verdadeiro</span>
+falar eh_par(<span class="num">7</span>)   <span class="cm"># Falso</span></code></pre>
+</div>
+
+<div class="dica">
+<p><strong>Dica:</strong> Se uma funcao nao tiver <code class="inline-code">retornar</code>, ela devolve <code class="inline-code">Nada</code> (o equivalente a <code>null</code> de outras linguagens).</p>
+</div>
+
+<h3>Exemplo: Fatorial (iterativo)</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="fn">fn</span> fatorial(n)
+    resultado = <span class="num">1</span>
+    <span class="kw">para</span> i <span class="kw">ate</span> n
+        resultado = resultado * i
+    <span class="kw">fim</span>
+    retornar resultado
+<span class="fn">fim</span>
+
+falar fatorial(<span class="num">5</span>)  <span class="cm"># 120</span></code></pre>
+</div>
+</div>
+
+<div class="secao" id="aula3">
+<h2>Aula 3: Funcao Anonima e Escopo</h2>
+
+<p>Uma <strong>funcao anonima</strong> eh uma funcao sem nome. Voce pode guarda-la em uma variavel, passar como argumento para outra funcao ou usa-la rapidamente sem precisar declarar um nome.</p>
+
+<p>A sintaxe usa <code class="inline-code">funcao(params) ... fim</code> em vez de <code class="inline-code">fn nome</code>.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="cm"># Guardando funcao anonima em uma variavel</span>
+dobrar = <span class="fn">funcao</span>(x)
+    retornar x * <span class="num">2</span>
+<span class="fn">fim</span>
+
+falar dobrar(<span class="num">5</span>)  <span class="cm"># 10</span></code></pre>
+</div>
+
+<h3>Escopo de variaveis</h3>
+
+<p>Variaveis criadas <strong>dentro</strong> da funcao nao vazam para fora. Elas existem apenas durante a execucao da funcao e sao destruidas no final. Isso se chama <strong>escopo local</strong>.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>x = <span class="num">10</span>  <span class="cm"># variavel global</span>
+
+<span class="fn">fn</span> teste()
+    x = <span class="num">99</span>  <span class="cm"># variavel local - nao altera a global</span>
+    falar <span class="str">"Dentro: {x}"</span>
+<span class="fn">fim</span>
+
+teste()       <span class="cm"># Dentro: 99</span>
+falar x       <span class="cm"># 10 (global nao foi alterada)</span></code></pre>
+</div>
+
+<div class="aviso">
+<p><strong>Atencao:</strong> Cuidado para nao confundir variaveis locais com globais. Se precisar alterar uma variavel global dentro de uma funcao, use a palavra-chave <code class="inline-code">global</code> (se disponivel na sua versao do SimpliPT).</p>
+</div>
+</div>
+
+<div class="secao" id="aula4">
+<h2>Aula 4: Pipe Operator | &gt;</h2>
+
+<p>O operador pipe <code class="inline-code">|&gt;</code> pega o resultado da expressao da esquerda e passa como argumento para a funcao da direita. Ele permite <strong>encadeamento elegante</strong> de operacoes.</p>
+
+<p><code class="inline-code">valor |&gt; funcao</code> eh equivalente a <code class="inline-code">funcao(valor)</code>.</p>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="fn">fn</span> quadrado(x)
+    retornar x * x
+<span class="fn">fim</span>
+
+<span class="fn">fn</span> text(valor)
+    retornar <span class="str">"Resultado: {valor}"</span>
+<span class="fn">fim</span>
+
+<span class="cm"># Sem pipe:</span>
+falar text(quadrado(<span class="num">5</span>))
+
+<span class="cm"># Com pipe (mais legivel):</span>
+falar <span class="num">5</span> |&gt; quadrado |&gt; text</code></pre>
+</div>
+
+<h3>Exemplo: Ordenar e pegar o primeiro</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code>nomes = [<span class="str">"Zara"</span>, <span class="str">"Ana"</span>, <span class="str">"Beto"</span>, <span class="str">"Caio"</span>]
+<span class="cm"># Pipe encadeado: ordena a lista e pega o primeiro elemento</span>
+primeiro = nomes |&gt; ordenar |&gt; primeiro
+falar primeiro  <span class="cm"># Ana</span></code></pre>
+</div>
+
+<h3>Exemplo: Encadeamento com funcoes proprias</h3>
+
+<div class="code-block">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="fn">fn</span> dobrar(n)
+    retornar n * <span class="num">2</span>
+<span class="fn">fim</span>
+
+<span class="fn">fn</span> somar_um(n)
+    retornar n + <span class="num">1</span>
+<span class="fn">fim</span>
+
+<span class="cm"># 5 -&gt; dobrar -&gt; 10 -&gt; somar_um -&gt; 11</span>
+resultado = <span class="num">5</span> |&gt; dobrar |&gt; somar_um
+falar resultado  <span class="cm"># 11</span></code></pre>
+</div>
+
+<div class="dica">
+<p><strong>Dica:</strong> O pipe funciona com qualquer funcao que receba um unico argumento. Para funcoes com multiplos parametros, use funcao anonima como intermediario: <code class="inline-code">valor |&gt; funcao(x) soma(x, 2) fim</code>.</p>
+</div>
+</div>
+
+<div class="secao" id="exercicios">
+<h2>Exercicios</h2>
+<p>Abra o <a href="/playground" target="_blank">Playground</a> e resolva:</p>
+
+<div class="exercicio">
+<div class="label">&#9997; Exercicio 3</div>
+<h3>Fatorial</h3>
+<p>Crie uma funcao recursiva <code class="inline-code">fatorial(n)</code> e teste com 5.</p>
+<p><a href="/playground?ex=m3-3" class="link-exercicio">&#9654; Verificar no Playground</a></p>
+</div>
+
+<div class="exercicio">
+<span class="label">Exercicio 2</span>
+<h3>Funcao eh_par</h3>
+<p>Crie uma funcao <code class="inline-code">eh_par(n)</code> que retorna <code class="inline-code">Verdadeiro</code> se o numero for par e <code class="inline-code">Falso</code> caso contrario. Teste com varios numeros.</p>
+</div>
+
+<div class="exercicio">
+<span class="label">Exercicio 3</span>
+<h3>Pipe Operator</h3>
+<p>Crie duas funcoes: <code class="inline-code">dobrar(n)</code> que retorna n * 2 e <code class="inline-code">somar_um(n)</code> que retorna n + 1. Use pipe para encadear <code class="inline-code">5 |&gt; dobrar |&gt; somar_um</code> e exiba o resultado.</p>
+</div>
+
+<div class="exercicio">
+<span class="label">Desafio</span>
+<h3>Fatorial Recursivo</h3>
+<p>Crie uma funcao <code class="inline-code">fatorial(n)</code> que calcula o fatorial de forma <strong>recursiva</strong> (a funcao chama ela mesma). Lembre-se: fatorial(0) = 1 e fatorial(n) = n * fatorial(n - 1). Teste com fatorial(5) que deve dar 120.</p>
+</div>
+</div>
+
+<div class="nav-modulos">
+<a href="/tutorial_m2" class="anterior">&larr; Modulo 2</a>
+<button class="check-mod" id="btn-concluir">&#10003;</button>
+<a href="/tutorial_m4" class="proximo">Modulo 4 &rarr;</a>
+</div>
+</main>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'simplipt_tutorial_progress';
+  function carregar() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch(e) { return {} } }
+  function salvar(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)) } catch(e) {} }
+
+  var btn = document.getElementById('btn-concluir');
+  if (btn) {
+    var prog = carregar();
+    if (prog.m3) btn.classList.add('marcado');
+    btn.addEventListener('click', function() {
+      var p = carregar();
+      p.m3 = !p.m3;
+      salvar(p);
+      this.classList.toggle('marcado');
+    });
+  }
+
+  var sidebar = document.querySelector('.aula-sidebar');
+  if (sidebar) {
+    var links = sidebar.querySelectorAll('.indice a');
+    var titles = [];
+    links.forEach(function(a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) titles.push({ el: el, link: a });
+    });
+    function onScroll() {
+      var found = false;
+      for (var i = titles.length - 1; i >= 0; i--) {
+        var rect = titles[i].el.getBoundingClientRect();
+        if (rect.top <= 120) {
+          links.forEach(function(l) { l.classList.remove('ativo'); });
+          titles[i].link.classList.add('ativo');
+          found = true; break;
+        }
+      }
+      if (!found && links.length) { links.forEach(function(l) { l.classList.remove('ativo'); }); links[0].classList.add('ativo'); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+})();
+</script>
+
+{% incluir "rodape.spt.html" %}

@@ -1,0 +1,173 @@
+{% incluir "cabecalho.spt.html" %}
+
+<section class="hero">
+<div class="inner">
+<div class="badge">&#9681; v5.2 &mdash; 257 testes &mdash; 18 módulos &mdash; 0 dependências &mdash; 11 funcionalidades novas</div>
+<h1>Programe em <span>Português</span></h1>
+<p>SimpliPT é uma linguagem de programação completa escrita em português. Tipagem opcional, modo debug, servidor web, banco SQLite, template engine. Zero dependências.</p>
+<div class="btns">
+<a href="/docs" class="primario">&#9654; Documentação</a>
+<a href="/exemplos" class="secundario">Ver exemplos &rarr;</a>
+</div>
+
+<div class="code-block" style="margin-top:3rem;text-align:left">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">SimpliPT</span></div>
+<pre><code><span class="kw">usar</span> servidor
+<span class="kw">usar</span> banco
+
+banco.conectar(<span class="str">"blog.db"</span>)
+banco.criar_tabela(<span class="str">"CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY, titulo TEXT, conteudo TEXT)"</span>)
+
+servidor.rota(<span class="str">"GET"</span>, <span class="str">"/"</span>, <span class="kw">fn</span>(req)
+    posts = banco.buscar(<span class="str">"SELECT * FROM posts"</span>)
+    retornar servidor.html(<span class="str">"index.html"</span>, {posts: posts})
+<span class="kw">fim</span>)
+
+falar servidor.iniciar(3000)</code></pre>
+</div>
+</div>
+</section>
+
+<section>
+<div class="inner">
+<h2>Por que SimpliPT?</h2>
+<p class="sub">Uma linguagem feita pra quem quer produtividade sem perder o controle. Código que parece português, mas tem poder de verdade.</p>
+
+<div class="cards">
+<div class="card">
+<span class="icon">&#9878;</span>
+<h3>Sintaxe Natural</h3>
+<p>Comandos como <span class="inline-code">escrever</span>, <span class="inline-code">se...senao</span>, <span class="inline-code">enquanto</span>, <span class="inline-code">para</span>, <span class="inline-code">tentar...capturar</span>. Código que qualquer um entende.</p>
+</div>
+<div class="card">
+<span class="icon">&#9889;</span>
+<h3>Zero Dependências</h3>
+<p>Não precisa instalar nada além do Python. Cada módulo foi escrito à mão, do zero. Sem node_modules, sem venv gigante.</p>
+</div>
+<div class="card">
+<span class="icon">&#128296;</span>
+<h3>18 Módulos Embutidos</h3>
+<p>Servidor web, banco SQLite, JSON, cache, fila, HTTP, regex, matemática, data, hashes, arquivos, template engine e mais.</p>
+</div>
+<div class="card">
+<span class="icon">&#127760;</span>
+<h3>Servidor Web Próprio</h3>
+<p>Crie APIs REST, sites com templates, sessões, formulários, arquivos estáticos. Tudo com <span class="inline-code">usar servidor</span>.</p>
+</div>
+<div class="card">
+<span class="icon">&#128220;</span>
+<h3>Template Engine</h3>
+<p>Arquivos <span class="inline-code">.spt.html</span> com <span class="inline-code">{{ var }}</span>, <span class="inline-code">{% se %}</span>, <span class="inline-code">{% para %}</span>, <span class="inline-code">{% incluir %}</span>. Compila pra Python nativo.</p>
+</div>
+<div class="card">
+<span class="icon">&#128200;</span>
+<h3>CLI Completa</h3>
+<p>REPL, build, formatador, transpilador, dashboard, LSP, debug, strict, hot-reload. <span class="inline-code">simplipt --help</span> para tudo.</p>
+</div>
+<div class="card">
+<span class="icon">&#128220;</span>
+<h3>Tipagem Opcional</h3>
+<p>Declare tipos com <span class="inline-code">nome: texto = "João"</span>. 7 tipos suportados com validação automática em runtime.</p>
+</div>
+<div class="card">
+<span class="icon">&#128269;</span>
+<h3>Modo Debug</h3>
+<p>Depurador passo a passo com breakpoints, inspeção de variáveis, avaliação de expressões. <span class="inline-code">simplipt --debug script.spt</span>.</p>
+</div>
+<div class="card">
+<span class="icon">&#128295;</span>
+<h3>Build & Compilar</h3>
+<p>Compile scripts para executáveis portáteis (.pyz) ou .exe standalone com PyInstaller. <span class="inline-code">simplipt build script.spt</span>.</p>
+</div>
+<div class="card">
+<span class="icon">&#128203;</span>
+<h3>Modo Estrito</h3>
+<p>Checagem estática de tipos sem executar o script. <span class="inline-code">simplipt --strict script.spt</span> encontra erros antes do runtime.</p>
+</div>
+<div class="card">
+<span class="icon">&#128260;</span>
+<h3>Hot-Reload</h3>
+<p>Servidor web recarrega rotas automaticamente ao salvar o arquivo. <span class="inline-code">simplipt --hot server.spt</span> para desenvolvimento ágil.</p>
+</div>
+<div class="card">
+<span class="icon">&#9000;</span>
+<h3>LSP + VS Code</h3>
+<p>Servidor LSP para autocomplete e diagnóstico em tempo real. Extensão VS Code com highlight, snippets e comandos integrados.</p>
+</div>
+<div class="card">
+<span class="icon">&#9888;</span>
+<h3>Garantir (Assert)</h3>
+<p>Verificações com <span class="inline-code">garantir(cond, "msg")</span>. Lança erro runtime se a condição for falsa. Ideal para testes e validações.</p>
+</div>
+<div class="card">
+<span class="icon">&#128194;</span>
+<h3>Scaffolding</h3>
+<p><span class="inline-code">simplipt new projeto</span> cria CRUD completo com servidor, banco SQLite, templates e CSS dark, pronto pra usar.</p>
+</div>
+<div class="card">
+<span class="icon">&#128203;</span>
+<h3>Test Runner</h3>
+<p><span class="inline-code">simplipt test [dir]</span> executa todos os <span class="inline-code">.spt</span> como testes, reporta PASS/FAIL/ERRO com tempos.</p>
+</div>
+<div class="card">
+<span class="icon">&#128200;</span>
+<h3>Profiling</h3>
+<p><span class="inline-code">--profile</span> mostra tempo gasto por função e contagem de chamadas. Otimize seus scripts com dados reais.</p>
+</div>
+<div class="card">
+<span class="icon">&#9001;</span>
+<h3>JSON Mode</h3>
+<p><span class="inline-code">--json</span> retorna saída estruturada (sucesso, saida, erros, AST). Integração com outras ferramentas.</p>
+</div>
+<div class="card">
+<span class="icon">&#128451;</span>
+<h3>banco.modelo()</h3>
+<p>ORM embutido: defina o schema e ganhe <span class="inline-code">criar</span>, <span class="inline-code">buscar</span>, <span class="inline-code">atualizar</span>, <span class="inline-code">deletar</span> automaticamente.</p>
+</div>
+<div class="card">
+<span class="icon">&#128269;</span>
+<h3>Debugger Web</h3>
+<p><span class="inline-code">simplipt debug [dir]</span> — interface gráfica no navegador. Passo a passo, variáveis, pilha, avaliar expressões.</p>
+</div>
+<div class="card">
+<span class="icon">&#9889;</span>
+<h3>Async/Await</h3>
+<p><span class="inline-code">async funcao fetch()</span> + <span class="inline-code">resp = esperar fetch()</span>. Concorrência nativa com asyncio.</p>
+</div>
+<div class="card">
+<span class="icon">&#128230;</span>
+<h3>Módulos Externos</h3>
+<p><span class="inline-code">simplipt modulo install requests</span> — baixa pacotes Python e usa como módulo SimpliPT.</p>
+</div>
+<div class="card">
+<span class="icon">&#9989;</span>
+<h3>PyPI Ready</h3>
+<p>v5.3.0 — <span class="inline-code">pip install simplipt</span></p>
+</div>
+</div>
+</div>
+</section>
+
+<section style="border-top:1px solid var(--border)">
+<div class="inner" style="text-align:center">
+<h2>Comece em 5 segundos</h2>
+<p class="sub" style="margin:0 auto 1.5rem">Instale e rode seu primeiro script.</p>
+
+<div class="code-block" style="max-width:600px;margin:0 auto;text-align:left">
+<div class="bar"><div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><span class="lang">terminal</span></div>
+<pre><code><span class="cm"># Instalar via PyPI (recomendado)</span>
+pip install simplipt
+
+<span class="cm"># Ou direto do repositório</span>
+pip install -e ./caminho/para/simplipt
+
+<span class="cm"># Executar um script</span>
+simplipt meu_script.spt
+
+<span class="cm"># REPL interativo</span>
+simplipt</code></pre>
+</div>
+</div>
+</section>
+
+{% incluir "rodape.spt.html" %}
